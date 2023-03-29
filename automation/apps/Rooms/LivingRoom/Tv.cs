@@ -38,8 +38,7 @@ public class Tv : BaseApp
 
             if (IsWorking)
             {
-                Entities.Light.Slaapkamer.TurnOn();
-                Entities.Light.Nachtkastje.TurnOff();
+                Entities.Light.Plafond.TurnOn();
             }
         }
     }
@@ -54,7 +53,8 @@ public class Tv : BaseApp
             Entities.Light.PlafondWoonkamer.TurnOff();
             Entities.Light.HueFilamentBulb1.TurnOff();
             Entities.Light.HueFilamentBulb2.TurnOff();
-            Entities.Light.Slaapkamer.TurnOff();
+            Entities.Light.Plafond.TurnOff();
+            Entities.Light.Nachtkastje.TurnOff();
             Entities.MediaPlayer.Tv.VolumeSet(0.14);
             Logger.LogDebug("Movie time started!");
         }

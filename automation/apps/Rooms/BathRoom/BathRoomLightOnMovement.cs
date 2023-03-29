@@ -85,7 +85,8 @@ public class BathRoomLightOnMovement : BaseApp
                 Entities.Light.BadkamerSpiegel.TurnOn(brightnessPct: brightnessPct, transition: 2);
                 break;
             case false:
-                Entities.Light.Badkamer.TurnOff();
+                Entities.Light.PlafondBadkamer.TurnOff();
+                Entities.Light.BadkamerSpiegel.TurnOff();
                 break;
         }
     }
