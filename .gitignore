@@ -1,0 +1,12 @@
+/automation/appsettings.json
+/automation/bin
+/automation/obj
+/automation/.config
+/automation/.idea
+/automation/.storage
+/automation/logs
+/automation/Dockerfile
+/automation/NetDaemonCodegen
+/automation/HomeAssistantGenerated.cs
+/automation/Release
+.idea
