@@ -27,6 +27,7 @@ public class Cat : BaseApp
             .Subscribe(_ =>
             {
                 FeedCat(Convert.ToInt32(Entities.Sensor.ZedarLastAmountManualFeed.State));
+                Entities.InputNumber.Zedarlastamountmanualfeed.SetValue(Convert.ToInt32(Entities.InputNumber.Zedarlastamountmanualfeed.State + Convert.ToInt32(Entities.Sensor.ZedarLastAmountManualFeed.State)));
                 Entities.InputDatetime.Zedarlastmanualfeed.SetDatetime(new InputDatetimeSetDatetimeParameters
                 {
                     Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
@@ -42,6 +43,9 @@ public class Cat : BaseApp
 
     private void FeedCat(int amount)
     {
+        Entities.InputNumber.Zedartotalamountfeedday.SetValue(Convert.ToInt32(Entities.InputNumber.Zedartotalamountfeedday.State + amount));
+        Entities.InputNumber.Zedartotalamountfeedalltime.SetValue(Convert.ToInt32(Entities.InputNumber.Zedartotalamountfeedalltime.State + amount));
+        
         Services.Localtuya.SetDp(new LocaltuyaSetDpParameters
         {
             DeviceId = @"bfe910316af564a2e4hgrm",
@@ -55,12 +59,12 @@ public class Cat : BaseApp
         Entities.InputDatetime.Zedarlastmanualfeed.StateChanges()
             .Subscribe(x =>
                 Notify.NotifyGsmVincent(@"Pixel heeft handmatig eten gehad",
-                    @$"Pixel heeft {x.New?.State} porties eten gehad"));
+                    @$"Pixel heeft {Entities.InputNumber.Zedarlastamountmanualfeed.State} porties eten gehad"));
 
         Entities.InputDatetime.Zedarlastautomatedfeed.StateChanges()
             .Subscribe(x =>
                 Notify.NotifyGsmVincent(@"Pixel heeft automatisch eten gehad",
-                    @$"Pixel heeft {x.New?.State} porties eten gehad"));
+                    @$"Pixel heeft {Entities.InputNumber.Zedarlastamountautomationfeed.State} porties eten gehad"));
     }
 
     private void AutoFeedCat()
@@ -71,12 +75,16 @@ public class Cat : BaseApp
             _scheduler.RunDaily(TimeSpan.Parse(autoFeed.Key.State!), () =>
             {
                 if (Entities.InputBoolean.Zedarskipnextautofeed.IsOff())
-                    FeedCat(Convert.ToInt32(autoFeed.Value.State));
-                Entities.InputBoolean.Zedarskipnextautofeed.TurnOff();
-                Entities.InputDatetime.Zedarlastautomatedfeed.SetDatetime(new InputDatetimeSetDatetimeParameters
                 {
-                    Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
-                });
+                    FeedCat(Convert.ToInt32(autoFeed.Value.State));
+                    Entities.InputDatetime.Zedarlastautomatedfeed.SetDatetime(new InputDatetimeSetDatetimeParameters
+                    {
+                        Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
+                    });
+                    Entities.InputNumber.Zedarlastamountautomationfeed.SetValue(Convert.ToInt32(autoFeed.Value.State));
+                }
+                
+                Entities.InputBoolean.Zedarskipnextautofeed.TurnOff();
             });
         }
     }
