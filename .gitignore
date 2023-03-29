@@ -7,6 +7,5 @@
 /automation/logs
 /automation/Dockerfile
 /automation/NetDaemonCodegen
-/automation/HomeAssistantGenerated.cs
 /automation/Release
 .idea
