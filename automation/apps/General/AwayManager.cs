@@ -82,7 +82,7 @@ public class AwayManager : BaseApp
                     throw new ArgumentOutOfRangeException();
             }
             
-            Thread.Sleep(5000);
+            Thread.Sleep(15000);
             var message = @"Welkom thuis Vincent!";
             if (Entities.BinarySensor.ZedarFeedContainer.IsOff())
                 message += @" Het eten van de Pixel is bijna op!";
