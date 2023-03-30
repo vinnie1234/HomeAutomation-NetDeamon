@@ -77,11 +77,12 @@ public class Cat : BaseApp
                 if (Entities.InputBoolean.Zedarskipnextautofeed.IsOff())
                 {
                     FeedCat(Convert.ToInt32(autoFeed.Value.State));
+                    
+                    Entities.InputNumber.Zedarlastamountautomationfeed.SetValue(Convert.ToInt32(autoFeed.Value.State));
                     Entities.InputDatetime.Zedarlastautomatedfeed.SetDatetime(new InputDatetimeSetDatetimeParameters
                     {
                         Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
                     });
-                    Entities.InputNumber.Zedarlastamountautomationfeed.SetValue(Convert.ToInt32(autoFeed.Value.State));
                 }
                 
                 Entities.InputBoolean.Zedarskipnextautofeed.TurnOff();
