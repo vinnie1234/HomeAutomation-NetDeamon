@@ -80,10 +80,11 @@ public class BatteryMonitoring : BaseApp
             .Where(x => x.Entity.State is <= BatteryWarningLevel)
             .Subscribe(x => SendNotification(@"Switchbot", x.Entity.State));
 
-        Entities.Sensor.JaapBatteryLevel
+        //todo temp disabled
+        /*Entities.Sensor.JaapBatteryLevel
             .StateChanges()
             .Where(x => x.Entity.State is <= BatteryWarningLevel)
-            .Subscribe(x => SendNotification(@"Jaap", x.Entity.State));
+            .Subscribe(x => SendNotification(@"Jaap", x.Entity.State)); */
     }
 
     private void SendNotification(string name, double? batterPrc)
