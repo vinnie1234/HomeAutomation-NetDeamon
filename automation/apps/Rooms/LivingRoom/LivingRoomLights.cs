@@ -36,7 +36,7 @@ public class LivingRoomLights : BaseApp
                     .Throttle(TimeSpan.FromMilliseconds(50))
                     .Subscribe(_ => { Entities.Light.HueFilamentBulb1.TurnOn(brightnessPct: 100, colorTemp: 222); });
                 
-                Thread.Sleep(TimeSpan.FromMilliseconds(150));
+                Thread.Sleep(TimeSpan.FromMilliseconds(2500));
                 //backup when PlafondWoonkamer was already on
                 Entities.Light.HueFilamentBulb1.TurnOn(brightnessPct: 100, colorTemp: 222);
             }
