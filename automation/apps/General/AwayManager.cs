@@ -8,7 +8,7 @@ namespace Automation.apps.General;
 // ReSharper disable once UnusedType.Global
 public class AwayManager : BaseApp
 {
-    private bool _backHome = true;
+    private bool _backHome;
 
     // ReSharper disable once SuggestBaseTypeForParameterInConstructor
     public AwayManager(IHaContext ha, ILogger<AwayManager> logger, INotify notify)
