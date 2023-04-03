@@ -65,6 +65,8 @@ public class Cat : BaseApp
             .Subscribe(x =>
                 Notify.NotifyGsmVincent(@"Pixel heeft automatisch eten gehad",
                     @$"Pixel heeft {Entities.InputNumber.Zedarlastamountautomationfeed.State} porties eten gehad"));
+
+        _scheduler.RunDaily(TimeSpan.Parse("00:00:00"), () => Entities.InputNumber.Zedartotalamountfeedday.SetValue(0));
     }
 
     private void AutoFeedCat()
