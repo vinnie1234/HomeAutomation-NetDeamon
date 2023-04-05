@@ -1,3 +1,5 @@
+using NetDaemon.Extensions.Scheduler;
+
 namespace Automation.apps.Rooms.BathRoom;
 
 [NetDaemonApp(Id = nameof(BathRoomLightOnMovement))]
@@ -8,11 +10,13 @@ public class BathRoomLightOnMovement : BaseApp
     private bool IsSleeping => Entities.InputBoolean.Sleeping.IsOn();
     private bool DisableLightAutomations => Entities.InputBoolean.Disablelightautomationbathroom.IsOn();
     private bool IsDouching => Entities.InputBoolean.Douchen.IsOn();
+    private readonly INetDaemonScheduler _scheduler;
 
     // ReSharper disable once SuggestBaseTypeForParameterInConstructor
-    public BathRoomLightOnMovement(IHaContext ha, ILogger<BathRoomLightOnMovement> logger, INotify notify)
+    public BathRoomLightOnMovement(IHaContext ha, ILogger<BathRoomLightOnMovement> logger, INotify notify, INetDaemonScheduler scheduler)
         : base(ha, logger, notify)
     {
+        _scheduler = scheduler;
         HaContext.Events.Where(x => x.EventType == "hue_event").Subscribe(x =>
         {
             var eventModel = x.DataElement?.ToObject<EventModel>();
@@ -55,6 +59,14 @@ public class BathRoomLightOnMovement : BaseApp
             Entities.Light.PlafondBadkamer.TurnOn(brightnessPct: 100);
             Entities.Cover.Rollerblind0001.CloseCover();
             Notify.NotifyHouse(@"Tijd om te douchen");
+            _scheduler.RunAt(DateTimeOffset.Now.AddHours(1), () =>
+            {
+                if (IsDouching)
+                {
+                    Entities.InputBoolean.Douchen.TurnOff();
+                    Notify.NotifyHouse(@"Je bent of een uur aan het douchen, of weer is vergeten alles uit te zetten!");
+                }
+            });
         }
         else
         {
