@@ -1,4 +1,3 @@
-using System.Globalization;
 using NetDaemon.Extensions.Scheduler;
 
 namespace Automation.apps.General;
@@ -48,7 +47,7 @@ public class Cat : BaseApp
         
         Services.Localtuya.SetDp(new LocaltuyaSetDpParameters
         {
-            DeviceId = @"bfe910316af564a2e4hgrm",
+            DeviceId = Entities.InputText.Zedardeviceid,
             Dp = 3,
             Value = amount
         });
@@ -57,16 +56,16 @@ public class Cat : BaseApp
     private void MonitorCar()
     {
         Entities.InputDatetime.Zedarlastmanualfeed.StateChanges()
-            .Subscribe(x =>
+            .Subscribe(_ =>
                 Notify.NotifyGsmVincent(@"Pixel heeft handmatig eten gehad",
                     @$"Pixel heeft {Entities.InputNumber.Zedarlastamountmanualfeed.State} porties eten gehad"));
 
         Entities.InputDatetime.Zedarlastautomatedfeed.StateChanges()
-            .Subscribe(x =>
+            .Subscribe(_ =>
                 Notify.NotifyGsmVincent(@"Pixel heeft automatisch eten gehad",
                     @$"Pixel heeft {Entities.InputNumber.Zedarlastamountautomationfeed.State} porties eten gehad"));
 
-        _scheduler.RunDaily(TimeSpan.Parse("00:00:00"), () => Entities.InputNumber.Zedartotalamountfeedday.SetValue(0));
+        _scheduler.RunDaily(TimeSpan.Parse("23:59:58"), () => Entities.InputNumber.Zedartotalamountfeedday.SetValue(0));
     }
 
     private void AutoFeedCat()
@@ -99,6 +98,8 @@ public class Cat : BaseApp
 
         Entities.InputBoolean.Zedarskipnextautofeed.TurnOn();
         FeedCat(Convert.ToInt32(closestFeed.Value.State));
+        
+        Entities.InputNumber.Zedarlastamountmanualfeed.SetValue(Convert.ToInt32(closestFeed.Value.State));
 
         Entities.InputDatetime.Zedarlastmanualfeed.SetDatetime(new InputDatetimeSetDatetimeParameters
         {
