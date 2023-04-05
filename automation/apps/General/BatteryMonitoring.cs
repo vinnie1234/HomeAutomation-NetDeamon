@@ -78,7 +78,12 @@ public class BatteryMonitoring : BaseApp
         Entities.Sensor.BotA801Battery
             .StateChanges()
             .Where(x => x.Entity.State is <= BatteryWarningLevel)
-            .Subscribe(x => SendNotification(@"Switchbot", x.Entity.State));
+            .Subscribe(x => SendNotification(@"Switchbot", x.Entity.State));        
+        
+        Entities.Sensor.KeukenAfstandbediening
+            .StateChanges()
+            .Where(x => x.Entity.State is <= BatteryWarningLevel)
+            .Subscribe(x => SendNotification(@"Keuken afstandbediening", x.Entity.State));
 
         //todo temp disabled
         /*Entities.Sensor.JaapBatteryLevel
