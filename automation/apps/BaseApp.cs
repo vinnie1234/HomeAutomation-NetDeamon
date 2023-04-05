@@ -16,6 +16,6 @@ public class BaseApp
         Entities = new Entities(haContext);
         Services = new Services(haContext);
 
-        Logger.LogDebug("Starting {Name}", GetType().Name);
+        Logger.LogDebug("Started {Name}", GetType().Name);
     }
 }
