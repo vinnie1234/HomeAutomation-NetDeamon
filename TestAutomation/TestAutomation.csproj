@@ -1,31 +1,32 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <OutputType>Exe</OutputType>
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <IsPackable>false</IsPackable>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="JoySoftware.NetDaemon.App" Version="22.1.12"/>
-        <PackageReference Include="JoySoftware.NetDaemon.AppModel" Version="23.9.0"/>
-        <PackageReference Include="JoySoftware.NetDaemon.Client" Version="23.9.0"/>
-        <PackageReference Include="JoySoftware.NetDaemon.Extensions.Logging" Version="23.9.0"/>
-        <PackageReference Include="JoySoftware.NetDaemon.Extensions.Mqtt" Version="23.9.0"/>
-        <PackageReference Include="JoySoftware.NetDaemon.Extensions.Scheduling" Version="23.9.0"/>
-        <PackageReference Include="JoySoftware.NetDaemon.Extensions.Tts" Version="23.9.0"/>
-        <PackageReference Include="JoySoftware.NetDaemon.Fakes" Version="22.1.12"/>
-        <PackageReference Include="JoySoftware.NetDaemon.HassModel" Version="23.9.0"/>
-        <PackageReference Include="JoySoftware.NetDaemon.Runtime" Version="23.9.0"/>
-        <PackageReference Include="Microsoft.Reactive.Testing" Version="5.0.0"/>
-        <PackageReference Include="Moq" Version="4.18.4"/>
-        <PackageReference Include="NSubstitute" Version="5.0.0"/>
-        <PackageReference Include="xunit" Version="2.4.2"/>
+        <PackageReference Include="JoySoftware.NetDaemon.App" Version="22.1.12" />
+        <PackageReference Include="JoySoftware.NetDaemon.AppModel" Version="23.14.0" />
+        <PackageReference Include="JoySoftware.NetDaemon.Client" Version="23.14.0" />
+        <PackageReference Include="JoySoftware.NetDaemon.Extensions.Logging" Version="23.14.0" />
+        <PackageReference Include="JoySoftware.NetDaemon.Extensions.Mqtt" Version="23.14.0" />
+        <PackageReference Include="JoySoftware.NetDaemon.Extensions.Scheduling" Version="23.14.0" />
+        <PackageReference Include="JoySoftware.NetDaemon.Extensions.Tts" Version="23.14.0" />
+        <PackageReference Include="JoySoftware.NetDaemon.Fakes" Version="22.1.12" />
+        <PackageReference Include="JoySoftware.NetDaemon.HassModel" Version="23.14.0" />
+        <PackageReference Include="JoySoftware.NetDaemon.Runtime" Version="23.14.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
+        <PackageReference Include="Microsoft.Reactive.Testing" Version="5.0.0" />
+        <PackageReference Include="Moq" Version="4.18.4" />
+        <PackageReference Include="NSubstitute" Version="5.0.0" />
+        <PackageReference Include="xunit" Version="2.4.2" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\automation\Automation.csproj"/>
+        <ProjectReference Include="..\automation\Automation.csproj" />
     </ItemGroup>
 
 </Project>
