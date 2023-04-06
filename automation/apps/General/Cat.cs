@@ -1,3 +1,4 @@
+using Automation.Helpers;
 using NetDaemon.Extensions.Scheduler;
 
 namespace Automation.apps.General;
@@ -47,7 +48,7 @@ public class Cat : BaseApp
         
         Services.Localtuya.SetDp(new LocaltuyaSetDpParameters
         {
-            DeviceId = Entities.InputText.Zedardeviceid,
+            DeviceId = ConfigManager.GetValueFromConfig(@"ZedarDeviceId"),
             Dp = 3,
             Value = amount
         });
