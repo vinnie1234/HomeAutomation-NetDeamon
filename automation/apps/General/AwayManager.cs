@@ -22,6 +22,28 @@ public class AwayManager : BaseApp
             .StateChanges()
             .Where(x => x.Old?.State != "home" && x.New?.State == "home" && Entities.InputBoolean.Away.IsOn())
             .Subscribe(_ => Entities.InputBoolean.Away.TurnOff());
+        
+        Entities.Person.VincentMaarschalkerweerd
+            .StateChanges()
+            .Where(x => x.Old?.State == "home" && x.New?.State != "home" && Entities.InputBoolean.Away.IsOn())
+            .Subscribe(_ =>
+            {
+                Notify.NotifyGsmVincent(@"Het lijkt er op dat je weg bent!",
+                    @"Je gaat weg zonder wat te zeggen...",
+                    new List<ActionModel>
+                    {
+                        new()
+                        {
+                            Action = @"SETAWAY",
+                            Title = @"Ik ben weg",
+                            Func = () =>
+                            {
+                                Entities.InputBoolean.Away.TurnOn();
+                                Notify.ClearPhone();
+                            }
+                        }
+                    });
+            });
     }
 
     private void AwayHandler()
