@@ -18,7 +18,10 @@ public class SleepManager : BaseApp
 
         scheduler.RunDaily(TimeSpan.Parse("10:00:00"), () =>
         {
-            if (Entities.InputBoolean.Sleeping.IsOn()) Entities.InputBoolean.Sleeping.TurnOff();
+            if (!((IList)Globals.WeekendDays).Contains(DateTime.Now.DayOfWeek))
+            {
+                if (Entities.InputBoolean.Sleeping.IsOn()) Entities.InputBoolean.Sleeping.TurnOff();
+            }
         });
     }
 
