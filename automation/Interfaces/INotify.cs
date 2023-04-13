@@ -1,8 +1,10 @@
+using System.Threading.Tasks;
+
 namespace Automation.Interfaces;
 
 public interface INotify
 {
-    void NotifyHouse(string message);
+    Task NotifyHouse(string message);
 
     void NotifyGsmVincent(
         string title,

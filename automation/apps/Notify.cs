@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Automation.Enum;
 
 namespace Automation.apps;
@@ -15,14 +16,20 @@ public class Notify : INotify
         _services = new Services(ha);
     }
 
-    public void NotifyHouse(string message)
+    public async Task NotifyHouse(string message)
     {
         _entities.MediaPlayer.HubVincent.VolumeSet(0.4);
         _entities.MediaPlayer.Woonkamer.VolumeSet(0.4);
-        _services.Tts.GoogleSay(new TtsGoogleSayParameters
-            { EntityId = _entities.MediaPlayer.HubVincent.EntityId, Message = message, Language = "nl" });
-        _services.Tts.GoogleSay(new TtsGoogleSayParameters
-            { EntityId = _entities.MediaPlayer.Woonkamer.EntityId, Message = message, Language = "nl" });
+
+        var tasks = new List<Task>
+        {
+            Task.Run(() => _services.Tts.GoogleSay(new TtsGoogleSayParameters
+                { EntityId = _entities.MediaPlayer.HubVincent.EntityId, Message = message, Language = "nl" })),
+            Task.Run(() => _services.Tts.GoogleSay(new TtsGoogleSayParameters
+                { EntityId = _entities.MediaPlayer.Woonkamer.EntityId, Message = message, Language = "nl" }))
+        };
+
+        await Task.WhenAll(tasks);
     }
 
     public void NotifyGsmVincent(
