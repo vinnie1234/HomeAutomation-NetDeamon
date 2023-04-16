@@ -26,13 +26,13 @@ public class Tv : BaseApp
         if (!DisableLightAutomations)
         {
             if (IsMorningTime)
-                Entities.Scene.WoonkamerMorning.TurnOn();
+                Entities.Scene.Woonkamermorning.TurnOn();
             if (IsDayTime)
-                Entities.Scene.WoonkamerDay.TurnOn();
+                Entities.Scene.Woonkamerday.TurnOn();
             if (IsEveningTime)
-                Entities.Scene.WoonkamerEvening.TurnOn();
+                Entities.Scene.Woonkamerevening.TurnOn();
             if (IsNightTime)
-                Entities.Scene.WoonkamerNight.TurnOn();
+                Entities.Scene.Woonkamernight.TurnOn();
 
             Entities.MediaPlayer.AvSoundbar.TurnOff();
 
@@ -48,7 +48,7 @@ public class Tv : BaseApp
         Logger.LogDebug("TV Turned on");
         if (!DisableLightAutomations)
         {
-            Entities.Scene.WoonkamerMovie.TurnOn();
+            Entities.Scene.TvKijken.TurnOn();
             Entities.MediaPlayer.AvSoundbar.TurnOn();
             Entities.Light.PlafondWoonkamer.TurnOff();
             Entities.Light.HueFilamentBulb1.TurnOff();
