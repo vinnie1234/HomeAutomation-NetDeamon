@@ -5,8 +5,7 @@ namespace Automation.apps.General;
 public class BatteryMonitoring : BaseApp
 {
     private const int BatteryWarningLevel = 20;
-
-    // ReSharper disable once SuggestBaseTypeForParameterInConstructor
+    
     public BatteryMonitoring(IHaContext ha, ILogger<BatteryMonitoring> logger, INotify notify)
         : base(ha, logger, notify)
     {

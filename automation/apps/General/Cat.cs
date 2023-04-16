@@ -9,8 +9,7 @@ public class Cat : BaseApp
 {
     private readonly INetDaemonScheduler _scheduler;
     private readonly Dictionary<InputDatetimeEntity, InputNumberEntity> _feedDictionary;
-
-    // ReSharper disable once SuggestBaseTypeForParameterInConstructor
+    
     public Cat(IHaContext haContext, ILogger<Cat> logger, INotify notify, INetDaemonScheduler scheduler)
         : base(haContext, logger, notify)
     {

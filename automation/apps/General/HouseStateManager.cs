@@ -20,8 +20,7 @@ public class HouseStateManager : BaseApp
     private readonly TimeSpan _startWorking = TimeSpan.Parse("08:30:00");
     private readonly TimeSpan _endWorking = TimeSpan.Parse("17:00:00");
     private readonly INetDaemonScheduler _scheduler;
-
-    // ReSharper disable once SuggestBaseTypeForParameterInConstructor
+    
     public HouseStateManager(IHaContext ha, INetDaemonScheduler scheduler, ILogger<HouseStateManager> logger,
         INotify notify)
         : base(ha, logger, notify)

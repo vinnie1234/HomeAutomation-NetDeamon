@@ -7,7 +7,6 @@ namespace Automation.apps.Rooms.LivingRoom;
 // ReSharper disable once UnusedType.Global
 public class LivingRoomLights : BaseApp
 {
-    // ReSharper disable once SuggestBaseTypeForParameterInConstructor
     public LivingRoomLights(IHaContext ha, ILogger<LivingRoomLights> logger, INotify notify)
         : base(ha, logger, notify)
     {
@@ -52,7 +51,6 @@ public class LivingRoomLights : BaseApp
                     .Subscribe(_ => { Entities.Light.HueFilamentBulb2.TurnOff(); });
                 
                 Thread.Sleep(TimeSpan.FromMilliseconds(150));
-                //backup when PlafondWoonkamer was already off
                 Entities.Light.HueFilamentBulb2.TurnOff();
             }
         }

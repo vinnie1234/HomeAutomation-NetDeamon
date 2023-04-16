@@ -8,8 +8,7 @@ public class Alarm : BaseApp
 {
     private readonly INetDaemonScheduler _scheduler;
     private bool IsSleeping => Entities.InputBoolean.Sleeping.IsOn();
-
-    // ReSharper disable once SuggestBaseTypeForParameterInConstructor
+    
     public Alarm(IHaContext ha, ILogger<Alarm> logger, INetDaemonScheduler scheduler, INotify notify)
         : base(ha, logger, notify)
     {

@@ -9,7 +9,6 @@ public class SleepManager : BaseApp
 {
     private bool DisableLightAutomations => Entities.InputBoolean.Disablelightautomationgeneral.IsOn();
 
-    // ReSharper disable once SuggestBaseTypeForParameterInConstructor
     public SleepManager(IHaContext ha, ILogger<SleepManager> logger, INetDaemonScheduler scheduler, INotify notify)
         : base(ha, logger, notify)
     {

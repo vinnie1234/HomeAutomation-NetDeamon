@@ -11,8 +11,7 @@ public class Tv : BaseApp
     private bool IsWorking => Entities.InputBoolean.Working.IsOn();
 
     private bool DisableLightAutomations => Entities.InputBoolean.Disablelightautomationlivingroom.IsOn();
-
-    // ReSharper disable once SuggestBaseTypeForParameterInConstructor
+    
     public Tv(IHaContext ha, ILogger<Tv> logger, INotify notify)
         : base(ha, logger, notify)
     {

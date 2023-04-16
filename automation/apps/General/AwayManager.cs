@@ -9,8 +9,7 @@ namespace Automation.apps.General;
 public class AwayManager : BaseApp
 {
     private bool _backHome;
-
-    // ReSharper disable once SuggestBaseTypeForParameterInConstructor
+    
     public AwayManager(IHaContext ha, ILogger<AwayManager> logger, INotify notify)
         : base(ha, logger, notify)
     {

@@ -7,8 +7,7 @@ public class HallLightOnMovement : BaseApp
     private bool IsNighttime => Entities.InputSelect.Housemodeselect.State == "Night";
     private bool IsSleeping => Entities.InputBoolean.Sleeping.IsOn();
     private bool DisableLightAutomations => Entities.InputBoolean.Disablelightautomationhall.IsOn();
-
-    // ReSharper disable once SuggestBaseTypeForParameterInConstructor
+    
     public HallLightOnMovement(IHaContext ha, ILogger<HallLightOnMovement> logger, INotify notify)
         : base(ha, logger, notify)
     {

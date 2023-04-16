@@ -28,6 +28,6 @@ public class AlarmStateModel
     [JsonProperty("recurrence")]
     public List<int>? Recurrence { get; set; }
 
-    [JsonProperty("EntityId")]
+    [JsonProperty(nameof(EntityId))]
     public string? EntityId { get; set; }
 }

@@ -8,29 +8,32 @@ namespace TestAutomation.Mock;
 
 public class HaContextMockBase : IHaContext, IHaContextMock
 {
-    public Dictionary<string, EntityState> _entityStates { get; } = new ();
+    public Dictionary<string, EntityState> _entityStates { get; } = new();
     public Subject<StateChange> StateAllChangeSubject { get; } = new();
     public Subject<Event> EventsSubject { get; } = new();
 
     public IObservable<StateChange> StateAllChanges() => StateAllChangeSubject;
 
-    public EntityState? GetState(string entityId) => _entityStates.TryGetValue(entityId, out var result) ? result : null;
+    public EntityState? GetState(string entityId) =>
+        _entityStates.TryGetValue(entityId, out var result) ? result : null;
 
     public IReadOnlyList<Entity> GetAllEntities() => _entityStates.Keys.Select(s => new Entity(this, s)).ToList();
 
     public virtual void CallService(string domain, string service, ServiceTarget? target = null, object? data = null)
-    { }
+    {
+    }
 
     public Area? GetAreaFromEntityId(string entityId) => null;
 
     public virtual void SendEvent(string eventType, object? data = null)
-    { }
+    {
+    }
 
     public IObservable<Event> Events => EventsSubject;
 
-    public void TriggerStateChange(Entity entity, string newStatevalue, object? attributes = null)
+    public void TriggerStateChange(Entity entity, string newStateValue, object? attributes = null)
     {
-        var newState = new EntityState { State = newStatevalue };
+        var newState = new EntityState { State = newStateValue };
         if (attributes != null)
         {
             newState = newState.WithAttributes(attributes);
@@ -58,7 +61,7 @@ public class HaContextMockBase : IHaContext, IHaContextMock
 
 public interface IHaContextMock
 {
-    void TriggerStateChange(Entity entity, string newStatevalue, object? attributes = null);
+    void TriggerStateChange(Entity entity, string newStateValue, object? attributes = null);
     void TriggerStateChange(string entityId, EntityState newState);
     void VerifyServiceCalled(Entity entity, string domain, string service);
 }
@@ -67,8 +70,9 @@ public static class TestExtensions
 {
     public static EntityState WithAttributes(this EntityState entityState, object attributes)
     {
-        var copy = entityState with {};
-        entityState.GetType().GetProperty("AttributesJson", BindingFlags.NonPublic | BindingFlags.Instance)!.SetValue(copy, AsJsonElement(attributes));
+        var copy = entityState with { };
+        entityState.GetType().GetProperty("AttributesJson", BindingFlags.NonPublic | BindingFlags.Instance)!.SetValue(
+            copy, AsJsonElement(attributes));
         return copy;
     }
 

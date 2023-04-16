@@ -27,19 +27,19 @@ public static class AppTestContextExtensions
     {
         var domain = serviceCall[..serviceCall.IndexOf(".", StringComparison.InvariantCultureIgnoreCase)];
         var service = serviceCall[(serviceCall.IndexOf(".", StringComparison.InvariantCultureIgnoreCase) + 1)..];
-        
+
         ctx.HaContext.Received(times)
             .CallService(domain, service, Arg.Any<ServiceTarget>(), Arg.Any<object?>());
     }
 
-    public static T? GetEntity<T>(this AppTestContext ctx, string entityId) where T : Entity 
-        
+    public static T? GetEntity<T>(this AppTestContext ctx, string entityId) where T : Entity
+
     {
-        return  Activator.CreateInstance(typeof(T), ctx.HaContext, entityId) as T;
-    }    
-    
-    public static T? GetEntity<T>(this AppTestContext ctx, string entityId, string state) where T : Entity 
-        
+        return Activator.CreateInstance(typeof(T), ctx.HaContext, entityId) as T;
+    }
+
+    public static T? GetEntity<T>(this AppTestContext ctx, string entityId, string state) where T : Entity
+
     {
         ctx.HaContext.GetState(entityId).Returns(
             new EntityState
@@ -48,7 +48,7 @@ public static class AppTestContextExtensions
                 State = state
             }
         );
-        return  Activator.CreateInstance(typeof(T), ctx.HaContext, entityId) as T;
+        return Activator.CreateInstance(typeof(T), ctx.HaContext, entityId) as T;
     }
 
     public static void ActivateScene(this AppTestContext ctx, string sceneName)

@@ -1,6 +1,5 @@
 using Automation.apps;
 using Automation.apps.General;
-using HomeAssistantGenerated;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using TestAutomation.Helpers;
@@ -12,7 +11,7 @@ public class Test
     private readonly AppTestContext _ctx = AppTestContext.New();
 
     [Fact]
-    public void test()
+    public void Test1()
     {
         _ctx.InitHouseManagerApp();
     }

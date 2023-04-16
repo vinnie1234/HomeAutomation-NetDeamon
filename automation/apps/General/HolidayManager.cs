@@ -7,8 +7,7 @@ namespace Automation.apps.General;
 public class HolidayManager : BaseApp
 {
     private readonly INetDaemonScheduler _scheduler;
-
-    // ReSharper disable once SuggestBaseTypeForParameterInConstructor
+    
     public HolidayManager(IHaContext ha, ILogger<HolidayManager> logger, INetDaemonScheduler scheduler, INotify notify)
         : base(ha, logger, notify)
     {

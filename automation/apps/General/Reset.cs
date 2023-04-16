@@ -8,7 +8,6 @@ public class Reset : BaseApp
 
     private List<LightStateModel>? LightEntitiesStates { get; set; }
 
-    // ReSharper disable once SuggestBaseTypeForParameterInConstructor
     public Reset(IHaContext ha, ILogger<Reset> logger, IDataRepository storage, INotify notify)
         : base(ha, logger, notify)
     {
@@ -49,7 +48,7 @@ public class Reset : BaseApp
                      .Where(alarm => oldAlarms
                          .All(x => x.AlarmId != alarm.AlarmId)))
         {
-            if (alarm is { EntityId: { }, AlarmId: { } })
+            if (alarm is { EntityId: not null, AlarmId: not null })
             {
                 Notify.NotifyHouse(@$"Alarm van {alarm.LocalTime} word verwijderd");
                 Services.GoogleHome.DeleteAlarm(alarm.EntityId, alarm.AlarmId);

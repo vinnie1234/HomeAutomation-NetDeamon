@@ -6,7 +6,6 @@ public class SaveInState : BaseApp
 {
     private readonly IDataRepository _storage;
 
-    // ReSharper disable once SuggestBaseTypeForParameterInConstructor
     public SaveInState(IHaContext ha, ILogger<SaveInState> logger, IDataRepository storage, INotify notify)
         : base(ha, logger, notify)
     {

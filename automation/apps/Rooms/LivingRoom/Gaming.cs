@@ -6,8 +6,7 @@ namespace Automation.apps.Rooms.LivingRoom;
 public class Gaming : BaseApp
 {
     private bool DisableLightAutomations => Entities.InputBoolean.Disablelightautomationlivingroom.IsOn();
-
-    // ReSharper disable once SuggestBaseTypeForParameterInConstructor
+    
     public Gaming(IHaContext ha, ILogger<Gaming> logger, INotify notify)
         : base(ha, logger, notify)
     {

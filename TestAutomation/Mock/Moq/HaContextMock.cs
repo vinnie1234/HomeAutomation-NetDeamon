@@ -9,9 +9,9 @@ public class HaContextMock : Mock<HaContextMockBase>, IHaContextMock
     {
     }
 
-    public void TriggerStateChange(Entity entity, string newStatevalue, object? attributes = null)
+    public void TriggerStateChange(Entity entity, string newStateValue, object? attributes = null)
     {
-        Object.TriggerStateChange(entity, newStatevalue, attributes);
+        Object.TriggerStateChange(entity, newStateValue, attributes);
     }
 
     public void TriggerStateChange(string entityId, EntityState newState)

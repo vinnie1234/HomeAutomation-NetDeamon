@@ -1,4 +1,3 @@
-using Automation;
 using Automation.Helpers;
 
 namespace TestAutomation;

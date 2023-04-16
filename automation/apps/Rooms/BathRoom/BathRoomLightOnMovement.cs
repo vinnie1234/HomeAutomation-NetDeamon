@@ -11,8 +11,7 @@ public class BathRoomLightOnMovement : BaseApp
     private bool DisableLightAutomations => Entities.InputBoolean.Disablelightautomationbathroom.IsOn();
     private bool IsDouching => Entities.InputBoolean.Douchen.IsOn();
     private readonly INetDaemonScheduler _scheduler;
-
-    // ReSharper disable once SuggestBaseTypeForParameterInConstructor
+    
     public BathRoomLightOnMovement(IHaContext ha, ILogger<BathRoomLightOnMovement> logger, INotify notify, INetDaemonScheduler scheduler)
         : base(ha, logger, notify)
     {
