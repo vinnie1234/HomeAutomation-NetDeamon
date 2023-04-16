@@ -9,7 +9,7 @@
 
     <ItemGroup>
         <PackageReference Include="JoySoftware.NetDaemon.App" Version="22.1.12" />
-        <PackageReference Include="JoySoftware.NetDaemon.AppModel" Version="23.14.0" />
+        <PackageReference Include="JoySoftware.NetDaemon.AppModel" Version="23.15.0" />
         <PackageReference Include="JoySoftware.NetDaemon.Client" Version="23.14.0" />
         <PackageReference Include="JoySoftware.NetDaemon.Extensions.Logging" Version="23.14.0" />
         <PackageReference Include="JoySoftware.NetDaemon.Extensions.Mqtt" Version="23.14.0" />
