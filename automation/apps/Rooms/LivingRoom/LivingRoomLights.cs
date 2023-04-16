@@ -1,4 +1,5 @@
 using System.Threading;
+using Automation.Enum;
 
 namespace Automation.apps.Rooms.LivingRoom;
 
@@ -24,21 +25,17 @@ public class LivingRoomLights : BaseApp
         {
             if (Entities.Light.HueFilamentBulb2.IsOff())
             {
-                Entities.Light.HueFilamentBulb2.TurnOn(brightnessPct: 100, colorTemp: 222);
+                Entities.Light.HueFilamentBulb2.TurnOn(brightnessPct: 100, colorTemp: GetColorTemp());
                 Entities.Light.HueFilamentBulb2
                     .StateChanges()
                     .Where(x => x.Old.IsOff())
                     .Throttle(TimeSpan.FromMilliseconds(50))
-                    .Subscribe(_ => { Entities.Light.PlafondWoonkamer.TurnOn(brightnessPct: 100, colorTemp: 222); });
+                    .Subscribe(_ => { Entities.Light.PlafondWoonkamer.TurnOn(brightnessPct: 100, colorTemp: GetColorTemp()); });
                 Entities.Light.PlafondWoonkamer
                     .StateChanges()
                     .Where(x => x.Old.IsOff())
                     .Throttle(TimeSpan.FromMilliseconds(50))
-                    .Subscribe(_ => { Entities.Light.HueFilamentBulb1.TurnOn(brightnessPct: 100, colorTemp: 222); });
-                
-                Thread.Sleep(TimeSpan.FromMilliseconds(2500));
-                //backup when PlafondWoonkamer was already on
-                Entities.Light.HueFilamentBulb1.TurnOn(brightnessPct: 100, colorTemp: 222);
+                    .Subscribe(_ => { Entities.Light.HueFilamentBulb1.TurnOn(brightnessPct: 100, colorTemp: GetColorTemp()); });
             }
             else
             {
@@ -59,5 +56,17 @@ public class LivingRoomLights : BaseApp
                 Entities.Light.HueFilamentBulb2.TurnOff();
             }
         }
+    }
+
+    private int GetColorTemp()
+    {
+        var houseState = Globals.GetHouseState(Entities);
+
+        return houseState switch
+        {
+            HouseStateEnum.Day or HouseStateEnum.Morning   => 150,
+            HouseStateEnum.Evening or HouseStateEnum.Night => 450,
+            _                                              => 150
+        };
     }
 }
