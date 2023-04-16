@@ -89,16 +89,16 @@ public class AwayManager : BaseApp
             switch (houseState)
             {
                 case HouseStateEnum.Morning:
-                    Entities.Scene.WoonkamerMorning.TurnOn();
+                    Entities.Scene.Woonkamermorning.TurnOn();
                     break;
                 case HouseStateEnum.Day:
-                    Entities.Scene.WoonkamerDay.TurnOn();
+                    Entities.Scene.Woonkamerday.TurnOn();
                     break;
                 case HouseStateEnum.Evening:
-                    Entities.Scene.WoonkamerEvening.TurnOn();
+                    Entities.Scene.Woonkamerevening.TurnOn();
                     break;
                 case HouseStateEnum.Night:
-                    Entities.Scene.WoonkamerNight.TurnOn();
+                    Entities.Scene.Woonkamernight.TurnOn();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

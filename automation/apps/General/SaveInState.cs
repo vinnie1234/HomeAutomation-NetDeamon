@@ -65,11 +65,6 @@ public class SaveInState : BaseApp
     // ReSharper disable once SuggestBaseTypeForParameter
     private void SetLightEntityState(LightEntity entity)
     {
-        if (entity.Attributes?.HueType == "room")
-        {
-            return;
-        }
-
         var oldEntity = LightEntitiesStates.FirstOrDefault(x => x.EntityId == entity.EntityId);
         if (oldEntity != null)
         {
