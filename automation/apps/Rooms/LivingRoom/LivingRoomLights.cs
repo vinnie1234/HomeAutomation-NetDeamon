@@ -25,17 +25,17 @@ public class LivingRoomLights : BaseApp
         {
             if (Entities.Light.HueFilamentBulb2.IsOff())
             {
-                Entities.Light.HueFilamentBulb2.TurnOn(brightnessPct: 100, colorTemp: GetColorTemp());
+                Entities.Light.HueFilamentBulb2.TurnOn(brightnessPct: 100, kelvin: GetColorTemp());
                 Entities.Light.HueFilamentBulb2
                     .StateChanges()
                     .Where(x => x.Old.IsOff())
                     .Throttle(TimeSpan.FromMilliseconds(50))
-                    .Subscribe(_ => { Entities.Light.PlafondWoonkamer.TurnOn(brightnessPct: 100, colorTemp: GetColorTemp()); });
+                    .Subscribe(_ => { Entities.Light.PlafondWoonkamer.TurnOn(brightnessPct: 100, kelvin: GetColorTemp()); });
                 Entities.Light.PlafondWoonkamer
                     .StateChanges()
                     .Where(x => x.Old.IsOff())
                     .Throttle(TimeSpan.FromMilliseconds(50))
-                    .Subscribe(_ => { Entities.Light.HueFilamentBulb1.TurnOn(brightnessPct: 100, colorTemp: GetColorTemp()); });
+                    .Subscribe(_ => { Entities.Light.HueFilamentBulb1.TurnOn(brightnessPct: 100, kelvin: GetColorTemp()); });
             }
             else
             {
@@ -64,8 +64,8 @@ public class LivingRoomLights : BaseApp
 
         return houseState switch
         {
-            HouseStateEnum.Day or HouseStateEnum.Morning   => 150,
-            HouseStateEnum.Evening or HouseStateEnum.Night => 450,
+            HouseStateEnum.Day or HouseStateEnum.Morning   => 4504,
+            HouseStateEnum.Evening or HouseStateEnum.Night => 2300,
             _                                              => 150
         };
     }
