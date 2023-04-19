@@ -24,13 +24,13 @@ public class Alarm : BaseApp
 
     private void TemperatureCheck()
     {
-        foreach (var battySensor in Collections.GetAllBattySensors(Entities))
+        foreach (var temperatureSensor in Collections.GetAllTemperatureSensors(Entities))
         {
-            battySensor.Key
+            temperatureSensor.Key
                 .StateChanges()
                 .Where(x => x.Entity.State > 25 && !IsSleeping)
                 .Subscribe(x => Notify.NotifyGsmVincent("High Temperature detected",
-                    @$"{battySensor.Value} is {x.Entity.State} graden", channel: "ALARM",
+                    @$"{temperatureSensor.Value} is {x.Entity.State} graden", channel: "ALARM",
                     vibrationPattern: "100, 1000, 100, 1000, 100", ledColor: "red"));
         }
     }
