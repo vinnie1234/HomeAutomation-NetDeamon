@@ -5,19 +5,9 @@ namespace Automation.apps.General;
 [NetDaemonApp(Id = nameof(Cat))]
 public class Cat : BaseApp
 {
-    private readonly Dictionary<InputDatetimeEntity, InputNumberEntity> _feedDictionary;
-    
     public Cat(IHaContext haContext, ILogger<Cat> logger, INotify notify, INetDaemonScheduler scheduler)
         : base(haContext, logger, notify, scheduler)
     {
-        _feedDictionary = new Dictionary<InputDatetimeEntity, InputNumberEntity>
-        {
-            { Entities.InputDatetime.Zedarfeedfirsttime, Entities.InputNumber.Zedarfeedfirstamound },
-            { Entities.InputDatetime.Zedarfeedsecondtime, Entities.InputNumber.Zedarfeedsecondamound },
-            { Entities.InputDatetime.Zedarfeedthirdtime, Entities.InputNumber.Zedarfeedthirdamound },
-            { Entities.InputDatetime.Zedarfeedfourthtime, Entities.InputNumber.Zedarfeedfourthamound }
-        };
-
         Entities.InputButton.Feedcat.StateChanges()
             .Subscribe(_ =>
             {
@@ -67,7 +57,7 @@ public class Cat : BaseApp
     private void AutoFeedCat()
     {
         foreach (var autoFeed in
-                 _feedDictionary.Where(autoFeed => autoFeed.Key.State != null))
+                 Collections.GetFeedTimes(Entities).Where(autoFeed => autoFeed.Key.State != null))
         {
             Scheduler.RunDaily(TimeSpan.Parse(autoFeed.Key.State!), () =>
             {
@@ -89,7 +79,7 @@ public class Cat : BaseApp
 
     private void GiveNextFeedEarly()
     {
-        var closestFeed = _feedDictionary.MinBy(t =>
+        var closestFeed = Collections.GetFeedTimes(Entities).MinBy(t =>
             Math.Abs((DateTime.Parse(t.Key.State!) - DateTime.Now).Ticks));
 
         Entities.InputBoolean.Zedarskipnextautofeed.TurnOn();

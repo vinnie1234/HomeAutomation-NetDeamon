@@ -1,3 +1,5 @@
+using Automation.Helpers;
+
 namespace Automation.apps.General;
 
 [NetDaemonApp(Id = nameof(Alarm))]
@@ -22,24 +24,15 @@ public class Alarm : BaseApp
 
     private void TemperatureCheck()
     {
-        Entities.Sensor.BadkamerTemperature
-            .StateChanges()
-            .Where(x => x.Entity.State > 25 && !IsSleeping)
-            .Subscribe(x => Notify.NotifyGsmVincent("High Temperature detected",
-                @$"Badkamer is {x.Entity.State} graden", channel: "ALARM",
-                vibrationPattern: "100, 1000, 100, 1000, 100", ledColor: "red"));
-
-        Entities.Sensor.BergingTemperature
-            .StateChanges()
-            .Where(x => x.Entity.State > 25 && !IsSleeping)
-            .Subscribe(x => Notify.NotifyGsmVincent("High Temperature detected", @$"Berging is {x.Entity.State} graden",
-                channel: "ALARM", vibrationPattern: "100, 1000, 100, 1000, 100", ledColor: "red"));
-
-        Entities.Sensor.GangTemperature
-            .StateChanges()
-            .Where(x => x.Entity.State > 25 && !IsSleeping)
-            .Subscribe(x => Notify.NotifyGsmVincent("High Temperature detected", @$"Gang is {x.Entity.State} graden",
-                channel: "ALARM", vibrationPattern: "100, 1000, 100, 1000, 100", ledColor: "red"));
+        foreach (var battySensor in Collections.GetAllBattySensors(Entities))
+        {
+            battySensor.Key
+                .StateChanges()
+                .Where(x => x.Entity.State > 25 && !IsSleeping)
+                .Subscribe(x => Notify.NotifyGsmVincent("High Temperature detected",
+                    @$"{battySensor.Value} is {x.Entity.State} graden", channel: "ALARM",
+                    vibrationPattern: "100, 1000, 100, 1000, 100", ledColor: "red"));
+        }
     }
 
     private void EnergyCheck()
