@@ -1,88 +1,21 @@
 namespace Automation.apps.General;
 
 [NetDaemonApp(Id = nameof(BatteryMonitoring))]
-// ReSharper disable once UnusedType.Global
 public class BatteryMonitoring : BaseApp
 {
     private const int BatteryWarningLevel = 20;
-    
-    public BatteryMonitoring(IHaContext ha, ILogger<BatteryMonitoring> logger, INotify notify)
-        : base(ha, logger, notify)
+
+    public BatteryMonitoring(IHaContext ha, ILogger<BatteryMonitoring> logger, INotify notify,
+        INetDaemonScheduler scheduler)
+        : base(ha, logger, notify, scheduler)
     {
-        Entities.Sensor.BadkamerBattery
-            .StateChanges()
-            .Where(x => x.Entity.State is <= BatteryWarningLevel)
-            .Subscribe(x => SendNotification(@"Wall switch Badkamer", x.Entity.State));
-
-        Entities.Sensor.BadkamerBattery2
-            .StateChanges()
-            .Where(x => x.Entity.State is <= BatteryWarningLevel)
-            .Subscribe(x => SendNotification(@"Hue switch Badkamer", x.Entity.State));
-
-        Entities.Sensor.BadkamermotionBattery
-            .StateChanges()
-            .Where(x => x.Entity.State is <= BatteryWarningLevel)
-            .Subscribe(x => SendNotification(@"Motion Detector Badkamer", x.Entity.State));
-
-        Entities.Sensor.SwitchBadkamerSpiegelBattery
-            .StateChanges()
-            .Where(x => x.Entity.State is <= BatteryWarningLevel)
-            .Subscribe(x => SendNotification(@"Hue switch Badkamerspiegel", x.Entity.State));
-
-        Entities.Sensor.GangBattery
-            .StateChanges()
-            .Where(x => x.Entity.State is <= BatteryWarningLevel)
-            .Subscribe(x => SendNotification(@"Motion Detector Gang", x.Entity.State));
-
-        Entities.Sensor.GangBattery2
-            .StateChanges()
-            .Where(x => x.Entity.State is <= BatteryWarningLevel)
-            .Subscribe(x => SendNotification(@"Hue switch switch Gang", x.Entity.State));
-
-        Entities.Sensor.HalBattery
-            .StateChanges()
-            .Where(x => x.Entity.State is <= BatteryWarningLevel)
-            .Subscribe(x => SendNotification(@"Wall switch switch Gang", x.Entity.State));
-
-        Entities.Sensor.BergingBattery
-            .StateChanges()
-            .Where(x => x.Entity.State is <= BatteryWarningLevel)
-            .Subscribe(x => SendNotification(@"Motion Detector Berging", x.Entity.State));
-
-        Entities.Sensor.WoonkamerBattery
-            .StateChanges()
-            .Where(x => x.Entity.State is <= BatteryWarningLevel)
-            .Subscribe(x => SendNotification(@"Hue switch woonkamer", x.Entity.State));
-
-        Entities.Sensor.WoonkamerBattery2
-            .StateChanges()
-            .Where(x => x.Entity.State is <= BatteryWarningLevel)
-            .Subscribe(x => SendNotification(@"Wall switch Woonkamer", x.Entity.State));
-
-        Entities.Sensor.SlaapkamerBattery
-            .StateChanges()
-            .Where(x => x.Entity.State is <= BatteryWarningLevel)
-            .Subscribe(x => SendNotification(@"Wall switch Slaapkamer", x.Entity.State));
-
-        Entities.Sensor.SwitchBadkamerSpiegelBattery
-            .StateChanges()
-            .Where(x => x.Entity.State is <= BatteryWarningLevel)
-            .Subscribe(x => SendNotification(@"Wall switch Badkamer", x.Entity.State));
-
-        Entities.Sensor.Rollerblind0001Battery
-            .StateChanges()
-            .Where(x => x.Entity.State is <= BatteryWarningLevel)
-            .Subscribe(x => SendNotification(@"Rolluik Slaapkamer", x.Entity.State));
-
-        Entities.Sensor.BotA801Battery
-            .StateChanges()
-            .Where(x => x.Entity.State is <= BatteryWarningLevel)
-            .Subscribe(x => SendNotification(@"Switchbot", x.Entity.State));        
-        
-        Entities.Sensor.KeukenAfstandbediening
-            .StateChanges()
-            .Where(x => x.Entity.State is <= BatteryWarningLevel)
-            .Subscribe(x => SendNotification(@"Keuken afstandbediening", x.Entity.State));
+        foreach (var battySensor in GetAllBattySensors())
+        {
+            battySensor.Key
+                .StateChanges()
+                .Where(x => x.Entity.State is <= BatteryWarningLevel)
+                .Subscribe(x => SendNotification(battySensor.Value, x.Entity.State));
+        }
 
         //todo temp disabled
         /*Entities.Sensor.JaapBatteryLevel
@@ -106,5 +39,28 @@ public class BatteryMonitoring : BaseApp
                     Uri = "https://vincent-huis.duckdns.org/status-huis"
                 }
             });
+    }
+
+    private Dictionary<NumericSensorEntity, string> GetAllBattySensors()
+    {
+        return new Dictionary<NumericSensorEntity, string>
+        {
+            { Entities.Sensor.BadkamerBattery, @"Wall switch Badkamer" },
+            { Entities.Sensor.BadkamerBattery2, @"Hue switch Badkamer" },
+            { Entities.Sensor.BadkamermotionBattery, @"Motion Detector Badkamer" },
+            { Entities.Sensor.SwitchBadkamerSpiegelBattery, @"Hue switch Badkamerspiegel" },
+            { Entities.Sensor.GangBattery, "Motion Detector Gang" },
+            { Entities.Sensor.GangBattery2, "Hue switch switch Gang" },
+            { Entities.Sensor.HalBattery, "Wall switch switch Gang" },
+            { Entities.Sensor.BergingBattery, @"Motion Detector Berging" },
+            { Entities.Sensor.WoonkamerBattery, @"Hue switch woonkamer" },
+            { Entities.Sensor.WoonkamerBattery2, @"Wall switch Woonkamer" },
+            { Entities.Sensor.SlaapkamerBattery, @"Wall switch Slaapkamer" },
+            { Entities.Sensor.SwitchBadkamerSpiegelBattery, @"Wall switch Badkamer" },
+            { Entities.Sensor.Rollerblind0001Battery, @"Rolluik Slaapkamer" },
+            { Entities.Sensor.BotA801Battery, @"Switchbot" },
+            { Entities.Sensor.KeukenAfstandbediening, @"Keuken afstandbediening" },
+            //{Entities.Sensor.JaapBatteryLevel, "Jaap"},
+        };
     }
 }

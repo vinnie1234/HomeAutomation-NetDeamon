@@ -1,15 +1,14 @@
 namespace Automation.apps.General;
 
 [NetDaemonApp(Id = nameof(Reset))]
-// ReSharper disable once UnusedType.Global
 public class Reset : BaseApp
 {
     private readonly IDataRepository _storage;
 
     private List<LightStateModel>? LightEntitiesStates { get; set; }
 
-    public Reset(IHaContext ha, ILogger<Reset> logger, IDataRepository storage, INotify notify)
-        : base(ha, logger, notify)
+    public Reset(IHaContext ha, ILogger<Reset> logger, IDataRepository storage, INotify notify, INetDaemonScheduler scheduler)
+        : base(ha, logger, notify, scheduler)
     {
         _storage = storage;
         LightEntitiesStates = new List<LightStateModel>();

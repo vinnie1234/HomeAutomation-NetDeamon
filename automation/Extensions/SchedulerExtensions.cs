@@ -1,5 +1,3 @@
-using NetDaemon.Extensions.Scheduler;
-
 namespace Automation.Extensions;
 
 public static class SchedulerExtensions

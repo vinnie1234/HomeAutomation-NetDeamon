@@ -1,14 +1,12 @@
 namespace Automation.apps.Rooms.LivingRoom;
 
 [NetDaemonApp(Id = nameof(Gaming))]
-// ReSharper disable once UnusedType.Global
-// ReSharper disable once ClassNeverInstantiated.Global
 public class Gaming : BaseApp
 {
     private bool DisableLightAutomations => Entities.InputBoolean.Disablelightautomationlivingroom.IsOn();
     
-    public Gaming(IHaContext ha, ILogger<Gaming> logger, INotify notify)
-        : base(ha, logger, notify)
+    public Gaming(IHaContext ha, ILogger<Gaming> logger, INotify notify, INetDaemonScheduler scheduler)
+        : base(ha, logger, notify, scheduler)
     {
         Entities.DeviceTracker.Sony.WhenTurnsOn(_ => GameSetUp());
     }

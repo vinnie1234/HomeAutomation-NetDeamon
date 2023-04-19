@@ -6,8 +6,8 @@ namespace Automation.apps.General;
 public class TestApp : BaseApp
 {
     // ReSharper disable once SuggestBaseTypeForParameterInConstructor
-    public TestApp(IHaContext ha, ILogger<TestApp> logger, INotify notify)
-        : base(ha, logger, notify)
+    public TestApp(IHaContext ha, ILogger<TestApp> logger, INotify notify, INetDaemonScheduler scheduler)
+        : base(ha, logger, notify, scheduler)
     {
         Notify.NotifyHouse("test");
     }

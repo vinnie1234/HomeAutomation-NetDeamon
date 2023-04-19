@@ -1,19 +1,15 @@
 using Automation.Helpers;
-using NetDaemon.Extensions.Scheduler;
 
 namespace Automation.apps.General;
 
 [NetDaemonApp(Id = nameof(Cat))]
-// ReSharper disable once UnusedType.Global
 public class Cat : BaseApp
 {
-    private readonly INetDaemonScheduler _scheduler;
     private readonly Dictionary<InputDatetimeEntity, InputNumberEntity> _feedDictionary;
     
     public Cat(IHaContext haContext, ILogger<Cat> logger, INotify notify, INetDaemonScheduler scheduler)
-        : base(haContext, logger, notify)
+        : base(haContext, logger, notify, scheduler)
     {
-        _scheduler = scheduler;
         _feedDictionary = new Dictionary<InputDatetimeEntity, InputNumberEntity>
         {
             { Entities.InputDatetime.Zedarfeedfirsttime, Entities.InputNumber.Zedarfeedfirstamound },
@@ -65,7 +61,7 @@ public class Cat : BaseApp
                 Notify.NotifyGsmVincent(@"Pixel heeft automatisch eten gehad",
                     @$"Pixel heeft {Entities.InputNumber.Zedarlastamountautomationfeed.State} porties eten gehad"));
 
-        _scheduler.RunDaily(TimeSpan.Parse("23:59:58"), () => Entities.InputNumber.Zedartotalamountfeedday.SetValue(0));
+        Scheduler.RunDaily(TimeSpan.Parse("23:59:58"), () => Entities.InputNumber.Zedartotalamountfeedday.SetValue(0));
     }
 
     private void AutoFeedCat()
@@ -73,7 +69,7 @@ public class Cat : BaseApp
         foreach (var autoFeed in
                  _feedDictionary.Where(autoFeed => autoFeed.Key.State != null))
         {
-            _scheduler.RunDaily(TimeSpan.Parse(autoFeed.Key.State!), () =>
+            Scheduler.RunDaily(TimeSpan.Parse(autoFeed.Key.State!), () =>
             {
                 if (Entities.InputBoolean.Zedarskipnextautofeed.IsOff())
                 {

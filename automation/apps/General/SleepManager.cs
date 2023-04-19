@@ -1,21 +1,19 @@
 using System.Collections;
-using NetDaemon.Extensions.Scheduler;
 
 namespace Automation.apps.General;
 
 [NetDaemonApp(Id = nameof(SleepManager))]
-// ReSharper disable once UnusedType.Global
 public class SleepManager : BaseApp
 {
     private bool DisableLightAutomations => Entities.InputBoolean.Disablelightautomationgeneral.IsOn();
 
-    public SleepManager(IHaContext ha, ILogger<SleepManager> logger, INetDaemonScheduler scheduler, INotify notify)
-        : base(ha, logger, notify)
+    public SleepManager(IHaContext ha, ILogger<SleepManager> logger, INotify notify, INetDaemonScheduler scheduler)
+        : base(ha, logger, notify, scheduler)
     {
         Entities.InputBoolean.Sleeping.WhenTurnsOff(_ => WakeUp());
         Entities.InputBoolean.Sleeping.WhenTurnsOn(_ => Sleeping());
 
-        scheduler.RunDaily(TimeSpan.Parse("10:00:00"), () =>
+        Scheduler.RunDaily(TimeSpan.Parse("10:00:00"), () =>
         {
             if (!((IList)Globals.WeekendDays).Contains(DateTime.Now.DayOfWeek))
             {

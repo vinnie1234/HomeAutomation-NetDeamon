@@ -1,15 +1,14 @@
 namespace Automation.apps.Rooms.Hall;
 
 [NetDaemonApp(Id = nameof(HallLightOnMovement))]
-// ReSharper disable once UnusedType.Global
 public class HallLightOnMovement : BaseApp
 {
     private bool IsNighttime => Entities.InputSelect.Housemodeselect.State == "Night";
     private bool IsSleeping => Entities.InputBoolean.Sleeping.IsOn();
     private bool DisableLightAutomations => Entities.InputBoolean.Disablelightautomationhall.IsOn();
     
-    public HallLightOnMovement(IHaContext ha, ILogger<HallLightOnMovement> logger, INotify notify)
-        : base(ha, logger, notify)
+    public HallLightOnMovement(IHaContext ha, ILogger<HallLightOnMovement> logger, INotify notify, INetDaemonScheduler scheduler)
+        : base(ha, logger, notify, scheduler)
     {
         InitializeDayLights();
     }

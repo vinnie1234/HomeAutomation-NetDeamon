@@ -53,4 +53,9 @@ public static class Globals
             _         => HouseStateEnum.Day
         };
     }
+    
+    public static bool AmIHomeCheck(Entities entities)
+    {
+        return entities.Person.VincentMaarschalkerweerd.State != "home";
+    }
 }

@@ -1,17 +1,15 @@
 using System.Collections;
-using System.Threading;
 using Automation.Enum;
 
 namespace Automation.apps.General;
 
 [NetDaemonApp(Id = nameof(AwayManager))]
-// ReSharper disable once UnusedType.Global
 public class AwayManager : BaseApp
 {
     private bool _backHome;
     
-    public AwayManager(IHaContext ha, ILogger<AwayManager> logger, INotify notify)
-        : base(ha, logger, notify)
+    public AwayManager(IHaContext ha, ILogger<AwayManager> logger, INotify notify, INetDaemonScheduler scheduler)
+        : base(ha, logger, notify, scheduler)
     {
         Entities.InputBoolean.Away.WhenTurnsOn(_ => AwayHandler());
         Entities.InputBoolean.Away.WhenTurnsOff(_ => { _backHome = true; });
@@ -102,16 +100,18 @@ public class AwayManager : BaseApp
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            
-            Thread.Sleep(15000);
-            var message = @"Welkom thuis Vincent!";
-            if (Entities.BinarySensor.ZedarFeedContainer.IsOff())
-                message += @" Het eten van de Pixel is bijna op!";
-            
-            Notify.NotifyHouse(message);
-        }
 
-        _backHome = false;
+            _backHome = false;
+            
+            Scheduler.RunIn(TimeSpan.FromSeconds(15), () =>
+            {
+                var message = @"Welkom thuis Vincent!";
+                if (Entities.BinarySensor.ZedarFeedContainer.IsOff())
+                    message += @" Het eten van de Pixel is bijna op!";
+
+                Notify.NotifyHouse(message);
+            });
+        }
     }
 
     // ReSharper disable once UnusedMember.Local

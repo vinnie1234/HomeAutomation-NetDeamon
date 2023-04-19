@@ -1,13 +1,12 @@
 namespace Automation.apps.General;
 
 [NetDaemonApp(Id = nameof(SaveInState))]
-// ReSharper disable once UnusedType.Global
 public class SaveInState : BaseApp
 {
     private readonly IDataRepository _storage;
 
-    public SaveInState(IHaContext ha, ILogger<SaveInState> logger, IDataRepository storage, INotify notify)
-        : base(ha, logger, notify)
+    public SaveInState(IHaContext ha, ILogger<SaveInState> logger, IDataRepository storage, INotify notify, INetDaemonScheduler scheduler)
+        : base(ha, logger, notify, scheduler)
     {
         _storage = storage;
         LightEntitiesStates = new List<LightStateModel>();

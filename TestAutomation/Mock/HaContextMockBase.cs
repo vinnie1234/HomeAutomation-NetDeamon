@@ -8,16 +8,16 @@ namespace TestAutomation.Mock;
 
 public class HaContextMockBase : IHaContext, IHaContextMock
 {
-    public Dictionary<string, EntityState> _entityStates { get; } = new();
-    public Subject<StateChange> StateAllChangeSubject { get; } = new();
-    public Subject<Event> EventsSubject { get; } = new();
+    private Dictionary<string, EntityState> EntityStates { get; } = new();
+    private Subject<StateChange> StateAllChangeSubject { get; } = new();
+    private Subject<Event> EventsSubject { get; } = new();
 
     public IObservable<StateChange> StateAllChanges() => StateAllChangeSubject;
 
     public EntityState? GetState(string entityId) =>
-        _entityStates.TryGetValue(entityId, out var result) ? result : null;
+        EntityStates.TryGetValue(entityId, out var result) ? result : null;
 
-    public IReadOnlyList<Entity> GetAllEntities() => _entityStates.Keys.Select(s => new Entity(this, s)).ToList();
+    public IReadOnlyList<Entity> GetAllEntities() => EntityStates.Keys.Select(s => new Entity(this, s)).ToList();
 
     public virtual void CallService(string domain, string service, ServiceTarget? target = null, object? data = null)
     {
@@ -44,8 +44,8 @@ public class HaContextMockBase : IHaContext, IHaContextMock
 
     public void TriggerStateChange(string entityId, EntityState newState)
     {
-        var oldState = _entityStates.TryGetValue(entityId, out var current) ? current : null;
-        _entityStates[entityId] = newState;
+        var oldState = EntityStates.TryGetValue(entityId, out var current) ? current : null;
+        EntityStates[entityId] = newState;
         StateAllChangeSubject.OnNext(new StateChange(new Entity(this, entityId), oldState, newState));
     }
 
@@ -76,7 +76,7 @@ public static class TestExtensions
         return copy;
     }
 
-    public static JsonElement AsJsonElement(this object value)
+    private static JsonElement AsJsonElement(this object value)
     {
         var jsonString = JsonSerializer.Serialize(value);
         return JsonSerializer.Deserialize<JsonElement>(jsonString);

@@ -1,34 +1,23 @@
-using NetDaemon.Extensions.Scheduler;
-
 namespace Automation.apps.General;
 
 [NetDaemonApp(Id = nameof(Alarm))]
-// ReSharper disable once UnusedType.Global
 public class Alarm : BaseApp
 {
-    private readonly INetDaemonScheduler _scheduler;
     private bool IsSleeping => Entities.InputBoolean.Sleeping.IsOn();
     
-    public Alarm(IHaContext ha, ILogger<Alarm> logger, INetDaemonScheduler scheduler, INotify notify)
-        : base(ha, logger, notify)
+    public Alarm(IHaContext ha, ILogger<Alarm> logger, INotify notify, INetDaemonScheduler scheduler)
+        : base(ha, logger, notify, scheduler)
     {
-        _scheduler = scheduler;
-
         TemperatureCheck();
         EnergyCheck();
         GarbageCheck();
 
         Entities.BinarySensor.GangMotion.WhenTurnsOn(_ =>
         {
-            if (AmIHomeCheck())
+            if (Globals.AmIHomeCheck(Entities))
                 Notify.NotifyGsmVincent("ALARM", "Motion detected", channel: "ALARM",
                     vibrationPattern: "100, 1000, 100, 1000, 100", ledColor: "red");
         });
-    }
-
-    private bool AmIHomeCheck()
-    {
-        return Entities.Person.VincentMaarschalkerweerd.State != "home";
     }
 
     private void TemperatureCheck()
@@ -78,7 +67,7 @@ public class Alarm : BaseApp
 
     private void GarbageCheck()
     {
-        _scheduler.RunDaily(TimeSpan.Parse("22:00:00"), () =>
+        Scheduler.RunDaily(TimeSpan.Parse("22:00:00"), () =>
         {
             var message = Entities.Sensor.AfvalMorgen.State;
             if (message != @"Geen")

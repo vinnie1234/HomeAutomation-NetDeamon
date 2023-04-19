@@ -1,18 +1,11 @@
-using NetDaemon.Extensions.Scheduler;
-
 namespace Automation.apps.General;
 
 [NetDaemonApp(Id = nameof(HolidayManager))]
-// ReSharper disable once UnusedType.Global
 public class HolidayManager : BaseApp
 {
-    private readonly INetDaemonScheduler _scheduler;
-    
-    public HolidayManager(IHaContext ha, ILogger<HolidayManager> logger, INetDaemonScheduler scheduler, INotify notify)
-        : base(ha, logger, notify)
+    public HolidayManager(IHaContext ha, ILogger<HolidayManager> logger, INotify notify, INetDaemonScheduler scheduler)
+        : base(ha, logger, notify, scheduler)
     {
-        _scheduler = scheduler;
-
         Entities.InputBoolean.Holliday.StateChanges().Where(x => x.Entity.IsOn()).Subscribe(_ => SetHoliday());
         Entities.InputBoolean.Holliday.StateChanges().Where(x => x.Entity.IsOff()).Subscribe(_ => SetEndHoliday());
 
@@ -21,7 +14,7 @@ public class HolidayManager : BaseApp
 
     private void SetHoliday()
     {
-        if (Entities.Sensor.HubVincentAlarms.Attributes is { NextAlarmStatus: "set", Alarms: { } })
+        if (Entities.Sensor.HubVincentAlarms.Attributes is { NextAlarmStatus: "set", Alarms: not null })
         {
             var alarmList = new List<AlarmStateModel>();
             var jsonList = Entities.Sensor.HubVincentAlarms.Attributes.Alarms;
@@ -48,7 +41,7 @@ public class HolidayManager : BaseApp
 
     private void CheckCalenderForHoliday()
     {
-        _scheduler.RunDaily(TimeSpan.Parse("00:00:00"), () =>
+        Scheduler.RunDaily(TimeSpan.Parse("00:00:00"), () =>
         {
             Logger.LogDebug(@"Check calender for the word 'vrij'");
             if (Entities.Calendar.VincentmaarschalkerweerdGmailCom.Attributes?.Description?.ToLower()

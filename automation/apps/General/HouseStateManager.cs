@@ -1,15 +1,10 @@
 using System.Collections;
 using Automation.Enum;
-using NetDaemon.Extensions.Scheduler;
 using Newtonsoft.Json;
 
 namespace Automation.apps.General;
 
-/// <summary>
-///     Manage state of morning, house, day, evening, night and cleaning
-/// </summary>
 [NetDaemonApp(Id = nameof(HouseStateManager))]
-// ReSharper disable once UnusedType.Global
 public class HouseStateManager : BaseApp
 {
     private TimeSpan _nighttimeWeekdays;
@@ -19,14 +14,11 @@ public class HouseStateManager : BaseApp
     private TimeSpan _daytimeOffice;
     private readonly TimeSpan _startWorking = TimeSpan.Parse("08:30:00");
     private readonly TimeSpan _endWorking = TimeSpan.Parse("17:00:00");
-    private readonly INetDaemonScheduler _scheduler;
-    
-    public HouseStateManager(IHaContext ha, INetDaemonScheduler scheduler, ILogger<HouseStateManager> logger,
-        INotify notify)
-        : base(ha, logger, notify)
-    {
-        _scheduler = scheduler;
 
+    public HouseStateManager(IHaContext ha, ILogger<HouseStateManager> logger,
+        INotify notify, INetDaemonScheduler scheduler)
+        : base(ha, logger, notify, scheduler)
+    {
         SetSleepingOffFromAlarm();
         SetTimes();
         SetDayTime();
@@ -67,7 +59,7 @@ public class HouseStateManager : BaseApp
 
     private void SetSleepingOffFromAlarm()
     {
-        _scheduler.RunDaily(TimeSpan.Parse("00:00:00"), () =>
+        Scheduler.RunDaily(TimeSpan.Parse("00:00:00"), () =>
         {
             var alarmsHubJson = JsonConvert.SerializeObject(Entities.Sensor.HubVincentAlarms.Attributes?.Alarms);
             var alarmsHub = JsonConvert.DeserializeObject<List<AlarmStateModel>>(alarmsHubJson);
@@ -76,8 +68,8 @@ public class HouseStateManager : BaseApp
                     !string.IsNullOrEmpty(x.LocalTime) &&
                     DateTimeOffset.Parse(x.LocalTime).Date == DateTimeOffset.Now.Date);
 
-            if (alarmToday is { LocalTime: { } })
-                _scheduler.RunOnce(DateTimeOffset.Parse(alarmToday.LocalTime), () =>
+            if (alarmToday is { LocalTime: not null })
+                Scheduler.RunOnce(DateTimeOffset.Parse(alarmToday.LocalTime), () =>
                 {
                     Logger.LogDebug(@"Setting schedular for {Time}. Sleeping off from alarm",
                         alarmToday.LocalTime);
@@ -88,7 +80,7 @@ public class HouseStateManager : BaseApp
 
     private void SetWorking()
     {
-        _scheduler.RunDaily(_startWorking, () =>
+        Scheduler.RunDaily(_startWorking, () =>
         {
             if (((IList)Globals.OfficeDays).Contains(DateTime.Now.DayOfWeek) ||
                 ((IList)Globals.HomeWorkDays).Contains(DateTime.Now.DayOfWeek) &&
@@ -98,7 +90,7 @@ public class HouseStateManager : BaseApp
             }
         });
 
-        _scheduler.RunDaily(_endWorking, () =>
+        Scheduler.RunDaily(_endWorking, () =>
         {
             if (((IList)Globals.OfficeDays).Contains(DateTime.Now.DayOfWeek) ||
                 ((IList)Globals.HomeWorkDays).Contains(DateTime.Now.DayOfWeek) &&
@@ -111,19 +103,19 @@ public class HouseStateManager : BaseApp
 
     private void SetDayTime()
     {
-        _scheduler.RunDaily(_daytimeOffice, () =>
+        Scheduler.RunDaily(_daytimeOffice, () =>
         {
             if (((IList)Globals.OfficeDays).Contains(DateTime.Now.DayOfWeek) && Entities.InputBoolean.Holliday.IsOff())
                 SetHouseState(HouseStateEnum.Day);
         });
-        _scheduler.RunDaily(_daytimeHomeWork, () =>
+        Scheduler.RunDaily(_daytimeHomeWork, () =>
         {
             if (((IList)Globals.HomeWorkDays).Contains(DateTime.Now.DayOfWeek) &&
                 Entities.InputBoolean.Holliday.IsOff())
                 SetHouseState(HouseStateEnum.Day);
         });
 
-        _scheduler.RunDaily(_daytimeWeekend, () =>
+        Scheduler.RunDaily(_daytimeWeekend, () =>
         {
             if (((IList)Globals.WeekendDays).Contains(DateTime.Now.DayOfWeek) || Entities.InputBoolean.Holliday.IsOn())
                 SetHouseState(HouseStateEnum.Day);
@@ -136,13 +128,13 @@ public class HouseStateManager : BaseApp
     private void SetNightTime()
     {
         Entities.InputBoolean.Sleeping.WhenTurnsOn(_ => SetHouseState(HouseStateEnum.Night));
-        _scheduler.RunDaily(_nighttimeWeekdays, () =>
+        Scheduler.RunDaily(_nighttimeWeekdays, () =>
         {
             if (((IList)Globals.WeekdayNightDays).Contains(DateTime.Now.DayOfWeek))
                 SetHouseState(HouseStateEnum.Night);
         });
 
-        _scheduler.RunDaily(_nighttimeWeekends, () =>
+        Scheduler.RunDaily(_nighttimeWeekends, () =>
         {
             if (((IList)Globals.WeekendNightDays).Contains(DateTime.Now.DayOfWeek))
                 SetHouseState(HouseStateEnum.Night);

@@ -1,19 +1,16 @@
+using Automation.Enum;
+
 namespace Automation.apps.Rooms.LivingRoom;
 
 [NetDaemonApp(Id = nameof(Tv))]
-// ReSharper disable once UnusedType.Global
 public class Tv : BaseApp
 {
-    private bool IsMorningTime => Entities.InputSelect.Housemodeselect.State == "Morning";
-    private bool IsDayTime => Entities.InputSelect.Housemodeselect.State == "Day";
-    private bool IsEveningTime => Entities.InputSelect.Housemodeselect.State == "Evening";
-    private bool IsNightTime => Entities.InputSelect.Housemodeselect.State == "Night";
     private bool IsWorking => Entities.InputBoolean.Working.IsOn();
 
     private bool DisableLightAutomations => Entities.InputBoolean.Disablelightautomationlivingroom.IsOn();
     
-    public Tv(IHaContext ha, ILogger<Tv> logger, INotify notify)
-        : base(ha, logger, notify)
+    public Tv(IHaContext ha, ILogger<Tv> logger, INotify notify, INetDaemonScheduler scheduler)
+        : base(ha, logger, notify, scheduler)
     {
         Entities.MediaPlayer.Tv.WhenTurnsOn(_ => MovieTime());
         Entities.MediaPlayer.Tv.WhenTurnsOff(_ => LetThereBeLight());
@@ -24,15 +21,25 @@ public class Tv : BaseApp
         Logger.LogDebug("TV Turned off");
         if (!DisableLightAutomations)
         {
-            if (IsMorningTime)
-                Entities.Scene.Woonkamermorning.TurnOn();
-            if (IsDayTime)
-                Entities.Scene.Woonkamerday.TurnOn();
-            if (IsEveningTime)
-                Entities.Scene.Woonkamerevening.TurnOn();
-            if (IsNightTime)
-                Entities.Scene.Woonkamernight.TurnOn();
-
+            switch (Globals.GetHouseState(Entities))
+            {
+                case HouseStateEnum.Morning:
+                    Entities.Scene.Woonkamermorning.TurnOn();
+                    break;
+                case HouseStateEnum.Day:
+                    Entities.Scene.Woonkamerday.TurnOn();
+                    break;
+                case HouseStateEnum.Evening:
+                    Entities.Scene.Woonkamerevening.TurnOn();
+                    break;
+                case HouseStateEnum.Night:
+                    Entities.Scene.Woonkamernight.TurnOn();
+                    break;
+                default:
+                    Entities.Scene.Woonkamerday.TurnOn();
+                    break;
+            }
+            
             Entities.MediaPlayer.AvSoundbar.TurnOff();
 
             if (IsWorking)

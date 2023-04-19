@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 namespace Automation.Helpers;
@@ -15,9 +14,7 @@ public class DataRepository : IDataRepository
 
         _jsonOptions = new JsonSerializerOptions();
     }
-
-    /// <inheritdoc/>
-    [SuppressMessage("", "CA1031")]
+    
     public T? Get<T>(string id) where T : class
     {
         try
@@ -35,9 +32,8 @@ public class DataRepository : IDataRepository
         {
             // We ignore errors, we will be adding logging later see issue #403
         }
-#pragma warning disable CS8603, CS8653
+        
         return default;
-#pragma warning restore CS8603, CS8653
     }
 
     /// <inheritdoc/>
