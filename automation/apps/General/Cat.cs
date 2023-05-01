@@ -27,7 +27,21 @@ public class Cat : BaseApp
         
         Entities.InputButton.Emptypetsnowy.StateChanges()
             .Subscribe(_ => EmptyPetSnowy());
-            
+
+        Entities.Sensor.PetsnowyStatus
+            .StateChanges()
+            .Subscribe(x =>
+            {
+                switch (x.New?.State)
+                {
+                    case "pet_into":
+                        Entities.InputNumber.Pixelinpetsnowytime.SetValue(Convert.ToInt32(Entities.InputNumber.Pixelinpetsnowytime.State) + 1);
+                        break;
+                    case "cleaning":
+                        Entities.InputNumber.Cleaningpetsnowytime.SetValue(Convert.ToInt32(Entities.InputNumber.Cleaningpetsnowytime.State) + 1);
+                        break;
+                }
+            });
 
         AutoFeedCat();
         MonitorCar();
