@@ -64,10 +64,18 @@ public class Alarm : BaseApp
         {
             var message = Entities.Sensor.AfvalMorgen.State;
             if (message != @"Geen")
-            {
                 Notify.NotifyGsmVincent(@"Vergeet het afval niet",
                     @$"Vergeet je niet op {message} buiten te zetten?");
-            }
+        });
+    }    
+    
+    private void PetSnowyCheck()
+    {
+        Scheduler.RunDaily(TimeSpan.Parse("22:00:00"), () =>
+        {
+            if (int.Parse(Entities.Sensor.PetsnowyError.State ?? "0") > 0)
+                Notify.NotifyGsmVincent(@"PetSnowy heeft errors",
+                    @"Er staat nog een error open voor de PetSnowy");
         });
     }
 
