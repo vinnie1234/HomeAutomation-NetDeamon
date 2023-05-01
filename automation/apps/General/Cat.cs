@@ -22,6 +22,13 @@ public class Cat : BaseApp
         Entities.InputButton.Zedargivenextfeedeary.StateChanges()
             .Subscribe(_ => GiveNextFeedEarly());
 
+        Entities.InputButton.Cleanpetsnowy.StateChanges()
+            .Subscribe(_ => CleanPetSnowy());        
+        
+        Entities.InputButton.Emptypetsnowy.StateChanges()
+            .Subscribe(_ => EmptyPetSnowy());
+            
+
         AutoFeedCat();
         MonitorCar();
     }
@@ -90,6 +97,26 @@ public class Cat : BaseApp
         Entities.InputDatetime.Zedarlastmanualfeed.SetDatetime(new InputDatetimeSetDatetimeParameters
         {
             Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
+        });
+    }
+
+    private void CleanPetSnowy()
+    {
+        Services.Localtuya.SetDp(new LocaltuyaSetDpParameters
+        {
+            DeviceId = ConfigManager.GetValueFromConfig(@"PetSnowyDeviceId"),
+            Dp = 9,
+            Value = "true"
+        });
+    }
+    
+    private void EmptyPetSnowy()
+    {
+        Services.Localtuya.SetDp(new LocaltuyaSetDpParameters
+        {
+            DeviceId = ConfigManager.GetValueFromConfig(@"PetSnowyDeviceId"),
+            Dp = 109,
+            Value = "true"
         });
     }
 }
