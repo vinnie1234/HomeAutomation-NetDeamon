@@ -7,10 +7,12 @@ public class DataRepository : IDataRepository
     // ReSharper disable once MemberInitializerValueIgnored
     private readonly string _dataStoragePath = "./apps/.storage";
     private readonly JsonSerializerOptions _jsonOptions;
+    private ILogger _logger;
 
-    public DataRepository(string dataStoragePath)
+    public DataRepository(string dataStoragePath, ILogger logger)
     {
         _dataStoragePath = dataStoragePath;
+        _logger = logger;
 
         _jsonOptions = new JsonSerializerOptions();
     }
@@ -28,9 +30,9 @@ public class DataRepository : IDataRepository
 
             return JsonSerializer.Deserialize<T>(jsonStream, _jsonOptions);
         }
-        catch
+        catch (Exception e)
         {
-            // We ignore errors, we will be adding logging later see issue #403
+            _logger.LogError("Error getting storage file {Id}, error message: {Error}", id, e.Message);
         }
         
         return default;

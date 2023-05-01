@@ -17,7 +17,7 @@ internal static class AppServicesExtension
             services.AddSingleton<IDataRepository>(n => new DataRepository(
                     Path.Combine(
                         n.GetRequiredService<IOptions<NetDaemonSettings>>().Value.GetAppSourceDirectory()
-                        , ".storage")))
+                        , ".storage"), n.GetRequiredService<ILogger>()))
                 .AddSingleton<INotify>(x => new Notify(GenericHelpers.GetHaContext(x)));
         });
     }
