@@ -13,6 +13,7 @@ public class Alarm : BaseApp
         TemperatureCheck();
         EnergyCheck();
         GarbageCheck();
+        PetSnowyCheck();
 
         Entities.BinarySensor.GangMotion.WhenTurnsOn(_ =>
         {

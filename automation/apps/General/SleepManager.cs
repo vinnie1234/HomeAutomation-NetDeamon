@@ -57,7 +57,7 @@ public class SleepManager : BaseApp
             Notify.NotifyGsmVincent(@"Vergeet het afval niet",
                 @$"Vergeet je niet op {message} buiten te zetten?");
         }
-        
+
         if (int.Parse(Entities.Sensor.PetsnowyError.State ?? "0") > 0)
             Notify.NotifyGsmVincent(@"PetSnowy heeft errors",
                 @"Er staat nog een error open voor de PetSnowy");

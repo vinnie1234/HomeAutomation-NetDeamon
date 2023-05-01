@@ -7,7 +7,7 @@ public class DataRepository : IDataRepository
     // ReSharper disable once MemberInitializerValueIgnored
     private readonly string _dataStoragePath = "./apps/.storage";
     private readonly JsonSerializerOptions _jsonOptions;
-    private ILogger _logger;
+    private readonly ILogger _logger;
 
     public DataRepository(string dataStoragePath, ILogger logger)
     {

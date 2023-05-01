@@ -41,7 +41,7 @@ public static class Collections
         {
             { entities.Sensor.BadkamerTemperature, @"Badkamer" },
             { entities.Sensor.BergingTemperature, @"Berging" },
-            { entities.Sensor.GangTemperature, @"Gang" },
+            { entities.Sensor.GangTemperature, @"Gang" }
         };
     }
 }
