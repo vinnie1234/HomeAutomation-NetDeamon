@@ -22,7 +22,8 @@ public class AwayManager : BaseApp
         
         Entities.Person.VincentMaarschalkerweerd
             .StateChanges()
-            .Where(x => x.Old?.State == "home" && x.New?.State != "home" && Entities.InputBoolean.Away.IsOff())
+            .WhenStateIsFor(x => x?.State != "home" && Entities.InputBoolean.Away.IsOff(),
+                TimeSpan.FromMinutes(2))
             .Subscribe(_ =>
             {
                 Notify.NotifyGsmVincent(@"Het lijkt er op dat je weg bent!",
@@ -36,7 +37,6 @@ public class AwayManager : BaseApp
                             Func = () =>
                             {
                                 Entities.InputBoolean.Away.TurnOn();
-                                Notify.ClearPhone();
                             }
                         }
                     });

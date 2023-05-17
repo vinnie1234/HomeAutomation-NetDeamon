@@ -44,6 +44,7 @@ public class SleepManager : BaseApp
         ChangeRelevantHouseState();
         TurnAllLightsOut();
         SendBatteryWarning();
+        Entities.MediaPlayer.Tv.TurnOff();
         Entities.Cover.Rollerblind0001.SetCoverPosition(0);
         var checkDate = DateTime.Now;
         var message = Entities.Sensor.AfvalMorgen.State;
