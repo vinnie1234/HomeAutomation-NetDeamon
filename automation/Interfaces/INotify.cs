@@ -17,5 +17,4 @@ public interface INotify
 
     // ReSharper disable once UnusedMember.Global
     void NotifyGsmVincentTts(string message);
-    void ClearPhone();
 }

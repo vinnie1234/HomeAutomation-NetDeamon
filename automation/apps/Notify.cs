@@ -54,13 +54,6 @@ public class Notify : INotify
             { Message = "TTS", Data = data });
     }
 
-    public void ClearPhone()
-    {
-        var data = ConstructData();
-        _services.Notify.MobileAppSmS908b(new NotifyMobileAppSmS908bParameters
-            { Title = "", Message = "clear_notification", Data = data });
-    }
-
     private void SubscribeToNotificationAction(Action func, string key, string title)
     {
         _ha.Events.Where(x => x.EventType == "mobile_app_notification_action")
