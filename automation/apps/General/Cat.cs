@@ -69,8 +69,12 @@ public class Cat : BaseApp
 
         Entities.InputDatetime.Zedarlastautomatedfeed.StateChanges()
             .Subscribe(_ =>
+            {
+                Logger.LogDebug(@"NOTIFICATIE: Pixel heeft automatisch eten gehad");
                 Notify.NotifyGsmVincent(@"Pixel heeft automatisch eten gehad",
-                    @$"Pixel heeft {Entities.InputNumber.Zedarlastamountautomationfeed.State} porties eten gehad"));
+                    @$"Pixel heeft {Entities.InputNumber.Zedarlastamountautomationfeed.State} porties eten gehad");
+            });
+             
 
         Scheduler.RunDaily(TimeSpan.Parse("23:59:58"), () => Entities.InputNumber.Zedartotalamountfeedday.SetValue(0));
     }
