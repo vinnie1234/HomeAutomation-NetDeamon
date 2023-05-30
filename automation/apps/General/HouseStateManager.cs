@@ -50,11 +50,10 @@ public class HouseStateManager : BaseApp
     /// </summary>
     private void InitHouseStateSceneManagement()
     {
-        //todo is unknown
-        Entities.Scene.Woonkamerday.WhenTurnsOn(_ => SetHouseState(HouseStateEnum.Day));
-        Entities.Scene.Woonkamerevening.WhenTurnsOn(_ => SetHouseState(HouseStateEnum.Evening));
-        Entities.Scene.Woonkamernight.WhenTurnsOn(_ => SetHouseState(HouseStateEnum.Night));
-        Entities.Scene.Woonkamermorning.WhenTurnsOn(_ => SetHouseState(HouseStateEnum.Morning));
+        Entities.Scene.Woonkamerday.StateChanges().Subscribe(_ => SetHouseState(HouseStateEnum.Day));
+        Entities.Scene.Woonkamerevening.StateChanges().Subscribe(_ => SetHouseState(HouseStateEnum.Evening));
+        Entities.Scene.Woonkamernight.StateChanges().Subscribe(_ => SetHouseState(HouseStateEnum.Night));
+        Entities.Scene.Woonkamermorning.StateChanges().Subscribe(_ => SetHouseState(HouseStateEnum.Morning));
     }
 
     private void SetSleepingOffFromAlarm()

@@ -83,8 +83,6 @@ public class BathRoomLightOnMovement : BaseApp
 
     private void ChangeLight(bool on, int brightnessPct = 0)
     {
-        Logger.LogDebug("Turn bathroom light {On} with brightnessPct {BrightnessPct}", on, brightnessPct);
-
         switch (on)
         {
             case true:

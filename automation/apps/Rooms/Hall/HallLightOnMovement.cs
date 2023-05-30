@@ -46,8 +46,6 @@ public class HallLightOnMovement : BaseApp
 
     private void ChangeLight(bool on, int brightnessPct = 0)
     {
-        Logger.LogDebug("Turn hall light {On} with brightnessPct {BrightnessPct}", on, brightnessPct);
-
         switch (on)
         {
             case true:

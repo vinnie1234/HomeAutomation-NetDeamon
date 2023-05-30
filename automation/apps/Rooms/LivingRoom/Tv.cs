@@ -41,6 +41,7 @@ public class Tv : BaseApp
             }
             
             Entities.MediaPlayer.AvSoundbar.TurnOff();
+            Entities.Switch.Ps5VincentPower.TurnOff();
 
             if (IsWorking)
             {

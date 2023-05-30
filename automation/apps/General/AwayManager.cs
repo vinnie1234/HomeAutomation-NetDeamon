@@ -78,7 +78,6 @@ public class AwayManager : BaseApp
                         Func = () =>
                         {
                             Entities.MediaPlayer.Tv.TurnOn();
-                            Notify.ClearPhone();
                         }
                     }
                 });
