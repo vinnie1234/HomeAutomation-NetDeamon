@@ -9,17 +9,17 @@
 
     <ItemGroup>
         <PackageReference Include="JoySoftware.NetDaemon.App" Version="22.1.12" />
-        <PackageReference Include="JoySoftware.NetDaemon.AppModel" Version="23.15.0" />
-        <PackageReference Include="JoySoftware.NetDaemon.Client" Version="23.15.0" />
-        <PackageReference Include="JoySoftware.NetDaemon.Extensions.Logging" Version="23.15.0" />
-        <PackageReference Include="JoySoftware.NetDaemon.Extensions.Mqtt" Version="23.15.0" />
-        <PackageReference Include="JoySoftware.NetDaemon.Extensions.Scheduling" Version="23.15.0" />
-        <PackageReference Include="JoySoftware.NetDaemon.Extensions.Tts" Version="23.15.0" />
+        <PackageReference Include="JoySoftware.NetDaemon.AppModel" Version="23.19.0" />
+        <PackageReference Include="JoySoftware.NetDaemon.Client" Version="23.19.0" />
+        <PackageReference Include="JoySoftware.NetDaemon.Extensions.Logging" Version="23.19.0" />
+        <PackageReference Include="JoySoftware.NetDaemon.Extensions.Mqtt" Version="23.19.0" />
+        <PackageReference Include="JoySoftware.NetDaemon.Extensions.Scheduling" Version="23.19.0" />
+        <PackageReference Include="JoySoftware.NetDaemon.Extensions.Tts" Version="23.19.0" />
         <PackageReference Include="JoySoftware.NetDaemon.Fakes" Version="22.1.12" />
-        <PackageReference Include="JoySoftware.NetDaemon.HassModel" Version="23.15.0" />
-        <PackageReference Include="JoySoftware.NetDaemon.Runtime" Version="23.15.0" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
-        <PackageReference Include="Microsoft.Reactive.Testing" Version="5.0.0" />
+        <PackageReference Include="JoySoftware.NetDaemon.HassModel" Version="23.19.0" />
+        <PackageReference Include="JoySoftware.NetDaemon.Runtime" Version="23.19.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.2" />
+        <PackageReference Include="Microsoft.Reactive.Testing" Version="6.0.0" />
         <PackageReference Include="Moq" Version="4.18.4" />
         <PackageReference Include="NSubstitute" Version="5.0.0" />
         <PackageReference Include="xunit" Version="2.4.2" />
