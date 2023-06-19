@@ -1,6 +1,7 @@
 using System.Reflection;
 using Automation;
 using Microsoft.Extensions.Hosting;
+using NetDaemon;
 using NetDaemon.Extensions.Tts;
 using NetDaemon.Runtime;
 
@@ -14,7 +15,8 @@ try
 {
     await Host.CreateDefaultBuilder(args)
         .UseNetDaemonAppSettings()
-        .UseCustomLogging()
+        .UseDefaultNetDaemonLogging()
+        //.UseCustomLogging()
         .UseNetDaemonRuntime()
         .UseNetDaemonTextToSpeech()
         .AddAppServices()

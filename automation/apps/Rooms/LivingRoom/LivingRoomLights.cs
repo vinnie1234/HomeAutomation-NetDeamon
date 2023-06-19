@@ -1,3 +1,4 @@
+using System.Reactive.Concurrency;
 using Automation.Enum;
 
 namespace Automation.apps.Rooms.LivingRoom;
@@ -5,7 +6,7 @@ namespace Automation.apps.Rooms.LivingRoom;
 [NetDaemonApp(Id = nameof(LivingRoomLights))]
 public class LivingRoomLights : BaseApp
 {
-    public LivingRoomLights(IHaContext ha, ILogger<LivingRoomLights> logger, INotify notify, INetDaemonScheduler scheduler)
+    public LivingRoomLights(IHaContext ha, ILogger<LivingRoomLights> logger, INotify notify, IScheduler scheduler)
         : base(ha, logger, notify, scheduler)
     {
         HaContext.Events.Where(x => x.EventType == "hue_event").Subscribe(x =>
@@ -34,7 +35,7 @@ public class LivingRoomLights : BaseApp
                     .Throttle(TimeSpan.FromMilliseconds(50))
                     .Subscribe(_ => { Entities.Light.HueFilamentBulb1.TurnOn(brightnessPct: 100, kelvin: GetColorTemp()); });
                 
-                Scheduler.RunIn(TimeSpan.FromMilliseconds(200), () =>
+                Scheduler.Schedule(TimeSpan.FromMilliseconds(200), () =>
                 {
                     Entities.Light.HueFilamentBulb2.TurnOn(); 
                     Entities.Light.PlafondWoonkamer.TurnOn(); 
@@ -55,7 +56,7 @@ public class LivingRoomLights : BaseApp
                     .Throttle(TimeSpan.FromMilliseconds(50))
                     .Subscribe(_ => { Entities.Light.HueFilamentBulb2.TurnOff(); });
 
-                Scheduler.RunIn(TimeSpan.FromMilliseconds(200), () =>
+                Scheduler.Schedule(TimeSpan.FromMilliseconds(200), () =>
                 {
                     Entities.Light.HueFilamentBulb1.TurnOff();
                     Entities.Light.PlafondWoonkamer.TurnOff();

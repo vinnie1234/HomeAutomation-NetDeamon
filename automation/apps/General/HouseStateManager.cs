@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Reactive.Concurrency;
 using Automation.Enum;
 using Newtonsoft.Json;
 
@@ -16,7 +17,7 @@ public class HouseStateManager : BaseApp
     private readonly TimeSpan _endWorking = TimeSpan.Parse("17:00:00");
 
     public HouseStateManager(IHaContext ha, ILogger<HouseStateManager> logger,
-        INotify notify, INetDaemonScheduler scheduler)
+        INotify notify, IScheduler scheduler)
         : base(ha, logger, notify, scheduler)
     {
         SetSleepingOffFromAlarm();
@@ -58,7 +59,7 @@ public class HouseStateManager : BaseApp
 
     private void SetSleepingOffFromAlarm()
     {
-        Scheduler.RunDaily(TimeSpan.Parse("00:00:00"), () =>
+        Scheduler.ScheduleCron("00 00 * * *", () =>
         {
             var alarmsHubJson = JsonConvert.SerializeObject(Entities.Sensor.HubVincentAlarms.Attributes?.Alarms);
             var alarmsHub = JsonConvert.DeserializeObject<List<AlarmStateModel>>(alarmsHubJson);
@@ -68,7 +69,7 @@ public class HouseStateManager : BaseApp
                     DateTimeOffset.Parse(x.LocalTime).Date == DateTimeOffset.Now.Date);
 
             if (alarmToday is { LocalTime: not null })
-                Scheduler.RunOnce(DateTimeOffset.Parse(alarmToday.LocalTime), () =>
+                Scheduler.Schedule(DateTimeOffset.Parse(alarmToday.LocalTime), () =>
                 {
                     Logger.LogDebug(@"Setting schedular for {Time}. Sleeping off from alarm",
                         alarmToday.LocalTime);

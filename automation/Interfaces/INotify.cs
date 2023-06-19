@@ -4,11 +4,13 @@ namespace Automation.Interfaces;
 
 public interface INotify
 {
-    Task NotifyHouse(string message);
+    Task NotifyHouse(string title, string message, bool canAlwaysSendNotification, double? sendAfterMinutes = null);
 
     void NotifyGsmVincent(
         string title,
         string message,
+        bool canAlwaysSendNotification,
+        double? sendAfterMinutes = null,
         List<ActionModel>? action = null,
         string? image = null,
         string? channel = null,
@@ -16,5 +18,7 @@ public interface INotify
         string? ledColor = null);
 
     // ReSharper disable once UnusedMember.Global
-    void NotifyGsmVincentTts(string message);
+    void NotifyGsmVincentTts(string title, string message, bool canAlwaysSendNotification, double? sendAfterMinutes = null);
+
+    void ResetNotificationHistoryForNotificationTitle(string title);
 }

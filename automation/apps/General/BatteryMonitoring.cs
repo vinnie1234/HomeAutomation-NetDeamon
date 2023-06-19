@@ -1,3 +1,4 @@
+using System.Reactive.Concurrency;
 using Automation.Helpers;
 
 namespace Automation.apps.General;
@@ -7,8 +8,9 @@ public class BatteryMonitoring : BaseApp
 {
     private const int BatteryWarningLevel = 20;
 
+
     public BatteryMonitoring(IHaContext ha, ILogger<BatteryMonitoring> logger, INotify notify,
-        INetDaemonScheduler scheduler)
+        IScheduler scheduler)
         : base(ha, logger, notify, scheduler)
     {
         foreach (var battySensor in Collections.GetAllBattySensors(Entities))
@@ -17,6 +19,11 @@ public class BatteryMonitoring : BaseApp
                 .StateChanges()
                 .Where(x => x.Entity.State is <= BatteryWarningLevel)
                 .Subscribe(x => SendNotification(battySensor.Value, x.Entity.State));
+            
+            battySensor.Key
+                .StateChanges()
+                .Where(x => x.Entity.State is 100)
+                .Subscribe(_ => Notify.ResetNotificationHistoryForNotificationTitle(battySensor.Value));
         }
     }
 
@@ -26,6 +33,8 @@ public class BatteryMonitoring : BaseApp
         Notify.NotifyGsmVincent(
             @$"Batterij bijna leeg van {name}",
             @$"Het is tijd om de batterij op te laden van {name}. De batterij is nu op {batterPrc}%",
+            false,
+            10080,
             new List<ActionModel>
             {
                 new()

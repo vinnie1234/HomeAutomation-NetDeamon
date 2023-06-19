@@ -23,6 +23,6 @@ public static class HouseStateManagerInstanceExtensions
     {
         var loggerMock = Substitute.For<ILogger<HouseStateManager>>();
         return new HouseStateManager(ctx.HaContext, loggerMock,
-            new Notify(ctx.HaContext), ctx.Scheduler);
+            new Notify(ctx.HaContext, null), ctx.Scheduler);
     }
 }

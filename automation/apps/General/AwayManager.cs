@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Reactive.Concurrency;
 using Automation.Enum;
 
 namespace Automation.apps.General;
@@ -8,7 +9,7 @@ public class AwayManager : BaseApp
 {
     private bool _backHome;
     
-    public AwayManager(IHaContext ha, ILogger<AwayManager> logger, INotify notify, INetDaemonScheduler scheduler)
+    public AwayManager(IHaContext ha, ILogger<AwayManager> logger, INotify notify, IScheduler scheduler)
         : base(ha, logger, notify, scheduler)
     {
         Entities.InputBoolean.Away.WhenTurnsOn(_ => AwayHandler());
@@ -23,11 +24,13 @@ public class AwayManager : BaseApp
         Entities.Person.VincentMaarschalkerweerd
             .StateChanges()
             .WhenStateIsFor(x => x?.State != "home" && Entities.InputBoolean.Away.IsOff(),
-                TimeSpan.FromMinutes(2))
+                TimeSpan.FromMinutes(2), Scheduler)
             .Subscribe(_ =>
             {
                 Notify.NotifyGsmVincent(@"Het lijkt er op dat je weg bent!",
                     @"Je gaat weg zonder wat te zeggen...",
+                    false, 
+                    10,
                     new List<ActionModel>
                     {
                         new()
@@ -49,11 +52,11 @@ public class AwayManager : BaseApp
         if (((IList)Globals.OfficeDays).Contains(DateTime.Now.DayOfWeek) && DateTime.Now.Hour < 9 &&
             Entities.InputBoolean.Holliday.IsOff())
         {
-            Notify.NotifyGsmVincent(@"Werkse Vincent", @"Succes op kantoor :)");
+            Notify.NotifyGsmVincent(@"Werkse Vincent", @"Succes op kantoor :)", false, 5);
         }
         else
         {
-            Notify.NotifyGsmVincent(@"Tot ziens", @"Je laat je huis weer alleen :(");
+            Notify.NotifyGsmVincent(@"Tot ziens", @"Je laat je huis weer alleen :(", false, 5);
         }
 
         Entities.Light.TurnAllOff();
@@ -69,7 +72,8 @@ public class AwayManager : BaseApp
         {
             Notify.NotifyGsmVincent(@"Welkom thuis Vincent",
                 @$"De huis status is nu: {houseState}. Je lampen worden voor je ingesteld.",
-                new List<ActionModel>
+                true,
+                action: new List<ActionModel>
                 {
                     new()
                     {
@@ -102,13 +106,13 @@ public class AwayManager : BaseApp
 
             _backHome = false;
             
-            Scheduler.RunIn(TimeSpan.FromSeconds(15), () =>
+            Scheduler.Schedule(TimeSpan.FromSeconds(15), () =>
             {
                 var message = @"Welkom thuis Vincent!";
                 if (Entities.BinarySensor.ZedarFeedContainer.IsOff())
                     message += @" Het eten van de Pixel is bijna op!";
 
-                Notify.NotifyHouse(message);
+                Notify.NotifyHouse("welcomeHome", message, true);
             });
         }
     }

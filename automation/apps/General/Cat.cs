@@ -1,3 +1,4 @@
+using System.Reactive.Concurrency;
 using Automation.Helpers;
 
 namespace Automation.apps.General;
@@ -5,7 +6,9 @@ namespace Automation.apps.General;
 [NetDaemonApp(Id = nameof(Cat))]
 public class Cat : BaseApp
 {
-    public Cat(IHaContext haContext, ILogger<Cat> logger, INotify notify, INetDaemonScheduler scheduler)
+    private readonly string _discordUri = ConfigManager.GetValueFromConfigNested("Discord", "Pixel") ?? "";
+
+    public Cat(IHaContext haContext, ILogger<Cat> logger, INotify notify, IScheduler scheduler)
         : base(haContext, logger, notify, scheduler)
     {
         Entities.InputButton.Feedcat.StateChanges()
@@ -58,6 +61,9 @@ public class Cat : BaseApp
             Dp = 3,
             Value = amount
         });
+        
+        Logger.LogDebug(@"Dankjewel voor {Amount} porties of eten!", amount);
+        Helpers.Discord.SendMessage(_discordUri, @$"Dankjewel voor {amount} porties of eten!");
     }
 
     private void MonitorCar()
@@ -65,18 +71,18 @@ public class Cat : BaseApp
         Entities.InputDatetime.Zedarlastmanualfeed.StateChanges()
             .Subscribe(_ =>
                 Notify.NotifyGsmVincent(@"Pixel heeft handmatig eten gehad",
-                    @$"Pixel heeft {Entities.InputNumber.Zedarlastamountmanualfeed.State} porties eten gehad"));
+                    @$"Pixel heeft {Entities.InputNumber.Zedarlastamountmanualfeed.State} porties eten gehad", false, 5));
 
         Entities.InputDatetime.Zedarlastautomatedfeed.StateChanges()
             .Subscribe(_ =>
             {
                 Logger.LogDebug(@"NOTIFICATIE: Pixel heeft automatisch eten gehad");
                 Notify.NotifyGsmVincent(@"Pixel heeft automatisch eten gehad",
-                    @$"Pixel heeft {Entities.InputNumber.Zedarlastamountautomationfeed.State} porties eten gehad");
+                    @$"Pixel heeft {Entities.InputNumber.Zedarlastamountautomationfeed.State} porties eten gehad", false, 5);
             });
              
 
-        Scheduler.RunDaily(TimeSpan.Parse("23:59:58"), () => Entities.InputNumber.Zedartotalamountfeedday.SetValue(0));
+        Scheduler.ScheduleCron("59 23 * * *", () => Entities.InputNumber.Zedartotalamountfeedday.SetValue(0));
     }
 
     private void AutoFeedCat()

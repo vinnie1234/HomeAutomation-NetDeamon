@@ -11,6 +11,12 @@ public static class ConfigManager
         var json = GetJson();
         return (json?[key] ?? throw new InvalidOperationException("Can't find config")).Value<string>();
     }
+    
+    public static string? GetValueFromConfigNested(string firstKey, string secondKey)
+    {
+        var json = GetJson();
+        return (json?[firstKey]?[secondKey] ?? throw new InvalidOperationException("Can't find config")).Value<string>();
+    }
 
     private static JObject? GetJson()
     {

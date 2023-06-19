@@ -1,3 +1,4 @@
+using System.Reactive.Concurrency;
 using Automation.Helpers;
 
 namespace Automation.apps.General;
@@ -7,7 +8,7 @@ public class Alarm : BaseApp
 {
     private bool IsSleeping => Entities.InputBoolean.Sleeping.IsOn();
     
-    public Alarm(IHaContext ha, ILogger<Alarm> logger, INotify notify, INetDaemonScheduler scheduler)
+    public Alarm(IHaContext ha, ILogger<Alarm> logger, INotify notify, IScheduler scheduler)
         : base(ha, logger, notify, scheduler)
     {
         TemperatureCheck();
@@ -18,7 +19,7 @@ public class Alarm : BaseApp
         Entities.BinarySensor.GangMotion.WhenTurnsOn(_ =>
         {
             if (Globals.AmIHomeCheck(Entities))
-                Notify.NotifyGsmVincent("ALARM", "Motion detected", channel: "ALARM",
+                Notify.NotifyGsmVincent("ALARM", "Motion detected", false, 5, channel: "ALARM",
                     vibrationPattern: "100, 1000, 100, 1000, 100", ledColor: "red");
         });
     }
@@ -31,7 +32,7 @@ public class Alarm : BaseApp
                 .StateChanges()
                 .Where(x => x.Entity.State > 25 && !IsSleeping)
                 .Subscribe(x => Notify.NotifyGsmVincent("High Temperature detected",
-                    @$"{temperatureSensor.Value} is {x.Entity.State} graden", channel: "ALARM",
+                    @$"{temperatureSensor.Value} is {x.Entity.State} graden", true, channel: "ALARM",
                     vibrationPattern: "100, 1000, 100, 1000, 100", ledColor: "red"));
         }
     }
@@ -40,11 +41,13 @@ public class Alarm : BaseApp
     {
         Entities.Sensor.P1Meter3c39e72a64e8ActivePower
             .StateChanges()
-            .WhenStateIsFor(x => x?.State > 2000, TimeSpan.FromMinutes(10))
+            .WhenStateIsFor(x => x?.State > 2000, TimeSpan.FromMinutes(10), Scheduler)
             .Subscribe(x =>
                 {
                     Notify.NotifyGsmVincent(@"Hoog energie verbruik",
                         @$"Energie verbruik is al voor 10 minuten {x.Entity.State}",
+                        false,
+                        10,
                         new List<ActionModel>
                         {
                             new()
@@ -61,22 +64,22 @@ public class Alarm : BaseApp
 
     private void GarbageCheck()
     {
-        Scheduler.RunDaily(TimeSpan.Parse("22:00:00"), () =>
+        Scheduler.ScheduleCron("00 22 * * *", () =>
         {
             var message = Entities.Sensor.AfvalMorgen.State;
             if (message != @"Geen")
                 Notify.NotifyGsmVincent(@"Vergeet het afval niet",
-                    @$"Vergeet je niet op {message} buiten te zetten?");
+                    @$"Vergeet je niet op {message} buiten te zetten?", true);
         });
     }    
     
     private void PetSnowyCheck()
     {
-        Scheduler.RunDaily(TimeSpan.Parse("22:00:00"), () =>
+        Scheduler.ScheduleCron("00 22 * * *", () =>
         {
             if (int.Parse(Entities.Sensor.PetsnowyError.State ?? "0") > 0)
                 Notify.NotifyGsmVincent(@"PetSnowy heeft errors",
-                    @"Er staat nog een error open voor de PetSnowy");
+                    @"Er staat nog een error open voor de PetSnowy", false, 10);
         });
     }
 

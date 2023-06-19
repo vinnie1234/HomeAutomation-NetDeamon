@@ -1,3 +1,4 @@
+using System.Reactive.Concurrency;
 using Automation.Enum;
 
 namespace Automation.apps.Rooms.LivingRoom;
@@ -9,7 +10,7 @@ public class Tv : BaseApp
 
     private bool DisableLightAutomations => Entities.InputBoolean.Disablelightautomationlivingroom.IsOn();
     
-    public Tv(IHaContext ha, ILogger<Tv> logger, INotify notify, INetDaemonScheduler scheduler)
+    public Tv(IHaContext ha, ILogger<Tv> logger, INotify notify, IScheduler scheduler)
         : base(ha, logger, notify, scheduler)
     {
         Entities.MediaPlayer.Tv.WhenTurnsOn(_ => MovieTime());

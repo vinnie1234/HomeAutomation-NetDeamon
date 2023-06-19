@@ -1,3 +1,5 @@
+using System.Reactive.Concurrency;
+
 namespace Automation.apps.Rooms.BathRoom;
 
 [NetDaemonApp(Id = nameof(BathRoomLightOnMovement))]
@@ -9,7 +11,7 @@ public class BathRoomLightOnMovement : BaseApp
     private bool IsDouching => Entities.InputBoolean.Douchen.IsOn();
 
     public BathRoomLightOnMovement(IHaContext ha, ILogger<BathRoomLightOnMovement> logger, INotify notify,
-        INetDaemonScheduler scheduler)
+        IScheduler scheduler)
         : base(ha, logger, notify, scheduler)
     {
         HaContext.Events.Where(x => x.EventType == "hue_event").Subscribe(x =>
@@ -31,13 +33,13 @@ public class BathRoomLightOnMovement : BaseApp
         Entities.BinarySensor.BadkamerMotion
             .StateChanges()
             .WhenStateIsFor(x => x.IsOff(),
-                TimeSpan.FromMinutes((int)Entities.InputNumber.Bathroomlightnighttime.State!))
+                TimeSpan.FromMinutes((int)Entities.InputNumber.Bathroomlightnighttime.State!), Scheduler)
             .Where(x => x.Old.IsOn() && !DisableLightAutomations && !IsDouching && IsNighttime && IsSleeping)
             .Subscribe(_ => ChangeLight(false));
 
         Entities.BinarySensor.BadkamerMotion
             .StateChanges()
-            .WhenStateIsFor(x => x.IsOff(), TimeSpan.FromMinutes((int)Entities.InputNumber.Bathroomlightdaytime.State!))
+            .WhenStateIsFor(x => x.IsOff(), TimeSpan.FromMinutes((int)Entities.InputNumber.Bathroomlightdaytime.State!), Scheduler)
             .Where(x => x.Old.IsOn() && !DisableLightAutomations && !IsDouching && !IsSleeping)
             .Subscribe(_ => ChangeLight(false));
 
@@ -53,13 +55,14 @@ public class BathRoomLightOnMovement : BaseApp
             Entities.Light.BadkamerSpiegel.TurnOn(brightnessPct: 100);
             Entities.Light.PlafondBadkamer.TurnOn(brightnessPct: 100);
             Entities.Cover.Rollerblind0001.CloseCover();
-            Notify.NotifyHouse(@"Tijd om te douchen");
-            Scheduler.RunIn(TimeSpan.FromHours(1), () =>
+            Notify.NotifyHouse("timeToDouche", @"Tijd om te douchen", true);
+            Scheduler.Schedule(TimeSpan.FromHours(1), () =>
             {
                 if (IsDouching)
                 {
                     Entities.InputBoolean.Douchen.TurnOff();
-                    Notify.NotifyHouse(@"Je bent of een uur aan het douchen, of weer is vergeten alles uit te zetten!");
+                    Notify.NotifyHouse(@"toLongDouchen",
+                        @"Je bent of een uur aan het douchen, of weer is vergeten alles uit te zetten!", false, 60);
                 }
             });
         }
@@ -68,7 +71,7 @@ public class BathRoomLightOnMovement : BaseApp
             Entities.Light.BadkamerSpiegel.TurnOff();
             Entities.Light.PlafondBadkamer.TurnOff();
             Entities.Cover.Rollerblind0001.OpenCover();
-            Notify.NotifyHouse(@"Klaar met douchen");
+            Notify.NotifyHouse("readyDouche", @"Klaar met douchen", true);
         }
     }
 

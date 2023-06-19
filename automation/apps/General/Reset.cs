@@ -1,3 +1,5 @@
+using System.Reactive.Concurrency;
+
 namespace Automation.apps.General;
 
 [NetDaemonApp(Id = nameof(Reset))]
@@ -7,7 +9,7 @@ public class Reset : BaseApp
 
     private List<LightStateModel>? LightEntitiesStates { get; set; }
 
-    public Reset(IHaContext ha, ILogger<Reset> logger, IDataRepository storage, INotify notify, INetDaemonScheduler scheduler)
+    public Reset(IHaContext ha, ILogger<Reset> logger, IDataRepository storage, INotify notify, IScheduler scheduler)
         : base(ha, logger, notify, scheduler)
     {
         _storage = storage;
@@ -49,7 +51,7 @@ public class Reset : BaseApp
         {
             if (alarm is { EntityId: not null, AlarmId: not null })
             {
-                Notify.NotifyHouse(@$"Alarm van {alarm.LocalTime} word verwijderd");
+                Notify.NotifyHouse("deleteAlarm", @$"Alarm van {alarm.LocalTime} word verwijderd", true);
                 Services.GoogleHome.DeleteAlarm(alarm.EntityId, alarm.AlarmId);
             }
         }

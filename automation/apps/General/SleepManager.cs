@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Reactive.Concurrency;
 
 namespace Automation.apps.General;
 
@@ -7,13 +8,14 @@ public class SleepManager : BaseApp
 {
     private bool DisableLightAutomations => Entities.InputBoolean.Disablelightautomationgeneral.IsOn();
 
-    public SleepManager(IHaContext ha, ILogger<SleepManager> logger, INotify notify, INetDaemonScheduler scheduler)
+    public SleepManager(IHaContext ha, ILogger<SleepManager> logger, INotify notify, IScheduler scheduler)
         : base(ha, logger, notify, scheduler)
     {
         Entities.InputBoolean.Sleeping.WhenTurnsOff(_ => WakeUp());
         Entities.InputBoolean.Sleeping.WhenTurnsOn(_ => Sleeping());
-
-        Scheduler.RunDaily(TimeSpan.Parse("10:00:00"), () =>
+        
+        
+        Scheduler.ScheduleCron("00 10 * * *", () =>
         {
             if (!((IList)Globals.WeekendDays).Contains(DateTime.Now.DayOfWeek))
             {
@@ -56,12 +58,12 @@ public class SleepManager : BaseApp
         if (message != @"Geen")
         {
             Notify.NotifyGsmVincent(@"Vergeet het afval niet",
-                @$"Vergeet je niet op {message} buiten te zetten?");
+                @$"Vergeet je niet op {message} buiten te zetten?", true);
         }
 
         if (int.Parse(Entities.Sensor.PetsnowyError.State ?? "0") > 0)
             Notify.NotifyGsmVincent(@"PetSnowy heeft errors",
-                @"Er staat nog een error open voor de PetSnowy");
+                @"Er staat nog een error open voor de PetSnowy", true);
     }
 
     private void ChangeRelevantHouseState()
@@ -75,13 +77,13 @@ public class SleepManager : BaseApp
         if (Entities.Sensor.SmS908bBatteryLevel.State < 30)
         {
             if (Entities.BinarySensor.SmS908bIsCharging.IsOff())
-                Notify.NotifyGsmVincent(@"Telefoon bijna leeg", @"Je moet je telefoon opladen");
+                Notify.NotifyGsmVincent(@"Telefoon bijna leeg", @"Je moet je telefoon opladen", true);
         }
 
         if (Entities.Sensor.SmT860BatteryLevel.State < 30)
         {
             if (Entities.BinarySensor.SmT860IsCharging.IsOff())
-                Notify.NotifyGsmVincent(@"Tabled bijna leeg", @"Je moet je tabled opladen");
+                Notify.NotifyGsmVincent(@"Tabled bijna leeg", @"Je moet je tabled opladen", true);
         }
     }
 

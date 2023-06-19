@@ -1,4 +1,5 @@
 
+using System.Reactive.Concurrency;
 using NetDaemon.Extensions.Scheduler;
 using NetDaemon.HassModel;
 
@@ -11,7 +12,7 @@ public class AppTestContext
 {
     public HaContextMock HaContextMock { get; } = new();
     public IHaContext HaContext => HaContextMock.HaContext;
-    public INetDaemonScheduler Scheduler { get; }
+    public IScheduler Scheduler { get; }
 
     public static AppTestContext New()
     {

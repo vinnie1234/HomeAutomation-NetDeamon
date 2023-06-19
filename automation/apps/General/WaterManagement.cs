@@ -1,10 +1,13 @@
+using System.Reactive.Concurrency;
+
 namespace Automation.apps.General;
 
 public class WaterManagement : BaseApp
 {
     private long _waterUsages = 0;
     
-    protected WaterManagement(IHaContext haContext, ILogger logger, INotify notify, INetDaemonScheduler scheduler) : base(haContext, logger, notify, scheduler)
+    // ReSharper disable once SuggestBaseTypeForParameterInConstructor
+    protected WaterManagement(IHaContext haContext, ILogger<WaterManagement> logger, INotify notify, IScheduler scheduler) : base(haContext, logger, notify, scheduler)
     {
         Entities.Sensor.Watermeter5c2faf0e9b0aTotalWaterUsage
             .StateChanges()
@@ -15,8 +18,8 @@ public class WaterManagement : BaseApp
 
         Entities.Sensor.Watermeter5c2faf0e9b0aTotalWaterUsage
             .StateChanges()
-            .WhenStateIsFor(x => x?.LastChanged < DateTime.Now.AddSeconds(10), TimeSpan.FromMinutes(1))
-            .Subscribe(x =>
+            .WhenStateIsFor(x => x?.LastChanged < DateTime.Now.AddSeconds(10), TimeSpan.FromMinutes(1), Scheduler)
+            .Subscribe(_ =>
             {
                 FindWaterUsage();
             });

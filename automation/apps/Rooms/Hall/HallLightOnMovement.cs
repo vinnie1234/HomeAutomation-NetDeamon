@@ -1,3 +1,5 @@
+using System.Reactive.Concurrency;
+
 namespace Automation.apps.Rooms.Hall;
 
 [NetDaemonApp(Id = nameof(HallLightOnMovement))]
@@ -7,7 +9,7 @@ public class HallLightOnMovement : BaseApp
     private bool IsSleeping => Entities.InputBoolean.Sleeping.IsOn();
     private bool DisableLightAutomations => Entities.InputBoolean.Disablelightautomationhall.IsOn();
     
-    public HallLightOnMovement(IHaContext ha, ILogger<HallLightOnMovement> logger, INotify notify, INetDaemonScheduler scheduler)
+    public HallLightOnMovement(IHaContext ha, ILogger<HallLightOnMovement> logger, INotify notify, IScheduler scheduler)
         : base(ha, logger, notify, scheduler)
     {
         InitializeDayLights();
@@ -22,7 +24,7 @@ public class HallLightOnMovement : BaseApp
 
         Entities.BinarySensor.GangMotion
             .StateChanges()
-            .WhenStateIsFor(x => x.IsOff(), TimeSpan.FromMinutes(GetStateTime()))
+            .WhenStateIsFor(x => x.IsOff(), TimeSpan.FromMinutes(GetStateTime()), Scheduler)
             .Where(_ => !DisableLightAutomations)
             .Subscribe(_ => ChangeLight(false));
     }

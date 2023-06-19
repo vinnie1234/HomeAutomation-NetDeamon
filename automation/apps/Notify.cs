@@ -8,16 +8,23 @@ public class Notify : INotify
     private readonly Entities _entities;
     private readonly IServices _services;
     private readonly IHaContext _ha;
+    private readonly IDataRepository _storage;
 
-    public Notify(IHaContext ha)
+    public Notify(IHaContext ha, IDataRepository storage)
     {
         _ha = ha;
+        _storage = storage;
         _entities = new Entities(ha);
         _services = new Services(ha);
     }
 
-    public async Task NotifyHouse(string message)
+    public async Task NotifyHouse(string title, string message, bool canAlwaysSendNotification, double? sendAfterMinutes = null)
     {
+        var canSendNotification = CanSendNotification(_storage, canAlwaysSendNotification, title, sendAfterMinutes);
+        if (!canSendNotification) return;
+        
+        SaveNotification(_storage, title, message);
+        
         _entities.MediaPlayer.HubVincent.VolumeSet(0.4);
         _entities.MediaPlayer.Woonkamer.VolumeSet(0.4);
 
@@ -35,23 +42,47 @@ public class Notify : INotify
     public void NotifyGsmVincent(
         string title,
         string message,
+        bool canAlwaysSendNotification,
+        double? sendAfterMinutes = null,
         List<ActionModel>? action = null,
         string? image = null,
         string? channel = null,
         string? vibrationPattern = null,
         string? ledColor = null)
     {
+        var canSendNotification = CanSendNotification(_storage, canAlwaysSendNotification, title, sendAfterMinutes);
+        if (!canSendNotification) return;
+        
+        SaveNotification(_storage, title, message);
+        
         var data = ConstructData(action, image: image, channel: channel, vibrationPattern: vibrationPattern,
             ledColor: ledColor);
         _services.Notify.MobileAppSmS908b(new NotifyMobileAppSmS908bParameters
             { Title = title, Message = message, Data = data });
     }
 
-    public void NotifyGsmVincentTts(string message)
+    public void NotifyGsmVincentTts(string title, string message, bool canAlwaysSendNotification, double? sendAfterMinutes = null)
     {
+        var canSendNotification = CanSendNotification(_storage, canAlwaysSendNotification, title, sendAfterMinutes);
+        if (!canSendNotification) return;
+        
+        SaveNotification(_storage, title, message);
+        
         var data = ConstructData(null, true, phoneMessage: message);
         _services.Notify.MobileAppSmS908b(new NotifyMobileAppSmS908bParameters
             { Message = "TTS", Data = data });
+    }
+
+    public void ResetNotificationHistoryForNotificationTitle(string title)
+    {
+        var oldData = _storage.Get<List<NotificationModel>>("notificationHistory") ?? new List<NotificationModel>();
+        var data = oldData.FirstOrDefault(x => x.Name == title);
+        if (data != null)
+        {
+            oldData.Remove(data);
+        }
+        
+        _storage.Save("notificationHistory", oldData);
     }
 
     private void SubscribeToNotificationAction(Action func, string key, string title)
@@ -122,5 +153,37 @@ public class Notify : INotify
         }
 
         return data;
+    }
+
+    private static bool CanSendNotification(IDataRepository storage, bool canAlwaysSend, string title, double? sendAfterMinutes)
+    {
+        if (canAlwaysSend) return true;
+        
+        var notification = GetLastNotification(storage, title);
+
+        sendAfterMinutes ??= 60;
+        return DateTime.Now.AddMinutes((double)sendAfterMinutes) >= notification?.LastSendNotification;
+    }
+
+    private static void SaveNotification(IDataRepository storage, string title, string message)
+    {
+        var oldData = storage.Get<List<NotificationModel>>("notificationHistory") ?? new List<NotificationModel>();
+        var data = oldData.FirstOrDefault(x => x.Name == title);
+        if (data != null)
+        {
+            data.Value = message;
+        }
+        else
+        {
+            oldData.Add(new NotificationModel(title, message, DateTime.Now));
+        }
+        
+        storage.Save("notificationHistory", oldData);
+    }
+
+    private static NotificationModel? GetLastNotification(IDataRepository storage, string title)
+    {
+        var oldData = storage.Get<List<NotificationModel>>("notificationHistory") ?? new List<NotificationModel>();
+        return oldData.FirstOrDefault(x => x.Name == title);
     }
 }

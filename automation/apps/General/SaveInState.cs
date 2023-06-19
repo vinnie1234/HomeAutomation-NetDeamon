@@ -1,3 +1,5 @@
+using System.Reactive.Concurrency;
+
 namespace Automation.apps.General;
 
 [NetDaemonApp(Id = nameof(SaveInState))]
@@ -5,7 +7,7 @@ public class SaveInState : BaseApp
 {
     private readonly IDataRepository _storage;
 
-    public SaveInState(IHaContext ha, ILogger<SaveInState> logger, IDataRepository storage, INotify notify, INetDaemonScheduler scheduler)
+    public SaveInState(IHaContext ha, ILogger<SaveInState> logger, IDataRepository storage, INotify notify, IScheduler scheduler)
         : base(ha, logger, notify, scheduler)
     {
         _storage = storage;
