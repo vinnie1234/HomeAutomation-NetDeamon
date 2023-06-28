@@ -14,15 +14,15 @@ public class Cat : BaseApp
         Entities.InputButton.Feedcat.StateChanges()
             .Subscribe(_ =>
             {
-                FeedCat(Convert.ToInt32(Entities.Sensor.ZedarLastAmountManualFeed.State));
-                Entities.InputNumber.Zedarlastamountmanualfeed.SetValue(Convert.ToInt32(Entities.InputNumber.Zedarlastamountmanualfeed.State + Convert.ToInt32(Entities.Sensor.ZedarLastAmountManualFeed.State)));
-                Entities.InputDatetime.Zedarlastmanualfeed.SetDatetime(new InputDatetimeSetDatetimeParameters
+                FeedCat(Convert.ToInt32(Entities.InputNumber.Pixelnumberofmanualfood.State));
+                Entities.InputNumber.Pixellastamountmanualfeed.SetValue(Convert.ToInt32(Entities.InputNumber.Pixelnumberofmanualfood.State + Convert.ToInt32(Entities.InputNumber.Pixellastamountmanualfeed.State)));
+                Entities.InputDatetime.Pixellastmanualfeed.SetDatetime(new InputDatetimeSetDatetimeParameters
                 {
                     Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
                 });
             });
 
-        Entities.InputButton.Zedargivenextfeedeary.StateChanges()
+        Entities.InputButton.Pixelgivenextfeedeary.StateChanges()
             .Subscribe(_ => GiveNextFeedEarly());
 
         Entities.InputButton.Cleanpetsnowy.StateChanges()
@@ -52,8 +52,8 @@ public class Cat : BaseApp
 
     private void FeedCat(int amount)
     {
-        Entities.InputNumber.Zedartotalamountfeedday.SetValue(Convert.ToInt32(Entities.InputNumber.Zedartotalamountfeedday.State + amount));
-        Entities.InputNumber.Zedartotalamountfeedalltime.SetValue(Convert.ToInt32(Entities.InputNumber.Zedartotalamountfeedalltime.State + amount));
+        Entities.InputNumber.Pixeltotalamountfeedday.SetValue(Convert.ToInt32(Entities.InputNumber.Pixeltotalamountfeedday.State + amount));
+        Entities.InputNumber.Pixeltotalamountfeedalltime.SetValue(Convert.ToInt32(Entities.InputNumber.Pixeltotalamountfeedalltime.State + amount));
         
         Services.Localtuya.SetDp(new LocaltuyaSetDpParameters
         {
@@ -68,21 +68,21 @@ public class Cat : BaseApp
 
     private void MonitorCar()
     {
-        Entities.InputDatetime.Zedarlastmanualfeed.StateChanges()
+        Entities.InputDatetime.Pixellastmanualfeed.StateChanges()
             .Subscribe(_ =>
-                Notify.NotifyGsmVincent(@"Pixel heeft handmatig eten gehad",
-                    @$"Pixel heeft {Entities.InputNumber.Zedarlastamountmanualfeed.State} porties eten gehad", false, 5));
+                Notify.NotifyPhoneVincent(@"Pixel heeft handmatig eten gehad",
+                    @$"Pixel heeft {Entities.InputNumber.Pixellastamountmanualfeed.State} porties eten gehad", false, 5));
 
-        Entities.InputDatetime.Zedarlastautomatedfeed.StateChanges()
+        Entities.InputDatetime.Pixellastautomatedfeed.StateChanges()
             .Subscribe(_ =>
             {
                 Logger.LogDebug(@"NOTIFICATIE: Pixel heeft automatisch eten gehad");
-                Notify.NotifyGsmVincent(@"Pixel heeft automatisch eten gehad",
-                    @$"Pixel heeft {Entities.InputNumber.Zedarlastamountautomationfeed.State} porties eten gehad", false, 5);
+                Notify.NotifyPhoneVincent(@"Pixel heeft automatisch eten gehad",
+                    @$"Pixel heeft {Entities.InputNumber.Pixellastamountautomationfeed.State} porties eten gehad", false, 5);
             });
              
 
-        Scheduler.ScheduleCron("59 23 * * *", () => Entities.InputNumber.Zedartotalamountfeedday.SetValue(0));
+        Scheduler.ScheduleCron("59 23 * * *", () => Entities.InputNumber.Pixeltotalamountfeedday.SetValue(0));
     }
 
     private void AutoFeedCat()
@@ -92,18 +92,18 @@ public class Cat : BaseApp
         {
             Scheduler.RunDaily(TimeSpan.Parse(autoFeed.Key.State!), () =>
             {
-                if (Entities.InputBoolean.Zedarskipnextautofeed.IsOff())
+                if (Entities.InputBoolean.Pixelskipnextautofeed.IsOff())
                 {
                     FeedCat(Convert.ToInt32(autoFeed.Value.State));
                     
-                    Entities.InputNumber.Zedarlastamountautomationfeed.SetValue(Convert.ToInt32(autoFeed.Value.State));
-                    Entities.InputDatetime.Zedarlastautomatedfeed.SetDatetime(new InputDatetimeSetDatetimeParameters
+                    Entities.InputNumber.Pixellastamountautomationfeed.SetValue(Convert.ToInt32(autoFeed.Value.State));
+                    Entities.InputDatetime.Pixellastautomatedfeed.SetDatetime(new InputDatetimeSetDatetimeParameters
                     {
                         Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
                     });
                 }
                 
-                Entities.InputBoolean.Zedarskipnextautofeed.TurnOff();
+                Entities.InputBoolean.Pixelskipnextautofeed.TurnOff();
             });
         }
     }
@@ -113,12 +113,12 @@ public class Cat : BaseApp
         var closestFeed = Collections.GetFeedTimes(Entities).MinBy(t =>
             Math.Abs((DateTime.Parse(t.Key.State!) - DateTime.Now).Ticks));
 
-        Entities.InputBoolean.Zedarskipnextautofeed.TurnOn();
+        Entities.InputBoolean.Pixelskipnextautofeed.TurnOn();
         FeedCat(Convert.ToInt32(closestFeed.Value.State));
         
-        Entities.InputNumber.Zedarlastamountmanualfeed.SetValue(Convert.ToInt32(closestFeed.Value.State));
+        Entities.InputNumber.Pixellastamountmanualfeed.SetValue(Convert.ToInt32(closestFeed.Value.State));
 
-        Entities.InputDatetime.Zedarlastmanualfeed.SetDatetime(new InputDatetimeSetDatetimeParameters
+        Entities.InputDatetime.Pixellastmanualfeed.SetDatetime(new InputDatetimeSetDatetimeParameters
         {
             Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
         });
