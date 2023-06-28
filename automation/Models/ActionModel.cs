@@ -17,5 +17,6 @@ public record ActionModel
     [JsonPropertyName("uri")]
     public string Uri { get; set; } = default!;
 
+    [JsonIgnore]
     public Action? Func;
 }
