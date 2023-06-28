@@ -28,10 +28,10 @@ public static class Collections
     {
         return new Dictionary<InputDatetimeEntity, InputNumberEntity>
         {
-            { entities.InputDatetime.Zedarfeedfirsttime, entities.InputNumber.Zedarfeedfirstamound },
-            { entities.InputDatetime.Zedarfeedsecondtime, entities.InputNumber.Zedarfeedsecondamound },
-            { entities.InputDatetime.Zedarfeedthirdtime, entities.InputNumber.Zedarfeedthirdamound },
-            { entities.InputDatetime.Zedarfeedfourthtime, entities.InputNumber.Zedarfeedfourthamound }
+            { entities.InputDatetime.Pixelfeedfirsttime, entities.InputNumber.Pixelfeedfirstamount },
+            { entities.InputDatetime.Pixelfeedsecondtime, entities.InputNumber.Pixelfeedsecondamount },
+            { entities.InputDatetime.Pixelfeedthirdtime, entities.InputNumber.Pixelfeedthirdamount },
+            { entities.InputDatetime.Pixelfeedfourthtime, entities.InputNumber.Pixelfeedfourthamount }
         };
     }
 

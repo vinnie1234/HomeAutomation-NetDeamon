@@ -25,8 +25,8 @@ public class HolidayManager : BaseApp
                 alarmList.AddRange(from JsonElement o in jsonList select o.Deserialize<AlarmStateModel>());
 
             var firstAlarm = alarmList.OrderBy(x => x.LocalTime).FirstOrDefault(x => x.Status == "set");
-            Notify.NotifyGsmVincent(@"WEKKER UITZETTEN",
-                @$"Je moet je wekker nog uit zetten voor {DateTime.Parse(firstAlarm?.LocalTime ?? string.Empty):dd-MM-yyyy hh:mm}", true);
+            Notify.NotifyPhoneVincent(@"WEKKER UITZETTEN",
+                @$"Je moet je wekker nog uit zetten voor {firstAlarm?.LocalTime}", true);
 
             Logger.LogDebug("Send reminder for disable alarm");
         }
@@ -36,7 +36,7 @@ public class HolidayManager : BaseApp
     {
         if (Entities.Sensor.HubVincentAlarms.Attributes?.NextAlarmStatus == "inactive")
         {
-            Notify.NotifyGsmVincent(@"WEKKER AANZETTEN", @"Helaas moet je je wekker nog aanzetten :(", true);
+            Notify.NotifyPhoneVincent(@"WEKKER AANZETTEN", @"Helaas moet je je wekker nog aanzetten :(", true);
             Logger.LogDebug("Send reminder for enable alarm");
         }
     }

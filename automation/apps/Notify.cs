@@ -18,13 +18,14 @@ public class Notify : INotify
         _services = new Services(ha);
     }
 
-    public async Task NotifyHouse(string title, string message, bool canAlwaysSendNotification, double? sendAfterMinutes = null)
+    public async Task NotifyHouse(string title, string message, bool canAlwaysSendNotification,
+        double? sendAfterMinutes = null)
     {
         var canSendNotification = CanSendNotification(_storage, canAlwaysSendNotification, title, sendAfterMinutes);
         if (!canSendNotification) return;
-        
+
         SaveNotification(_storage, title, message);
-        
+
         _entities.MediaPlayer.HubVincent.VolumeSet(0.4);
         _entities.MediaPlayer.Woonkamer.VolumeSet(0.4);
 
@@ -39,7 +40,7 @@ public class Notify : INotify
         await Task.WhenAll(tasks);
     }
 
-    public void NotifyGsmVincent(
+    public void NotifyPhoneVincent(
         string title,
         string message,
         bool canAlwaysSendNotification,
@@ -52,22 +53,23 @@ public class Notify : INotify
     {
         var canSendNotification = CanSendNotification(_storage, canAlwaysSendNotification, title, sendAfterMinutes);
         if (!canSendNotification) return;
-        
+
         SaveNotification(_storage, title, message);
-        
+
         var data = ConstructData(action, image: image, channel: channel, vibrationPattern: vibrationPattern,
             ledColor: ledColor);
         _services.Notify.MobileAppSmS908b(new NotifyMobileAppSmS908bParameters
             { Title = title, Message = message, Data = data });
     }
 
-    public void NotifyGsmVincentTts(string title, string message, bool canAlwaysSendNotification, double? sendAfterMinutes = null)
+    public void NotifyPhoneVincentTts(string title, string message, bool canAlwaysSendNotification,
+        double? sendAfterMinutes = null)
     {
         var canSendNotification = CanSendNotification(_storage, canAlwaysSendNotification, title, sendAfterMinutes);
         if (!canSendNotification) return;
-        
+
         SaveNotification(_storage, title, message);
-        
+
         var data = ConstructData(null, true, phoneMessage: message);
         _services.Notify.MobileAppSmS908b(new NotifyMobileAppSmS908bParameters
             { Message = "TTS", Data = data });
@@ -81,7 +83,7 @@ public class Notify : INotify
         {
             oldData.Remove(data);
         }
-        
+
         _storage.Save("notificationHistory", oldData);
     }
 
@@ -123,22 +125,10 @@ public class Notify : INotify
             data.TtsText = phoneMessage;
         }
 
-        if (!string.IsNullOrEmpty(channel))
-        {
-            data.Channel = channel;
-        }
-
-        if (!string.IsNullOrEmpty(vibrationPattern))
-        {
-            data.VibrationPattern = vibrationPattern; //"100, 1000, 100, 1000, 100"
-        }
-
-        if (!string.IsNullOrEmpty(ledColor))
-        {
-            data.LedColor = vibrationPattern; //"red"
-        }
-
-        if (!string.IsNullOrEmpty(image)) data.Image = image;
+        data.Channel = channel;
+        data.VibrationPattern = vibrationPattern; //"100, 1000, 100, 1000, 100"
+        data.LedColor = vibrationPattern;         //"red"
+        data.Image = image;
 
         if (actions != null)
         {
@@ -155,10 +145,11 @@ public class Notify : INotify
         return data;
     }
 
-    private static bool CanSendNotification(IDataRepository storage, bool canAlwaysSend, string title, double? sendAfterMinutes)
+    private static bool CanSendNotification(IDataRepository storage, bool canAlwaysSend, string title,
+        double? sendAfterMinutes)
     {
         if (canAlwaysSend) return true;
-        
+
         var notification = GetLastNotification(storage, title);
 
         sendAfterMinutes ??= 60;
@@ -175,9 +166,14 @@ public class Notify : INotify
         }
         else
         {
-            oldData.Add(new NotificationModel(title, message, DateTime.Now));
+            oldData.Add(new NotificationModel
+            {
+                Name = title,
+                Value = message,
+                LastSendNotification = DateTime.Now
+            });
         }
-        
+
         storage.Save("notificationHistory", oldData);
     }
 

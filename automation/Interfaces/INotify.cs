@@ -6,7 +6,7 @@ public interface INotify
 {
     Task NotifyHouse(string title, string message, bool canAlwaysSendNotification, double? sendAfterMinutes = null);
 
-    void NotifyGsmVincent(
+    void NotifyPhoneVincent(
         string title,
         string message,
         bool canAlwaysSendNotification,
@@ -18,7 +18,7 @@ public interface INotify
         string? ledColor = null);
 
     // ReSharper disable once UnusedMember.Global
-    void NotifyGsmVincentTts(string title, string message, bool canAlwaysSendNotification, double? sendAfterMinutes = null);
+    void NotifyPhoneVincentTts(string title, string message, bool canAlwaysSendNotification, double? sendAfterMinutes = null);
 
     void ResetNotificationHistoryForNotificationTitle(string title);
 }

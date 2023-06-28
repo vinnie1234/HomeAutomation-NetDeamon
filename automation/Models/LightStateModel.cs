@@ -5,7 +5,7 @@ namespace Automation.Models;
 
 public class LightStateModel
 {
-    public string? EntityId { get; set; }
+    public string EntityId { get; set; } = default!;
     public IReadOnlyList<double>? RgbColors { get; set; }
     public double? Brightness { get; set; }
     public double? ColorTemp { get; set; }

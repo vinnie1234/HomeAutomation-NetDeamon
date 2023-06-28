@@ -1,10 +1,11 @@
 using System.Reactive.Concurrency;
 using Automation.Helpers;
+using Newtonsoft.Json;
 
 namespace Automation.apps.General;
 
 //[NetDaemonApp(Id = nameof(TestApp))]
-// ReSharper disable once UnusedType.Global
+//ReSharper disable once UnusedType.Global
 //[Focus]
 public class TestApp : BaseApp
 {
@@ -12,7 +13,5 @@ public class TestApp : BaseApp
     public TestApp(IHaContext ha, ILogger<TestApp> logger, INotify notify, IScheduler scheduler)
         : base(ha, logger, notify, scheduler)
     {
-        var uri = ConfigManager.GetValueFromConfigNested("Discord", "Pixel");
-        if (uri != null) Helpers.Discord.SendMessage(uri, @"Pixellll");
     }
 }

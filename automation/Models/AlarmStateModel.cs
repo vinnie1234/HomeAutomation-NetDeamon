@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
@@ -7,27 +8,27 @@ namespace Automation.Models;
 
 public class AlarmStateModel
 {
-    [JsonProperty("alarm_id")]
+    [JsonPropertyName("alarm_id")]
     public string? AlarmId { get; set; }
 
-    [JsonProperty("fire_time")]
+    [JsonPropertyName("fire_time")]
     public int? FireTime { get; set; }
 
-    [JsonProperty("local_time")]
+    [JsonPropertyName("local_time")]
     public string? LocalTime { get; set; }
 
-    [JsonProperty("local_time_iso")]
+    [JsonPropertyName("local_time_iso")]
     public DateTime? LocalTimeIso { get; set; }
 
-    [JsonProperty("status")]
+    [JsonPropertyName("status")]
     public string? Status { get; set; }
 
-    [JsonProperty("label")]
+    [JsonPropertyName("label")]
     public object? Label { get; set; }
 
-    [JsonProperty("recurrence")]
-    public List<int>? Recurrence { get; set; }
+    [JsonPropertyName("recurrence")]
+    public List<int>? RecurrenceDays { get; set; }
 
-    [JsonProperty(nameof(EntityId))]
+    [JsonPropertyName(nameof(EntityId))]
     public string? EntityId { get; set; }
 }

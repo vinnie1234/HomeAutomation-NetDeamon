@@ -57,12 +57,12 @@ public class SleepManager : BaseApp
 
         if (message != @"Geen")
         {
-            Notify.NotifyGsmVincent(@"Vergeet het afval niet",
+            Notify.NotifyPhoneVincent(@"Vergeet het afval niet",
                 @$"Vergeet je niet op {message} buiten te zetten?", true);
         }
 
         if (int.Parse(Entities.Sensor.PetsnowyError.State ?? "0") > 0)
-            Notify.NotifyGsmVincent(@"PetSnowy heeft errors",
+            Notify.NotifyPhoneVincent(@"PetSnowy heeft errors",
                 @"Er staat nog een error open voor de PetSnowy", true);
     }
 
@@ -77,13 +77,13 @@ public class SleepManager : BaseApp
         if (Entities.Sensor.SmS908bBatteryLevel.State < 30)
         {
             if (Entities.BinarySensor.SmS908bIsCharging.IsOff())
-                Notify.NotifyGsmVincent(@"Telefoon bijna leeg", @"Je moet je telefoon opladen", true);
+                Notify.NotifyPhoneVincent(@"Telefoon bijna leeg", @"Je moet je telefoon opladen", true);
         }
 
         if (Entities.Sensor.SmT860BatteryLevel.State < 30)
         {
             if (Entities.BinarySensor.SmT860IsCharging.IsOff())
-                Notify.NotifyGsmVincent(@"Tabled bijna leeg", @"Je moet je tabled opladen", true);
+                Notify.NotifyPhoneVincent(@"Tabled bijna leeg", @"Je moet je tabled opladen", true);
         }
     }
 

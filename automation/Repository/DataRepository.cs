@@ -1,20 +1,17 @@
 using System.IO;
 
-namespace Automation.Helpers;
+namespace Automation.Repository;
 
 public class DataRepository : IDataRepository
 {
     // ReSharper disable once MemberInitializerValueIgnored
     private readonly string _dataStoragePath = "./apps/.storage";
-    private readonly JsonSerializerOptions _jsonOptions;
     private readonly ILogger _logger;
 
     public DataRepository(string dataStoragePath, ILogger logger)
     {
         _dataStoragePath = dataStoragePath;
         _logger = logger;
-
-        _jsonOptions = new JsonSerializerOptions();
     }
     
     public T? Get<T>(string id) where T : class
@@ -28,7 +25,7 @@ public class DataRepository : IDataRepository
 
             using var jsonStream = File.OpenRead(storageJsonFile);
 
-            return JsonSerializer.Deserialize<T>(jsonStream, _jsonOptions);
+            return JsonSerializer.Deserialize<T>(jsonStream);
         }
         catch (Exception e)
         {
@@ -37,14 +34,10 @@ public class DataRepository : IDataRepository
         
         return default;
     }
-
-    /// <inheritdoc/>
+    
     public void Save<T>(string id, T data)
     {
-        if (data == null)
-            throw new ArgumentNullException(nameof(data));
-
-        SaveInternal<T>(id, data);
+        SaveInternal(id, data);
     }
 
     private void SaveInternal<T>(string id, T data)

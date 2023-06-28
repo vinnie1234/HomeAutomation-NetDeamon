@@ -8,8 +8,7 @@ public static class LightExtension
 
         foreach (var property in properties)
         {
-            var light = (LightEntity)lightEntities.GetType().GetProperty(property.Name)
-                ?.GetValue(lightEntities, null)!;
+            var light = (LightEntity)property.GetValue(lightEntities, null)!;
             if (light.EntityId == "light.rt_ax88u_led")
             {
                 continue;

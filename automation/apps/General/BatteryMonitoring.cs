@@ -30,7 +30,7 @@ public class BatteryMonitoring : BaseApp
     private void SendNotification(string name, double? batterPrc)
     {
         Logger.LogDebug(@"Batterij bijna leeg van {Name}. De batterij is nu op {BatterPrc}", name, batterPrc);
-        Notify.NotifyGsmVincent(
+        Notify.NotifyPhoneVincent(
             @$"Batterij bijna leeg van {name}",
             @$"Het is tijd om de batterij op te laden van {name}. De batterij is nu op {batterPrc}%",
             false,

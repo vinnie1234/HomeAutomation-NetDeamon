@@ -1,6 +1,7 @@
 using System.IO;
 using Automation.apps;
 using Automation.Helpers;
+using Automation.Repository;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
