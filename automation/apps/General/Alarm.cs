@@ -1,5 +1,8 @@
 using System.Reactive.Concurrency;
+using System.Threading;
 using Automation.Helpers;
+using NetDaemon.Client;
+using NetDaemon.Client.HomeAssistant.Extensions;
 
 namespace Automation.apps.General;
 
@@ -7,14 +10,17 @@ namespace Automation.apps.General;
 public class Alarm : BaseApp
 {
     private bool IsSleeping => Entities.InputBoolean.Sleeping.IsOn();
+    private readonly string _discordUri = ConfigManager.GetValueFromConfigNested("Discord", "Logs") ?? "";
     
-    public Alarm(IHaContext ha, ILogger<Alarm> logger, INotify notify, IScheduler scheduler)
+    public Alarm(IHaContext ha, ILogger<Alarm> logger, INotify notify, IScheduler scheduler, IHomeAssistantConnection homeAssistantConnection)
         : base(ha, logger, notify, scheduler)
     {
         TemperatureCheck();
         EnergyCheck();
         GarbageCheck();
         PetSnowyCheck();
+        HaChecks(homeAssistantConnection);
+        EnergyNegativeCheck();
 
         Entities.BinarySensor.GangMotion.WhenTurnsOn(_ =>
         {
@@ -78,14 +84,40 @@ public class Alarm : BaseApp
         Scheduler.ScheduleCron("00 22 * * *", () =>
         {
             if (int.Parse(Entities.Sensor.PetsnowyError.State ?? "0") > 0)
+            {
+                Helpers.Discord.SendMessage(_discordUri, @"PetSnowy heeft errors");
                 Notify.NotifyPhoneVincent(@"PetSnowy heeft errors",
                     @"Er staat nog een error open voor de PetSnowy", false, 10);
+            }
+        });
+    }
+    
+    private void HaChecks(IHomeAssistantConnection homeAssistantConnection)
+    {
+        Scheduler.RunEvery(TimeSpan.FromSeconds(30), DateTimeOffset.Now, () =>
+        {
+            var ping = homeAssistantConnection.PingAsync(TimeSpan.FromSeconds(5), new CancellationToken()).Result;
+            if (!ping)
+            {
+                Helpers.Discord.SendMessage(_discordUri, @"NetDeamon heeft geen verbinding meer met HA");
+                Notify.NotifyPhoneVincent(@"NetDeamon heeft geen verbinding meer met HA",
+                    @"De ping naar HA is helaas niet gelukt!", false, 10);
+            }
         });
     }
 
-    // ReSharper disable once UnusedMember.Local
-    private void HaChecks()
+    private void EnergyNegativeCheck()
     {
-        throw new NotImplementedException();
+        Entities.Sensor.Energykwhnetpriceincent
+            .StateChanges()
+            .Subscribe(x =>
+            {
+                if (x.New?.State < 20.00)
+                {
+                    Helpers.Discord.SendMessage(_discordUri, @$"ENERGY IS NEGATIEF - {x.New.State}");
+                    Notify.NotifyPhoneVincent(@$"ENERGY IS NEGATIEF - {x.New.State}",
+                        @"Je energy is negatief, dit kost geld.", false, 10);
+                }
+            });
     }
 }
