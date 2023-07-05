@@ -11,10 +11,11 @@ public class SleepManager : BaseApp
     public SleepManager(IHaContext ha, ILogger<SleepManager> logger, INotify notify, IScheduler scheduler)
         : base(ha, logger, notify, scheduler)
     {
+        EnergyPriceCheck();
+        
         Entities.InputBoolean.Sleeping.WhenTurnsOff(_ => WakeUp());
         Entities.InputBoolean.Sleeping.WhenTurnsOn(_ => Sleeping());
-        
-        
+
         Scheduler.ScheduleCron("00 10 * * *", () =>
         {
             if (!((IList)Globals.WeekendDays).Contains(DateTime.Now.DayOfWeek))
@@ -92,6 +93,25 @@ public class SleepManager : BaseApp
         if (!DisableLightAutomations)
         {
             Entities.Light.TurnAllOff();
+        }
+    }
+
+    private void EnergyPriceCheck()
+    {
+        var priceList = Entities.Sensor.EpexSpotNlNetPrice
+            .Attributes?.Data;
+
+        if (priceList != null)
+        {
+            foreach (JsonElement price in priceList)
+            {
+                var model = price.ToObject<EnergyPriceModel>();
+                if (model is { PriceCtPerKwh: > -20 })
+                {
+                    Notify.NotifyPhoneVincent(@"Morgen is het stroom gratis", @$"Stroom kost morgen om {model.StartTime} {model.PriceCtPerKwh} cent!", false, 10);
+                    break;
+                }
+            }
         }
     }
 }
