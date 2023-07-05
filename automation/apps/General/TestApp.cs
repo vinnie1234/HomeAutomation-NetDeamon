@@ -1,6 +1,11 @@
 using System.Reactive.Concurrency;
+using System.Threading;
 using Automation.Helpers;
+using NetDaemon.Client;
+using NetDaemon.Client.HomeAssistant.Extensions;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Automation.apps.General;
 
@@ -10,7 +15,7 @@ namespace Automation.apps.General;
 public class TestApp : BaseApp
 {
     // ReSharper disable once SuggestBaseTypeForParameterInConstructor
-    public TestApp(IHaContext ha, ILogger<TestApp> logger, INotify notify, IScheduler scheduler)
+    public TestApp(IHaContext ha, IHomeAssistantConnection homeAssistantConnection, ILogger<TestApp> logger, INotify notify, IScheduler scheduler)
         : base(ha, logger, notify, scheduler)
     {
     }
