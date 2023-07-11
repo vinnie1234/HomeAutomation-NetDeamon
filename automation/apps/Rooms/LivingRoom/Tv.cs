@@ -1,5 +1,6 @@
 using System.Reactive.Concurrency;
 using Automation.Enum;
+using static Automation.Globals;
 
 namespace Automation.apps.Rooms.LivingRoom;
 
@@ -10,7 +11,11 @@ public class Tv : BaseApp
 
     private bool DisableLightAutomations => Entities.InputBoolean.Disablelightautomationlivingroom.IsOn();
     
-    public Tv(IHaContext ha, ILogger<Tv> logger, INotify notify, IScheduler scheduler)
+    public Tv(
+        IHaContext ha, 
+        ILogger<Tv> logger, 
+        INotify notify, 
+        IScheduler scheduler)
         : base(ha, logger, notify, scheduler)
     {
         Entities.MediaPlayer.Tv.WhenTurnsOn(_ => MovieTime());
@@ -22,7 +27,7 @@ public class Tv : BaseApp
         Logger.LogDebug("TV Turned off");
         if (!DisableLightAutomations)
         {
-            switch (Globals.GetHouseState(Entities))
+            switch (GetHouseState(Entities))
             {
                 case HouseStateEnum.Morning:
                     Entities.Scene.Woonkamermorning.TurnOn();

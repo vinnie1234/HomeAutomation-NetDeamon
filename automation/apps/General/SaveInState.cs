@@ -6,8 +6,14 @@ namespace Automation.apps.General;
 public class SaveInState : BaseApp
 {
     private readonly IDataRepository _storage;
+    private List<LightStateModel> LightEntitiesStates { get; }
 
-    public SaveInState(IHaContext ha, ILogger<SaveInState> logger, IDataRepository storage, INotify notify, IScheduler scheduler)
+    public SaveInState(
+        IHaContext ha,
+        ILogger<SaveInState> logger,
+        IDataRepository storage,
+        INotify notify,
+        IScheduler scheduler)
         : base(ha, logger, notify, scheduler)
     {
         _storage = storage;
@@ -16,17 +22,15 @@ public class SaveInState : BaseApp
         SetInitialStates();
     }
 
-    private List<LightStateModel> LightEntitiesStates { get; }
-
     private void SetInitialStates()
     {
         var properties = Entities.Light.GetType().GetProperties();
 
         foreach (var property in properties)
         {
-            var light = (LightEntity)Entities?.Light.GetType().GetProperty(property.Name)
-                ?.GetValue(Entities.Light, null)!;
-            SetLightEntityState(light);
+            var light = property.GetValue(Entities.Light, null);
+            if (light != null)
+                SetLightEntityState((LightEntity)light);
         }
 
         _storage.Save("LightState", LightEntitiesStates);
@@ -36,27 +40,30 @@ public class SaveInState : BaseApp
         Logger.LogDebug("Save state");
     }
 
-    private IEnumerable<AlarmStateModel> SetAlarmState()
+    private IEnumerable<AlarmStateModel?> SetAlarmState()
     {
-        var activeAlarmsHub = new List<AlarmStateModel>();
+        var activeAlarmsHub = new List<AlarmStateModel?>();
         var activeAlarmsHubJson = Entities.Sensor.HubVincentAlarms.Attributes?.Alarms;
         if (activeAlarmsHubJson != null)
-            activeAlarmsHub.AddRange(from JsonElement o in activeAlarmsHubJson select o.Deserialize<AlarmStateModel>());
+            activeAlarmsHub
+                .AddRange(activeAlarmsHubJson.Cast<JsonElement>().Select(o => o.Deserialize<AlarmStateModel>()));
 
-        foreach (var alarmState in activeAlarmsHub)
+        foreach (var alarmState in activeAlarmsHub.Where(alarmState => alarmState != null))
         {
-            alarmState.EntityId = Entities?.Sensor.HubVincentAlarms.EntityId;
+            if (alarmState != null) 
+                alarmState.EntityId = Entities?.Sensor.HubVincentAlarms.EntityId;
         }
 
-        var activeAlarmsLivingRoom = new List<AlarmStateModel>();
+        var activeAlarmsLivingRoom = new List<AlarmStateModel?>();
         var activeAlarmsLivingRoomJson = Entities?.Sensor.WoonkamerAlarms.Attributes?.Alarms;
         if (activeAlarmsLivingRoomJson != null)
-            activeAlarmsLivingRoom.AddRange(from JsonElement o in activeAlarmsLivingRoomJson
-                select o.Deserialize<AlarmStateModel>());
+            activeAlarmsLivingRoom.AddRange(activeAlarmsLivingRoomJson.Cast<JsonElement>()
+                .Select(o => o.Deserialize<AlarmStateModel>()));
 
-        foreach (var alarmState in activeAlarmsLivingRoom)
+        foreach (var alarmState in activeAlarmsLivingRoom.Where(alarmState => alarmState != null))
         {
-            alarmState.EntityId = Entities?.Sensor.WoonkamerAlarms.EntityId;
+            if (alarmState != null) 
+                alarmState.EntityId = Entities?.Sensor.WoonkamerAlarms.EntityId;
         }
 
         return activeAlarmsHub.Concat(activeAlarmsLivingRoom);
@@ -65,20 +72,15 @@ public class SaveInState : BaseApp
     // ReSharper disable once SuggestBaseTypeForParameter
     private void SetLightEntityState(LightEntity entity)
     {
-        var oldEntity = LightEntitiesStates.FirstOrDefault(x => x.EntityId == entity.EntityId);
+        var oldEntity = LightEntitiesStates
+            .FirstOrDefault(lightStateModel => lightStateModel.EntityId == entity.EntityId);
         if (oldEntity != null)
         {
             LightEntitiesStates.Remove(oldEntity);
         }
 
-        LightEntitiesStates.Add(new LightStateModel
-        {
-            EntityId = entity.EntityId,
-            RgbColors = entity.Attributes?.RgbColor,
-            Brightness = entity.Attributes?.Brightness,
-            ColorTemp = entity.Attributes?.ColorTemp,
-            IsOn = entity.IsOn(),
-            SupportedColorModes = entity.Attributes?.SupportedColorModes
-        });
+        LightEntitiesStates.Add(new LightStateModel(entityId: entity.EntityId, rgbColors: entity.Attributes?.RgbColor,
+            brightness: entity.Attributes?.Brightness, colorTemp: entity.Attributes?.ColorTemp, isOn: entity.IsOn(),
+            supportedColorModes: entity.Attributes?.SupportedColorModes));
     }
 }

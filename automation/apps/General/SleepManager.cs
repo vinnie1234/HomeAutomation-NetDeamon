@@ -8,7 +8,11 @@ public class SleepManager : BaseApp
 {
     private bool DisableLightAutomations => Entities.InputBoolean.Disablelightautomationgeneral.IsOn();
 
-    public SleepManager(IHaContext ha, ILogger<SleepManager> logger, INotify notify, IScheduler scheduler)
+    public SleepManager(
+        IHaContext ha, 
+        ILogger<SleepManager> logger, 
+        INotify notify, 
+        IScheduler scheduler)
         : base(ha, logger, notify, scheduler)
     {
         EnergyPriceCheck();

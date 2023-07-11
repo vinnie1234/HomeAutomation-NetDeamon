@@ -6,6 +6,15 @@ namespace Automation.Models;
 
 public class RecordNotifyData
 {
+    public RecordNotifyData(string? priority, int? ttl, string? tag, string? color, string? sticky)
+    {
+        Priority = priority;
+        Ttl = ttl;
+        Tag = tag;
+        Color = color;
+        Sticky = sticky;
+    }
+
     [JsonPropertyName("tag")]
     public string? Tag { get; set; }
 

@@ -30,8 +30,8 @@ try
         .RunAsync()
         .ConfigureAwait(false);
 }
-catch (Exception e)
+catch (Exception ex)
 {
-    Console.WriteLine($"Failed to start host... {e}");
+    Console.WriteLine($"Failed to start host... {ex}");
     throw;
 }

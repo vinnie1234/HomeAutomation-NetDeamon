@@ -7,7 +7,12 @@ public class WaterManagement : BaseApp
     private long _waterUsages = 0;
     
     // ReSharper disable once SuggestBaseTypeForParameterInConstructor
-    protected WaterManagement(IHaContext haContext, ILogger<WaterManagement> logger, INotify notify, IScheduler scheduler) : base(haContext, logger, notify, scheduler)
+    protected WaterManagement(
+        IHaContext haContext, 
+        ILogger<WaterManagement> logger, 
+        INotify notify, 
+        IScheduler scheduler) 
+        : base(haContext, logger, notify, scheduler)
     {
         Entities.Sensor.Watermeter5c2faf0e9b0aTotalWaterUsage
             .StateChanges()

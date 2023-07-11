@@ -7,7 +7,11 @@ public class Gaming : BaseApp
 {
     private bool DisableLightAutomations => Entities.InputBoolean.Disablelightautomationlivingroom.IsOn();
     
-    public Gaming(IHaContext ha, ILogger<Gaming> logger, INotify notify, IScheduler scheduler)
+    public Gaming(
+        IHaContext ha, 
+        ILogger<Gaming> logger, 
+        INotify notify, 
+        IScheduler scheduler)
         : base(ha, logger, notify, scheduler)
     {
         Entities.DeviceTracker.Sony.WhenTurnsOn(_ => GameSetUp());

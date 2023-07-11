@@ -9,7 +9,12 @@ public class Reset : BaseApp
 
     private List<LightStateModel>? LightEntitiesStates { get; set; }
 
-    public Reset(IHaContext ha, ILogger<Reset> logger, IDataRepository storage, INotify notify, IScheduler scheduler)
+    public Reset(
+        IHaContext ha,
+        ILogger<Reset> logger,
+        IDataRepository storage,
+        INotify notify,
+        IScheduler scheduler)
         : base(ha, logger, notify, scheduler)
     {
         _storage = storage;
@@ -25,20 +30,21 @@ public class Reset : BaseApp
     private void ResetAlarm()
     {
         //todo TTP steps!
-        var oldAlarms = _storage.Get<List<AlarmStateModel>>("LightState");
+        var oldAlarms = _storage.Get<List<AlarmStateModel?>>("LightState");
         if (oldAlarms == null) return;
 
-        var activeAlarmsHub = new List<AlarmStateModel>();
+        var activeAlarmsHub = new List<AlarmStateModel?>();
         var activeAlarmsHubJson = Entities.Sensor.HubVincentAlarms.Attributes?.Alarms;
         if (activeAlarmsHubJson != null)
-            activeAlarmsHub.AddRange(from JsonElement o in activeAlarmsHubJson select o.Deserialize<AlarmStateModel>());
+            activeAlarmsHub.AddRange(activeAlarmsHubJson.Cast<JsonElement>()
+                .Select(o => o.Deserialize<AlarmStateModel>()));
 
 
-        var activeAlarmsLivingRoom = new List<AlarmStateModel>();
+        var activeAlarmsLivingRoom = new List<AlarmStateModel?>();
         var activeAlarmsLivingRoomJson = Entities.Sensor.WoonkamerAlarms.Attributes?.Alarms;
         if (activeAlarmsLivingRoomJson != null)
-            activeAlarmsLivingRoom.AddRange(from JsonElement o in activeAlarmsLivingRoomJson
-                select o.Deserialize<AlarmStateModel>());
+            activeAlarmsLivingRoom.AddRange(activeAlarmsLivingRoomJson.Cast<JsonElement>()
+                .Select(o => o.Deserialize<AlarmStateModel>()));
 
         var allActiveAlarms = activeAlarmsHub.Concat(activeAlarmsLivingRoom);
 
@@ -47,7 +53,7 @@ public class Reset : BaseApp
         foreach (var alarm in activeAlarms
                      .Where(alarm => alarm.Status == "set")
                      .Where(alarm => oldAlarms
-                         .All(x => x.AlarmId != alarm.AlarmId)))
+                         .All(alarmStateModel => alarmStateModel?.AlarmId != alarm.AlarmId)))
         {
             if (alarm is { EntityId: not null, AlarmId: not null })
             {
@@ -68,45 +74,51 @@ public class Reset : BaseApp
 
         foreach (var property in properties)
         {
-            var light = (LightEntity)Entities.Light.GetType().GetProperty(property.Name)
-                ?.GetValue(Entities.Light, null)!;
+            var light = (LightEntity)property.GetValue(Entities.Light, null)!;
 
-            var oldStateLight = LightEntitiesStates?.FirstOrDefault(x => x.EntityId == light.EntityId);
+            var oldStateLight = LightEntitiesStates?
+                .FirstOrDefault(lightStateModel => lightStateModel.EntityId == light.EntityId);
 
-            if (oldStateLight != null)
+            ActualResetLight(oldStateLight, light);
+        }
+    }
+
+    private static void ActualResetLight(LightStateModel? oldStateLight, LightEntity light)
+    {
+        if (oldStateLight != null)
+        {
+            switch (oldStateLight.IsOn)
             {
-                switch (oldStateLight.IsOn)
-                {
-                    case false:
-                        light.TurnOff();
-                        break;
-                    case true:
-                        if ((light.Attributes?.SupportedColorModes ?? Array.Empty<string>()).Any(x => x == "xy"))
+                case false:
+                    light.TurnOff();
+                    break;
+                case true:
+                    if ((light.Attributes?.SupportedColorModes ?? Array.Empty<string>()).Any(x => x == "xy"))
+                    {
+                        light.TurnOn(
+                            rgbColor: oldStateLight.RgbColors,
+                            brightness: Convert.ToInt64(oldStateLight.Brightness)
+                        );
+                    }
+                    else
+                    {
+                        if (light.Attributes == null ||
+                            (light.Attributes?.SupportedColorModes ?? 
+                             Array.Empty<string>())
+                            .Any(x => x == @"onoff"))
                         {
-                            light.TurnOn(
-                                rgbColor: oldStateLight.RgbColors,
-                                brightness: Convert.ToInt64(oldStateLight.Brightness)
-                            );
+                            light.TurnOn();
                         }
                         else
                         {
-                            if (light.Attributes == null ||
-                                (light.Attributes?.SupportedColorModes ?? Array.Empty<string>())
-                                .Any(x => x == @"onoff"))
-                            {
-                                light.TurnOn();
-                            }
-                            else
-                            {
-                                light.TurnOn(
-                                    colorTemp: oldStateLight.ColorTemp,
-                                    brightness: Convert.ToInt64(oldStateLight.Brightness)
-                                );
-                            }
+                            light.TurnOn(
+                                colorTemp: oldStateLight.ColorTemp,
+                                brightness: Convert.ToInt64(oldStateLight.Brightness)
+                            );
                         }
+                    }
 
-                        break;
-                }
+                    break;
             }
         }
     }

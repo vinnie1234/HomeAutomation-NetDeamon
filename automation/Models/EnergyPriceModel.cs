@@ -4,6 +4,13 @@ namespace Automation.Models;
 
 public class EnergyPriceModel
 {
+    public EnergyPriceModel(DateTime startTime, double priceCtPerKwh, DateTime endTime)
+    {
+        StartTime = startTime;
+        PriceCtPerKwh = priceCtPerKwh;
+        EndTime = endTime;
+    }
+
     [JsonPropertyName("start_time")]
     public DateTime StartTime { get; set; }
     

@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Automation.Enum;
+using static System.Enum;
 
 namespace Automation.apps;
 
@@ -28,13 +29,21 @@ public class Notify : INotify
 
         _entities.MediaPlayer.HubVincent.VolumeSet(0.4);
         _entities.MediaPlayer.Woonkamer.VolumeSet(0.4);
-
+        
         var tasks = new List<Task>
         {
-            Task.Run(() => _services.Tts.GoogleSay(new TtsGoogleSayParameters
-                { EntityId = _entities.MediaPlayer.HubVincent.EntityId, Message = message, Language = "nl" })),
-            Task.Run(() => _services.Tts.GoogleSay(new TtsGoogleSayParameters
-                { EntityId = _entities.MediaPlayer.Woonkamer.EntityId, Message = message, Language = "nl" }))
+            Task.Run(() => _services.Tts.Speak(ServiceTarget.FromEntities(_entities.MediaPlayer.HubVincent.EntityId), new TtsSpeakParameters
+            {
+                MediaPlayerEntityId = _entities.MediaPlayer.HubVincent.EntityId,
+                Message = message,
+                Language = "nl",
+            })),
+            Task.Run(() => _services.Tts.Speak(ServiceTarget.FromEntities(_entities.MediaPlayer.Woonkamer.EntityId), new TtsSpeakParameters
+            {
+                MediaPlayerEntityId = _entities.MediaPlayer.Woonkamer.EntityId,
+                Message = message,
+                Language = "nl",
+            }))
         };
 
         await Task.WhenAll(tasks);
@@ -56,8 +65,7 @@ public class Notify : INotify
 
         SaveNotification(_storage, title, message);
 
-        var data = ConstructData(action, image: image, channel: channel, vibrationPattern: vibrationPattern,
-            ledColor: ledColor);
+        var data = ConstructData(action, image: image, channel: channel, vibrationPattern: vibrationPattern);
         _services.Notify.MobileAppSmS908b(new NotifyMobileAppSmS908bParameters
             { Title = title, Message = message, Data = data });
     }
@@ -106,18 +114,15 @@ public class Notify : INotify
         string? phoneMessage = null,
         string? image = null,
         string? channel = null,
-        string? vibrationPattern = null,
-        string? ledColor = null)
+        string? vibrationPattern = null)
     {
         //construct the data here
-        RecordNotifyData data = new()
-        {
-            Priority = System.Enum.GetName(priority)?.ToLower(),
-            Ttl = 0,
-            Tag = null,
-            Color = "",
-            Sticky = "true"
-        };
+        RecordNotifyData data = new(
+            priority: GetName(priority)?.ToLower(), 
+            ttl: 0, 
+            tag: null, 
+            color: "",
+            sticky: "true");
 
         if (tts)
         {
@@ -166,12 +171,7 @@ public class Notify : INotify
         }
         else
         {
-            oldData.Add(new NotificationModel
-            {
-                Name = title,
-                Value = message,
-                LastSendNotification = DateTime.Now
-            });
+            oldData.Add(new NotificationModel(name: title, value: message, lastSendNotification: DateTime.Now));
         }
 
         storage.Save("notificationHistory", oldData);

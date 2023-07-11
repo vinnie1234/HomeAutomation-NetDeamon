@@ -9,7 +9,11 @@ public class HallLightOnMovement : BaseApp
     private bool IsSleeping => Entities.InputBoolean.Sleeping.IsOn();
     private bool DisableLightAutomations => Entities.InputBoolean.Disablelightautomationhall.IsOn();
     
-    public HallLightOnMovement(IHaContext ha, ILogger<HallLightOnMovement> logger, INotify notify, IScheduler scheduler)
+    public HallLightOnMovement(
+        IHaContext ha, 
+        ILogger<HallLightOnMovement> logger, 
+        INotify notify, 
+        IScheduler scheduler)
         : base(ha, logger, notify, scheduler)
     {
         InitializeDayLights();
@@ -40,8 +44,8 @@ public class HallLightOnMovement : BaseApp
 
     private int GetStateTime()
     {
-        if (IsNighttime && IsSleeping) return (int)Entities.InputNumber.Halllightnighttime.State!;
-        if (!IsNighttime && !IsSleeping) return (int)Entities.InputNumber.Halllightdaytime.State!;
+        if (IsNighttime && IsSleeping) return Convert.ToInt32(Entities.InputNumber.Halllightnighttime.State);
+        if (!IsNighttime && !IsSleeping) return Convert.ToInt32(Entities.InputNumber.Halllightdaytime.State);
 
         return 1;
     }

@@ -2,9 +2,16 @@ namespace Automation.Models;
 
 public class NotificationModel
 {
-    public string Name { get; init; } = default!;
+    public NotificationModel(string name, string value, DateTime lastSendNotification)
+    {
+        Name = name;
+        Value = value;
+        LastSendNotification = lastSendNotification;
+    }
+
+    public string Name { get; }
     
     // ReSharper disable once UnusedAutoPropertyAccessor.Global
-    public string Value { get; set; } = default!;
-    public DateTime LastSendNotification { get; init; }
+    public string Value { get; set; }
+    public DateTime LastSendNotification { get; }
 }

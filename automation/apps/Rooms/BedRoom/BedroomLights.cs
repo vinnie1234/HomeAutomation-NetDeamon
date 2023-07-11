@@ -8,8 +8,13 @@ public class BedRoomLights : BaseApp
     // ReSharper disable once UnusedMember.Local
     private bool DisableLightAutomations => Entities.InputBoolean.Disablelightautomationbedroom.IsOn();
     
-    public BedRoomLights(IHaContext ha, ILogger<BedRoomLights> logger, INotify notify, IScheduler scheduler)
+    public BedRoomLights(
+        IHaContext ha, 
+        ILogger<BedRoomLights> logger, 
+        INotify notify, 
+        IScheduler scheduler)
         : base(ha, logger, notify, scheduler)
     {
+        //todo still need to think about automation
     }
 }

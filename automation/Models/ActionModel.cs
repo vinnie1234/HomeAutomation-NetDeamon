@@ -6,17 +6,22 @@ public record ActionModel
 {
     [JsonPropertyName("action")]
     // ReSharper disable once PropertyCanBeMadeInitOnly.Global
-    public string Action { get; set; } = default!;
-
-    // ReSharper disable once PropertyCanBeMadeInitOnly.Global
+    public string Action { get; } = default!;
+    
     [JsonPropertyName("title")]
-    public string Title { get; set; } = default!;
-
-    // ReSharper disable once PropertyCanBeMadeInitOnly.Global
-    // ReSharper disable once UnusedAutoPropertyAccessor.Global
+    public string Title { get; } = default!;
+    
     [JsonPropertyName("uri")]
-    public string Uri { get; set; } = default!;
+    public string? Uri { get; set; }
 
     [JsonIgnore]
     public Action? Func;
+
+    public ActionModel(string action, string title, string? uri = null, Action? func = null)
+    {
+        Action = action;
+        Title = title;
+        Uri = uri;
+        Func = func;
+    }
 }

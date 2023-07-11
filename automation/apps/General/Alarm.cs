@@ -12,7 +12,12 @@ public class Alarm : BaseApp
     private bool IsSleeping => Entities.InputBoolean.Sleeping.IsOn();
     private readonly string _discordUri = ConfigManager.GetValueFromConfigNested("Discord", "Logs") ?? "";
     
-    public Alarm(IHaContext ha, ILogger<Alarm> logger, INotify notify, IScheduler scheduler, IHomeAssistantConnection homeAssistantConnection)
+    public Alarm(
+        IHaContext ha, 
+        ILogger<Alarm> logger, 
+        INotify notify, 
+        IScheduler scheduler, 
+        IHomeAssistantConnection homeAssistantConnection)
         : base(ha, logger, notify, scheduler)
     {
         TemperatureCheck();
@@ -56,12 +61,8 @@ public class Alarm : BaseApp
                         10,
                         new List<ActionModel>
                         {
-                            new()
-                            {
-                                Action = "URI",
-                                Title = @"Ga naar dashboard",
-                                Uri = "https://vincent-huis.duckdns.org/energy"
-                            }
+                            new(action: "URI", title: @"Ga naar dashboard",
+                                uri: ConfigManager.GetValueFromConfig("BaseUrlHomeAssistant") + "/energy")
                         },
                         channel: "ALARM", vibrationPattern: "100, 1000, 100, 1000, 100", ledColor: "red");
                 }
@@ -94,7 +95,7 @@ public class Alarm : BaseApp
     
     private void HaChecks(IHomeAssistantConnection homeAssistantConnection)
     {
-        Scheduler.RunEvery(TimeSpan.FromSeconds(30), DateTimeOffset.Now, () =>
+        /*Scheduler.RunEvery(TimeSpan.FromSeconds(30), DateTimeOffset.Now, () =>
         {
             var ping = homeAssistantConnection.PingAsync(TimeSpan.FromSeconds(5), new CancellationToken()).Result;
             if (!ping)
@@ -103,7 +104,7 @@ public class Alarm : BaseApp
                 Notify.NotifyPhoneVincent(@"NetDeamon heeft geen verbinding meer met HA",
                     @"De ping naar HA is helaas niet gelukt!", false, 10);
             }
-        });
+        }); */
     }
 
     private void EnergyNegativeCheck()

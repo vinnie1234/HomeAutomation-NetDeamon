@@ -44,16 +44,17 @@ public static class Globals
 
     public static HouseStateEnum GetHouseState(Entities entities)
     {
-        return entities.InputSelect.Housemodeselect.State switch
-        {
-            "Morning" => HouseStateEnum.Morning,
-            "Day"     => HouseStateEnum.Day,
-            "Evening" => HouseStateEnum.Evening,
-            "Night"   => HouseStateEnum.Night,
-            _         => HouseStateEnum.Day
-        };
+        return entities.InputSelect.Housemodeselect.State
+            switch
+            {
+                "Morning" => HouseStateEnum.Morning,
+                "Day"     => HouseStateEnum.Day,
+                "Evening" => HouseStateEnum.Evening,
+                "Night"   => HouseStateEnum.Night,
+                _         => HouseStateEnum.Day
+            };
     }
-    
+
     public static bool AmIHomeCheck(Entities entities)
     {
         return entities.Person.VincentMaarschalkerweerd.State != "home";

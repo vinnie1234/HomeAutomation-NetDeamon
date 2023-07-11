@@ -11,7 +11,11 @@ public class BaseApp
     internal readonly IServices Services;
     internal readonly IHaContext HaContext;
 
-    protected BaseApp(IHaContext haContext, ILogger logger, INotify notify, IScheduler scheduler)
+    protected BaseApp(
+        IHaContext haContext, 
+        ILogger logger, 
+        INotify notify, 
+        IScheduler scheduler)
     {
         HaContext = haContext;
         Logger = logger;

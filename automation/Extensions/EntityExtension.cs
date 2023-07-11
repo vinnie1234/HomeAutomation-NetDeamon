@@ -11,7 +11,7 @@ public static class EntityExtensions
         Action<StateChange<T, EntityState<TAttributes>>> observer)
         where TAttributes : class
         where T : Entity<T, EntityState<TAttributes>, TAttributes>
-        => entity.StateChanges().Where(c => (c.Old?.IsOff() ?? false) && (c.New?.IsOn() ?? false))
+        => entity.StateChanges().Where(c => c.Old?.IsOff() == true && (c.New?.IsOn() ?? false))
             .Subscribe(observer);
 
     // ReSharper disable once UnusedMethodReturnValue.Global
@@ -20,6 +20,6 @@ public static class EntityExtensions
         Action<StateChange<T, EntityState<TAttributes>>> observer)
         where TAttributes : class
         where T : Entity<T, EntityState<TAttributes>, TAttributes>
-        => entity.StateChanges().Where(c => (c.Old?.IsOn() ?? false) && (c.New?.IsOff() ?? false))
+        => entity.StateChanges().Where(c => c.Old?.IsOn() == true && (c.New?.IsOff() ?? false))
             .Subscribe(observer);
 }

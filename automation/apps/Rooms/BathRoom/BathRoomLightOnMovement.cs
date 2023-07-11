@@ -10,7 +10,10 @@ public class BathRoomLightOnMovement : BaseApp
     private bool DisableLightAutomations => Entities.InputBoolean.Disablelightautomationbathroom.IsOn();
     private bool IsDouching => Entities.InputBoolean.Douchen.IsOn();
 
-    public BathRoomLightOnMovement(IHaContext ha, ILogger<BathRoomLightOnMovement> logger, INotify notify,
+    public BathRoomLightOnMovement(
+        IHaContext ha, 
+        ILogger<BathRoomLightOnMovement> logger, 
+        INotify notify,
         IScheduler scheduler)
         : base(ha, logger, notify, scheduler)
     {
@@ -101,22 +104,27 @@ public class BathRoomLightOnMovement : BaseApp
 
     private void OverwriteSwitch(EventModel eventModel)
     {
-        if (eventModel is { DeviceId: "3dcab87acc97379282b359fdf3557a52", Type: "initial_press" })
+        const string hueSwitchBathroomId = @"3dcab87acc97379282b359fdf3557a520";
+        if (eventModel is { DeviceId: hueSwitchBathroomId, Type: "initial_press" })
         {
             switch (eventModel.Subtype)
             {
+                //button one
                 case 1:
                     Entities.Light.BadkamerSpiegel.TurnOff();
                     Entities.Light.PlafondBadkamer.TurnOff();
                     break;
+                //button two
                 case 2:
                     Entities.Light.BadkamerSpiegel.TurnOn(brightnessStepPct: 10);
                     Entities.Light.PlafondBadkamer.TurnOn(brightnessStepPct: 10);
                     break;
+                //button three
                 case 3:
                     Entities.Light.BadkamerSpiegel.TurnOn(brightnessStepPct: -10);
                     Entities.Light.PlafondBadkamer.TurnOn(brightnessStepPct: -10);
                     break;
+                //button four
                 case 4:
                     if (Entities.InputBoolean.Douchen.IsOn()) Entities.InputBoolean.Douchen.TurnOff();
                     if (Entities.InputBoolean.Douchen.IsOff()) Entities.InputBoolean.Douchen.TurnOn();

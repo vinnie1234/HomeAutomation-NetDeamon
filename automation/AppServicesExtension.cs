@@ -15,12 +15,15 @@ internal static class AppServicesExtension
     {
         return hostBuilder.ConfigureServices((_, services) =>
         {
-            services.AddSingleton<IDataRepository>(n => new DataRepository(
+            services.AddSingleton<IDataRepository>(provider => new DataRepository(
                     Path.Combine(
-                        n.GetRequiredService<IOptions<NetDaemonSettings>>().Value.GetAppSourceDirectory()
-                        , ".storage"), n.GetRequiredService<ILogger<DataRepository>>()))
-                .AddSingleton<INotify>(x =>
-                    new Notify(GenericHelpers.GetHaContext(x), x.GetRequiredService<IDataRepository>()));
+                        provider
+                            .GetRequiredService<IOptions<NetDaemonSettings>>()
+                            .Value.GetAppSourceDirectory(),
+                        ".storage"),
+                    provider.GetRequiredService<ILogger<DataRepository>>()))
+                .AddSingleton<INotify>(provider =>
+                    new Notify(GenericHelpers.GetHaContext(provider), provider.GetRequiredService<IDataRepository>()));
         });
     }
 }

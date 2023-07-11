@@ -4,8 +4,7 @@ namespace Automation.Repository;
 
 public class DataRepository : IDataRepository
 {
-    // ReSharper disable once MemberInitializerValueIgnored
-    private readonly string _dataStoragePath = "./apps/.storage";
+    private readonly string _dataStoragePath;
     private readonly ILogger _logger;
 
     public DataRepository(string dataStoragePath, ILogger logger)
@@ -27,9 +26,9 @@ public class DataRepository : IDataRepository
 
             return JsonSerializer.Deserialize<T>(jsonStream);
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            _logger.LogError("Error getting storage file {Id}, error message: {Error}", id, e.Message);
+            _logger.LogError("Error getting storage file {Id}, error message: {Error}", id, ex.Message);
         }
         
         return default;
@@ -43,11 +42,7 @@ public class DataRepository : IDataRepository
     private void SaveInternal<T>(string id, T data)
     {
         var storageJsonFile = Path.Combine(_dataStoragePath, $"{id}_store.json");
-
-        if (!Directory.Exists(_dataStoragePath))
-        {
-            Directory.CreateDirectory(_dataStoragePath);
-        }
+        Directory.CreateDirectory(_dataStoragePath);
 
         using var jsonStream = File.Open(storageJsonFile, FileMode.Create, FileAccess.Write);
 
