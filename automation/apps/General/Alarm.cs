@@ -109,7 +109,7 @@ public class Alarm : BaseApp
 
     private void EnergyNegativeCheck()
     {
-        Entities.Sensor.Energykwhnetpriceincent
+        Entities.Sensor.Energykwhnetpriceincents
             .StateChanges()
             .Subscribe(x =>
             {
