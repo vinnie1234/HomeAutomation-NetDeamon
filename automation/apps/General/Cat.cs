@@ -110,7 +110,6 @@ public class Cat : BaseApp
     {
         foreach (var autoFeed in
                  Collections.GetFeedTimes(Entities).Where(autoFeed => autoFeed.Key.State != null))
-        {
             Scheduler.RunDaily(TimeSpan.Parse(autoFeed.Key.State!), () =>
             {
                 if (Entities.InputBoolean.Pixelskipnextautofeed.IsOff())
@@ -126,7 +125,6 @@ public class Cat : BaseApp
 
                 Entities.InputBoolean.Pixelskipnextautofeed.TurnOff();
             });
-        }
     }
 
     private void GiveNextFeedEarly()

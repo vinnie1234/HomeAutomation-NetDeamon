@@ -106,7 +106,6 @@ public class BathRoomLightOnMovement : BaseApp
     {
         const string hueSwitchBathroomId = @"3dcab87acc97379282b359fdf3557a520";
         if (eventModel is { DeviceId: hueSwitchBathroomId, Type: "initial_press" })
-        {
             switch (eventModel.Subtype)
             {
                 //button one
@@ -130,6 +129,5 @@ public class BathRoomLightOnMovement : BaseApp
                     if (Entities.InputBoolean.Douchen.IsOff()) Entities.InputBoolean.Douchen.TurnOn();
                     break;
             }
-        }
     }
 }

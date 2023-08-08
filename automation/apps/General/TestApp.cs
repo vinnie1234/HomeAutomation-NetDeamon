@@ -1,11 +1,5 @@
 using System.Reactive.Concurrency;
-using System.Threading;
-using Automation.Helpers;
 using NetDaemon.Client;
-using NetDaemon.Client.HomeAssistant.Extensions;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Automation.apps.General;
 

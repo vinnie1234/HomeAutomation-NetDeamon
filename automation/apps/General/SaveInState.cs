@@ -49,10 +49,8 @@ public class SaveInState : BaseApp
                 .AddRange(activeAlarmsHubJson.Cast<JsonElement>().Select(o => o.Deserialize<AlarmStateModel>()));
 
         foreach (var alarmState in activeAlarmsHub.Where(alarmState => alarmState != null))
-        {
             if (alarmState != null) 
                 alarmState.EntityId = Entities?.Sensor.HubVincentAlarms.EntityId;
-        }
 
         var activeAlarmsLivingRoom = new List<AlarmStateModel?>();
         var activeAlarmsLivingRoomJson = Entities?.Sensor.WoonkamerAlarms.Attributes?.Alarms;
@@ -61,10 +59,8 @@ public class SaveInState : BaseApp
                 .Select(o => o.Deserialize<AlarmStateModel>()));
 
         foreach (var alarmState in activeAlarmsLivingRoom.Where(alarmState => alarmState != null))
-        {
             if (alarmState != null) 
                 alarmState.EntityId = Entities?.Sensor.WoonkamerAlarms.EntityId;
-        }
 
         return activeAlarmsHub.Concat(activeAlarmsLivingRoom);
     }
@@ -74,10 +70,7 @@ public class SaveInState : BaseApp
     {
         var oldEntity = LightEntitiesStates
             .FirstOrDefault(lightStateModel => lightStateModel.EntityId == entity.EntityId);
-        if (oldEntity != null)
-        {
-            LightEntitiesStates.Remove(oldEntity);
-        }
+        if (oldEntity != null) LightEntitiesStates.Remove(oldEntity);
 
         LightEntitiesStates.Add(new LightStateModel(entityId: entity.EntityId, rgbColors: entity.Attributes?.RgbColor,
             brightness: entity.Attributes?.Brightness, colorTemp: entity.Attributes?.ColorTemp, isOn: entity.IsOn(),

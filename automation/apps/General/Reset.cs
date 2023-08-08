@@ -54,13 +54,11 @@ public class Reset : BaseApp
                      .Where(alarm => alarm.Status == "set")
                      .Where(alarm => oldAlarms
                          .All(alarmStateModel => alarmStateModel?.AlarmId != alarm.AlarmId)))
-        {
             if (alarm is { EntityId: not null, AlarmId: not null })
             {
                 Notify.NotifyHouse("deleteAlarm", @$"Alarm van {alarm.LocalTime} word verwijderd", true);
                 Services.GoogleHome.DeleteAlarm(alarm.EntityId, alarm.AlarmId);
             }
-        }
     }
 
     private void ResetLights()
@@ -86,7 +84,6 @@ public class Reset : BaseApp
     private static void ActualResetLight(LightStateModel? oldStateLight, LightEntity light)
     {
         if (oldStateLight != null)
-        {
             switch (oldStateLight.IsOn)
             {
                 case false:
@@ -106,20 +103,15 @@ public class Reset : BaseApp
                             (light.Attributes?.SupportedColorModes ?? 
                              Array.Empty<string>())
                             .Any(x => x == @"onoff"))
-                        {
                             light.TurnOn();
-                        }
                         else
-                        {
                             light.TurnOn(
                                 colorTemp: oldStateLight.ColorTemp,
                                 brightness: Convert.ToInt64(oldStateLight.Brightness)
                             );
-                        }
                     }
 
                     break;
             }
-        }
     }
 }

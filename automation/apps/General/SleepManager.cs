@@ -23,9 +23,7 @@ public class SleepManager : BaseApp
         Scheduler.ScheduleCron("00 10 * * *", () =>
         {
             if (!((IList)Globals.WeekendDays).Contains(DateTime.Now.DayOfWeek))
-            {
                 if (Entities.InputBoolean.Sleeping.IsOn()) Entities.InputBoolean.Sleeping.TurnOff();
-            }
         });
     }
 
@@ -33,13 +31,8 @@ public class SleepManager : BaseApp
     {
         Logger.LogDebug("Wake up Routine");
         if (((IList)Globals.WeekendDays).Contains(DateTime.Now.DayOfWeek))
-        {
             Entities.Cover.Rollerblind0001.SetCoverPosition(100);
-        }
-        else if (Entities.Cover.Rollerblind0001.Attributes?.CurrentPosition < 100)
-        {
-            Entities.Cover.Rollerblind0001.SetCoverPosition(45);
-        }
+        else if (Entities.Cover.Rollerblind0001.Attributes?.CurrentPosition < 100) Entities.Cover.Rollerblind0001.SetCoverPosition(45);
 
         SendBatteryWarning();
     }
@@ -55,16 +48,11 @@ public class SleepManager : BaseApp
         Entities.Cover.Rollerblind0001.SetCoverPosition(0);
         var checkDate = DateTime.Now;
         var message = Entities.Sensor.AfvalMorgen.State;
-        if (checkDate.Hour is >= 00 and < 07)
-        {
-            message = Entities.Sensor.AfvalVandaag.State;
-        }
+        if (checkDate.Hour is >= 00 and < 07) message = Entities.Sensor.AfvalVandaag.State;
 
         if (message != @"Geen")
-        {
             Notify.NotifyPhoneVincent(@"Vergeet het afval niet",
                 @$"Vergeet je niet op {message} buiten te zetten?", true);
-        }
 
         if (int.Parse(Entities.Sensor.PetsnowyError.State ?? "0") > 0)
             Notify.NotifyPhoneVincent(@"PetSnowy heeft errors",
@@ -80,24 +68,17 @@ public class SleepManager : BaseApp
     private void SendBatteryWarning()
     {
         if (Entities.Sensor.SmS908bBatteryLevel.State < 30)
-        {
             if (Entities.BinarySensor.SmS908bIsCharging.IsOff())
                 Notify.NotifyPhoneVincent(@"Telefoon bijna leeg", @"Je moet je telefoon opladen", true);
-        }
 
         if (Entities.Sensor.SmT860BatteryLevel.State < 30)
-        {
             if (Entities.BinarySensor.SmT860IsCharging.IsOff())
                 Notify.NotifyPhoneVincent(@"Tabled bijna leeg", @"Je moet je tabled opladen", true);
-        }
     }
 
     private void TurnAllLightsOut()
     {
-        if (!DisableLightAutomations)
-        {
-            Entities.Light.TurnAllOff();
-        }
+        if (!DisableLightAutomations) Entities.Light.TurnAllOff();
     }
 
     private void EnergyPriceCheck()
@@ -106,7 +87,6 @@ public class SleepManager : BaseApp
             .Attributes?.Data;
 
         if (priceList != null)
-        {
             foreach (JsonElement price in priceList)
             {
                 var model = price.ToObject<EnergyPriceModel>();
@@ -116,6 +96,5 @@ public class SleepManager : BaseApp
                     break;
                 }
             }
-        }
     }
 }

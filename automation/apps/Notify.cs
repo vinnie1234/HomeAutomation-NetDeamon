@@ -29,7 +29,7 @@ public class Notify : INotify
 
         _entities.MediaPlayer.HubVincent.VolumeSet(0.4);
         _entities.MediaPlayer.Woonkamer.VolumeSet(0.4);
-        
+
         var tasks = new List<Task>
         {
             Task.Run(() => _services.Tts.CloudSay(_entities.MediaPlayer.HubVincent.EntityId, message)),
@@ -77,10 +77,7 @@ public class Notify : INotify
     {
         var oldData = _storage.Get<List<NotificationModel>>("notificationHistory") ?? new List<NotificationModel>();
         var data = oldData.FirstOrDefault(x => x.Name == title);
-        if (data != null)
-        {
-            oldData.Remove(data);
-        }
+        if (data != null) oldData.Remove(data);
 
         _storage.Save("notificationHistory", oldData);
     }
@@ -91,10 +88,7 @@ public class Notify : INotify
             .Subscribe(x =>
             {
                 var eventActionModel = x.DataElement?.ToObject<EventActionModel>();
-                if (eventActionModel?.Action1Key == key && eventActionModel.Action1Title == title)
-                {
-                    func.Invoke();
-                }
+                if (eventActionModel?.Action1Key == key && eventActionModel.Action1Title == title) func.Invoke();
             });
     }
 
@@ -108,9 +102,9 @@ public class Notify : INotify
     {
         //construct the data here
         RecordNotifyData data = new(
-            priority: GetName(priority)?.ToLower(), 
-            ttl: 0, 
-            tag: null, 
+            priority: GetName(priority)?.ToLower(),
+            ttl: 0,
+            tag: null,
             color: "",
             sticky: "true");
 
@@ -156,13 +150,9 @@ public class Notify : INotify
         var oldData = storage.Get<List<NotificationModel>>("notificationHistory") ?? new List<NotificationModel>();
         var data = oldData.FirstOrDefault(x => x.Name == title);
         if (data != null)
-        {
             data.Value = message;
-        }
         else
-        {
             oldData.Add(new NotificationModel(name: title, value: message, lastSendNotification: DateTime.Now));
-        }
 
         storage.Save("notificationHistory", oldData);
     }

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Reactive.Concurrency;
 using Automation.Enum;
 using Newtonsoft.Json;
@@ -89,9 +88,7 @@ public class HouseStateManager : BaseApp
             if (OfficeDays.Contains(DateTime.Now.DayOfWeek) ||
                 HomeWorkDays.Contains(DateTime.Now.DayOfWeek) &&
                 Entities.InputBoolean.Holliday.IsOff())
-            {
                 Entities.InputBoolean.Working.TurnOn();
-            }
         });
 
         Scheduler.RunDaily(_endWorking, () =>
@@ -99,9 +96,7 @@ public class HouseStateManager : BaseApp
             if (OfficeDays.Contains(DateTime.Now.DayOfWeek) ||
                 HomeWorkDays.Contains(DateTime.Now.DayOfWeek) &&
                 Entities.InputBoolean.Holliday.IsOff())
-            {
                 Entities.InputBoolean.Working.TurnOff();
-            }
         });
     }
 

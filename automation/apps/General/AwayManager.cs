@@ -63,13 +63,9 @@ public class AwayManager : BaseApp
         if (OfficeDays.Contains(DateTime.Now.DayOfWeek)
             && DateTime.Now.Hour < 9
             && Entities.InputBoolean.Holliday.IsOff())
-        {
             Notify.NotifyPhoneVincent(@"Werkse Vincent", @"Succes op kantoor :)", false, 5);
-        }
         else
-        {
             Notify.NotifyPhoneVincent(@"Tot ziens", @"Je laat je huis weer alleen :(", false, 5);
-        }
 
         Entities.Light.TurnAllOff();
         Entities.MediaPlayer.Tv.TurnOff();

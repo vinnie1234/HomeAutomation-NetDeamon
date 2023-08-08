@@ -1,8 +1,6 @@
 using System.Reactive.Concurrency;
-using System.Threading;
 using Automation.Helpers;
 using NetDaemon.Client;
-using NetDaemon.Client.HomeAssistant.Extensions;
 
 namespace Automation.apps.General;
 
@@ -38,14 +36,12 @@ public class Alarm : BaseApp
     private void TemperatureCheck()
     {
         foreach (var temperatureSensor in Collections.GetAllTemperatureSensors(Entities))
-        {
             temperatureSensor.Key
                 .StateChanges()
                 .Where(x => x.Entity.State > 25 && !IsSleeping)
                 .Subscribe(x => Notify.NotifyPhoneVincent(@"Hoge temperatuur gedetecteerd",
                     @$"{temperatureSensor.Value} is {x.Entity.State} graden", true, channel: "ALARM",
                     vibrationPattern: "100, 1000, 100, 1000, 100", ledColor: "red"));
-        }
     }
 
     private void EnergyCheck()
