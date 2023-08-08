@@ -32,18 +32,8 @@ public class Notify : INotify
         
         var tasks = new List<Task>
         {
-            Task.Run(() => _services.Tts.Speak(ServiceTarget.FromEntities(_entities.MediaPlayer.HubVincent.EntityId), new TtsSpeakParameters
-            {
-                MediaPlayerEntityId = _entities.MediaPlayer.HubVincent.EntityId,
-                Message = message,
-                Language = "nl",
-            })),
-            Task.Run(() => _services.Tts.Speak(ServiceTarget.FromEntities(_entities.MediaPlayer.Woonkamer.EntityId), new TtsSpeakParameters
-            {
-                MediaPlayerEntityId = _entities.MediaPlayer.Woonkamer.EntityId,
-                Message = message,
-                Language = "nl",
-            }))
+            Task.Run(() => _services.Tts.CloudSay(_entities.MediaPlayer.HubVincent.EntityId, message)),
+            Task.Run(() => _services.Tts.CloudSay(_entities.MediaPlayer.Woonkamer.EntityId, message))
         };
 
         await Task.WhenAll(tasks);
