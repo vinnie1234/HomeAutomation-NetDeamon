@@ -8,11 +8,11 @@ namespace Automation.apps.General;
 public class AwayManager : BaseApp
 {
     private bool _backHome;
-    
+
     public AwayManager(
-        IHaContext ha, 
-        ILogger<AwayManager> logger, 
-        INotify notify, 
+        IHaContext ha,
+        ILogger<AwayManager> logger,
+        INotify notify,
         IScheduler scheduler)
         : base(ha, logger, notify, scheduler)
     {
@@ -45,7 +45,9 @@ public class AwayManager : BaseApp
     {
         Entities.Person.VincentMaarschalkerweerd
             .StateChanges()
-            .Where(x => x.Old?.State != "home" && x.New?.State == "home" && Entities.InputBoolean.Away.IsOn())
+            .Where(x => x.Old?.State != "home" && 
+                        x.New?.State == "home" && 
+                        Entities.InputBoolean.Away.IsOn())
             .Subscribe(_ => Entities.InputBoolean.Away.TurnOff());
     }
 
@@ -83,7 +85,7 @@ public class AwayManager : BaseApp
             SetLightScene(houseState);
 
             _backHome = false;
-            
+
             Scheduler.Schedule(TimeSpan.FromSeconds(15), () =>
             {
                 var message = @"Welkom thuis Vincent!";

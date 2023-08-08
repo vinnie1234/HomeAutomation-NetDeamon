@@ -144,12 +144,6 @@ public class Cat : BaseApp
 
     private KeyValuePair<InputDatetimeEntity, InputNumberEntity> GetClosestFeed()
     {
-        //todo Harry, whut....
-        //        TimeSpan DifferenceBetween(DateTime start, DateTime end) => end > start ? end - start : start - end;
-        //        DateTime StateAsDateTime(Entity entity) => DateTime.Parse(entity.State ?? throw new InvalidOperationException("entity.State was null"));
-        //        var closestFeed = Collections.GetFeedTimes(Entities)
-        //            .MinBy(pair => DifferenceBetween(StateAsDateTime(pair.Key), DateTime.Now).Ticks);
-
         var closestFeed =
             Collections
                 .GetFeedTimes(Entities)

@@ -69,11 +69,9 @@ public class HolidayManager : BaseApp
     {
         Scheduler.ScheduleCron("00 00 * * *", () =>
         {
-            Logger.LogDebug(@"Check calender for the word 'vrij'");
-            if (Entities.Calendar.VincentmaarschalkerweerdGmailCom.Attributes?.Description?.ToLower()
-                    .Contains(@"vrij") == true)
+            var description = Entities.Calendar.VincentmaarschalkerweerdGmailCom.Attributes?.Description?.ToLower();
+            if (description?.Contains(@"vrij") == true || description?.Contains(@"vakantie") == true)
             {
-                Logger.LogDebug(@"Find the word 'vrij' and changed holiday sate");
                 Entities.InputBoolean.Holliday.TurnOn();
             }
         });
