@@ -5,7 +5,7 @@ namespace Automation.apps.General;
 
 [NetDaemonApp(Id = nameof(TestApp))]
 //ReSharper disable once UnusedType.Global
-[Focus]
+//[Focus]
 public class TestApp : BaseApp
 {
     // ReSharper disable once SuggestBaseTypeForParameterInConstructor

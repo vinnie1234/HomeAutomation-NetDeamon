@@ -23,6 +23,11 @@ public class HaContextMockBase : IHaContext, IHaContextMock
     {
     }
 
+    public Task<JsonElement?> CallServiceWithResponseAsync(string domain, string service, ServiceTarget? target = null, object? data = null)
+    {
+        throw new NotImplementedException();
+    }
+
     public Area? GetAreaFromEntityId(string entityId) => null;
 
     public virtual void SendEvent(string eventType, object? data = null)
