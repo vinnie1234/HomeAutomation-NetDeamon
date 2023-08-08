@@ -90,7 +90,7 @@ public class SleepManager : BaseApp
             foreach (JsonElement price in priceList)
             {
                 var model = price.ToObject<EnergyPriceModel>();
-                if (model is { PriceCtPerKwh: > -20 })
+                if (model is { PriceCtPerKwh: < -20 })
                 {
                     Notify.NotifyPhoneVincent(@"Morgen is het stroom gratis", @$"Stroom kost morgen om {model.StartTime} {model.PriceCtPerKwh} cent!", false, 10);
                     break;

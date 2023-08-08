@@ -109,7 +109,7 @@ public class Alarm : BaseApp
             .StateChanges()
             .Subscribe(x =>
             {
-                if (x.New?.State < 20.00)
+                if (x.New?.State < -20.00)
                 {
                     Helpers.Discord.SendMessage(_discordUri, @$"ENERGY IS NEGATIEF - {x.New.State}");
                     Notify.NotifyPhoneVincent(@$"ENERGY IS NEGATIEF - {x.New.State}",
