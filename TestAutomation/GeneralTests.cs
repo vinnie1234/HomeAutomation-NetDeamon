@@ -1,4 +1,5 @@
 using Automation.Helpers;
+using Xunit;
 
 namespace TestAutomation;
 
