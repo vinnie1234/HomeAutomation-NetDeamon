@@ -6,14 +6,14 @@ namespace Automation.apps.General;
 
 [NetDaemonApp(Id = nameof(FunApp))]
 //ReSharper disable once UnusedType.Global
-//[Focus]
+[Focus]
 public class FunApp : BaseApp
 {
     // ReSharper disable once SuggestBaseTypeForParameterInConstructor
     public FunApp(IHaContext ha, IHomeAssistantConnection homeAssistantConnection, ILogger<FunApp> logger, INotify notify, IScheduler scheduler)
         : base(ha, logger, notify, scheduler)
     {
-        Entities.Sensor.Ps5turnon.StateChanges().Where(x => x.New?.State == "On")
+        Entities.Sensor.Ps5turnon.StateChanges().Where(x => x.New?.State == "on")
             .SubscribeAsync(x =>
             {
                 Ps5TurnOn();
