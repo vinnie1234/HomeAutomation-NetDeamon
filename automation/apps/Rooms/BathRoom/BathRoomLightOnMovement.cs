@@ -104,7 +104,7 @@ public class BathRoomLightOnMovement : BaseApp
 
     private void OverwriteSwitch(EventModel eventModel)
     {
-        const string hueSwitchBathroomId = @"3dcab87acc97379282b359fdf3557a520";
+        const string hueSwitchBathroomId = @"3dcab87acc97379282b359fdf3557a52";
         if (eventModel is { DeviceId: hueSwitchBathroomId, Type: "initial_press" })
             switch (eventModel.Subtype)
             {
