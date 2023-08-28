@@ -16,7 +16,7 @@ try
     await Host.CreateDefaultBuilder(args)
         .UseNetDaemonAppSettings()
         .UseDefaultNetDaemonLogging()
-        //.UseCustomLogging()
+        .UseCustomLogging()
         .UseNetDaemonRuntime()
         .UseNetDaemonTextToSpeech()
         .AddAppServices()
