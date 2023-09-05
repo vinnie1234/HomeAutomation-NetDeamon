@@ -12,15 +12,14 @@ public class FunApp : BaseApp
     public FunApp(IHaContext ha, ILogger<FunApp> logger, INotify notify, IScheduler scheduler)
         : base(ha, logger, notify, scheduler)
     {
-        Entities.Sensor.Ps5turnon.StateChanges().Where(x => x.New?.State == "on")
-            .SubscribeAsync(x =>
+        Entities.Sensor.Ps5turnon.StateChanges().Where(x => x.New?.State?.ToLower() == "on")
+            .Subscribe(x =>
             {
-                Ps5TurnOn();
-                return Task.CompletedTask;
+                Ps5TurnedOn();
             });
     }
 
-    private void Ps5TurnOn()
+    private void Ps5TurnedOn()
     {
         if (DateTime.Now.DayOfWeek == DayOfWeek.Wednesday && DateTime.Now.Hour > 19)
             Notify.NotifyHouse(@"Dewin",
