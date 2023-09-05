@@ -63,7 +63,7 @@ public class Tv : BaseApp
             Entities.Light.PlafondWoonkamer.TurnOff();
             Entities.Light.HueFilamentBulb1.TurnOff();
             Entities.Light.HueFilamentBulb2.TurnOff();
-            Entities.Light.TradfriDriver.TurnOff();
+            Entities.Light.LampenKeuken.TurnOff();
             Entities.Light.Plafond.TurnOff();
             Entities.Light.Nachtkastje.TurnOff();
             Entities.MediaPlayer.Tv.VolumeSet(0.14);
