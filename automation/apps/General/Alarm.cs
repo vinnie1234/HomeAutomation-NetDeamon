@@ -1,6 +1,9 @@
 using System.Reactive.Concurrency;
+using System.Threading;
+using System.Threading.Tasks;
 using Automation.Helpers;
 using NetDaemon.Client;
+using NetDaemon.Client.HomeAssistant.Extensions;
 
 namespace Automation.apps.General;
 
@@ -82,7 +85,7 @@ public class Alarm : BaseApp
         {
             if (int.Parse(Entities.Sensor.PetsnowyError.State ?? "0") > 0)
             {
-                Helpers.Discord.SendMessage(_discordUri, @"PetSnowy heeft errors");
+                Discord.SendMessage(_discordUri, @"PetSnowy heeft errors");
                 Notify.NotifyPhoneVincent(@"PetSnowy heeft errors",
                     @"Er staat nog een error open voor de PetSnowy", false, 10);
             }
@@ -91,16 +94,16 @@ public class Alarm : BaseApp
     
     private void HaChecks(IHomeAssistantConnection homeAssistantConnection)
     {
-        /*Scheduler.RunEvery(TimeSpan.FromSeconds(30), DateTimeOffset.Now, () =>
+        Scheduler.RunEvery(TimeSpan.FromSeconds(30), DateTimeOffset.Now, () =>
         {
-            var ping = homeAssistantConnection.PingAsync(TimeSpan.FromSeconds(5), new CancellationToken()).Result;
-            if (!ping)
+            var entities = homeAssistantConnection.GetEntitiesAsync(new CancellationToken()).Result;
+            if (!(entities?.Count > 0))
             {
-                Helpers.Discord.SendMessage(_discordUri, @"NetDeamon heeft geen verbinding meer met HA");
+                Discord.SendMessage(_discordUri, @"NetDeamon heeft geen verbinding meer met HA");
                 Notify.NotifyPhoneVincent(@"NetDeamon heeft geen verbinding meer met HA",
                     @"De ping naar HA is helaas niet gelukt!", false, 10);
             }
-        }); */
+        });
     }
 
     private void EnergyNegativeCheck()
