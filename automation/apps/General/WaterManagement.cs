@@ -5,7 +5,7 @@ namespace Automation.apps.General;
 [NetDaemonApp(Id = nameof(WaterManagement))]
 public class WaterManagement : BaseApp
 {
-    private double? _waterUsages;
+    private double? _waterUsages = 0;
     private readonly IDataRepository _storage;
     
     // ReSharper disable once SuggestBaseTypeForParameterInConstructor
@@ -49,13 +49,13 @@ public class WaterManagement : BaseApp
 
         if (Entities.Sensor.WasmachinePower.State > 0) guess = "Wasmachine";
 
-        Notify.NotifyPhoneVincent(@"Water Check",
+        Notify.NotifyPhoneVincent($@"Water Check ({_waterUsages})",
             @$"Nieuw water gesignaleerd",
             true,
             action: new List<ActionModel>
             {
-                new(action: "SendNotificationWater", title: $"Gok: {guess} : {_waterUsages}", func: () => { SaveWater(_waterUsages, guess); }),
-                new(action: "SendNotificationWater", title: $"Anders : {_waterUsages}", func: () => { SaveWater(_waterUsages, guess); }),
+                new(action: "SendNotificationWater", title: $"Gok: {guess}", func: () => { SaveWater(_waterUsages, guess); }),
+                new(action: "SendNotificationWater", title: $"Anders", func: () => { SaveWater(_waterUsages, guess); }),
                 new(action: "SendNotificationWater", title: "Skip", func: () => { SaveWater(_waterUsages, "Skip"); }),
             });
 
