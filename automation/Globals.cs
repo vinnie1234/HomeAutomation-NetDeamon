@@ -57,6 +57,6 @@ public static class Globals
 
     public static bool AmIHomeCheck(Entities entities)
     {
-        return entities.Person.VincentMaarschalkerweerd.State != "home";
+        return entities.Person.VincentMaarschalkerweerd.State != "home" || (entities.InputBoolean.Onvacation.IsOn() && entities.Person.Timo.State != "home");
     }
 }
