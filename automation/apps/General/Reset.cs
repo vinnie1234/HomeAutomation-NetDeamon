@@ -40,20 +40,10 @@ public class Reset : BaseApp
                 .Select(o => o.Deserialize<AlarmStateModel>()));
 
 
-        var activeAlarmsLivingRoom = new List<AlarmStateModel?>();
-        var activeAlarmsLivingRoomJson = Entities.Sensor.WoonkamerAlarms.Attributes?.Alarms;
-        if (activeAlarmsLivingRoomJson != null)
-            activeAlarmsLivingRoom.AddRange(activeAlarmsLivingRoomJson.Cast<JsonElement>()
-                .Select(o => o.Deserialize<AlarmStateModel>()));
-
-        var allActiveAlarms = activeAlarmsHub.Concat(activeAlarmsLivingRoom);
-
-        var activeAlarms = (List<AlarmStateModel>)allActiveAlarms;
-
-        foreach (var alarm in activeAlarms
-                     .Where(alarm => alarm.Status == "set")
+        foreach (var alarm in activeAlarmsHub
+                     .Where(alarm => alarm?.Status == "set")
                      .Where(alarm => oldAlarms
-                         .All(alarmStateModel => alarmStateModel?.AlarmId != alarm.AlarmId)))
+                         .All(alarmStateModel => alarmStateModel?.AlarmId != alarm?.AlarmId)))
             if (alarm is { EntityId: not null, AlarmId: not null })
             {
                 Notify.NotifyHouse("deleteAlarm", @$"Alarm van {alarm.LocalTime} word verwijderd", true);
