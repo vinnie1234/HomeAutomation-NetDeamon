@@ -88,7 +88,7 @@ public class Notify : INotify
             .Subscribe(x =>
             {
                 var eventActionModel = x.DataElement?.ToObject<EventActionModel>();
-                if (eventActionModel?.Action1Key == key && eventActionModel.Action1Title == title) func.Invoke();
+                if (eventActionModel?.Action == key) func.Invoke();
             });
     }
 
