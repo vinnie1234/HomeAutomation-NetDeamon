@@ -40,9 +40,10 @@ public class WaterManagement : BaseApp
 
         var guess = _waterUsages switch
         {
-            < 5           => "WC Klein",
-            > 5 and <= 8  => "WC Groot",
-            > 8 and <= 30 => "Afwas",
+            < 4           => "Kraan",
+            <= 4 and <= 5 => "WC Klein",
+            > 5 and <= 7  => "WC Groot",
+            > 7 and <= 30 => "Afwas",
             > 30          => "Douchen",
             _             => string.Empty
         };
@@ -71,7 +72,7 @@ public class WaterManagement : BaseApp
     private void SaveWater(string value, string guess, Guid id)
     {
         Entities.InputText.Lastwaterusageguess.SetValue(guess);
-        
+
         if (guess != "Skip")
         {
             Entities.InputText.Lastwaterusageinlitersaved.SetValue(value);
@@ -83,9 +84,9 @@ public class WaterManagement : BaseApp
                 var oldList =
                     _storage.Get<List<WaterSavingModel>>(@$"WATERUSAGE_{DateTime.Now.Year}_{DateTime.Now.Month}") ??
                     new List<WaterSavingModel>();
-                    
+
                 if (oldList.FirstOrDefault(x => x.Id == id) != null) return;
-                    
+
                 oldList.Add(new WaterSavingModel
                 {
                     Id = id,
