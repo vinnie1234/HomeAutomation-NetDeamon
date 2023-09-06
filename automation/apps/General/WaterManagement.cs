@@ -40,8 +40,8 @@ public class WaterManagement : BaseApp
 
         var guess = _waterUsages switch
         {
-            < 4           => "Kraan",
-            <= 4 and <= 5 => "WC Klein",
+            < 3           => "Kraan",
+            <= 3 and <= 5 => "WC Klein",
             > 5 and <= 7  => "WC Groot",
             > 7 and <= 30 => "Afwas",
             > 30          => "Douchen",
@@ -58,18 +58,18 @@ public class WaterManagement : BaseApp
             action: new List<ActionModel>
             {
                 new(action: "SendNotificationWaterGuess", title: $"Gok: {guess}",
-                    func: () => { SaveWater(waterUsage.ToString()!, guess, id); }),
+                    func: () => { SaveWater(waterUsage.ToString()!, guess, id, DateTime.Now); }),
                 new(action: "SendNotificationWaterDifferent", title: "Anders",
-                    func: () => { SaveWater(waterUsage.ToString()!, "", id); }),
+                    func: () => { SaveWater(waterUsage.ToString()!, "", id, DateTime.Now); }),
                 new(action: "SendNotificationWaterSkip", title: "Skip",
-                    func: () => { SaveWater(waterUsage.ToString()!, "Skip", id); }),
+                    func: () => { SaveWater(waterUsage.ToString()!, "Skip", id, DateTime.Now); }),
             });
 
         _waterUsages = 0;
         Entities.InputText.Lastwaterusageinliteractual.SetValue(_waterUsages.ToString() ?? string.Empty);
     }
 
-    private void SaveWater(string value, string guess, Guid id)
+    private void SaveWater(string value, string guess, Guid id, DateTime dateTime)
     {
         Entities.InputText.Lastwaterusageguess.SetValue(guess);
 
@@ -91,7 +91,8 @@ public class WaterManagement : BaseApp
                 {
                     Id = id,
                     Value = value,
-                    Guess = guess
+                    Guess = guess,
+                    DateTime = dateTime
                 });
 
                 _storage.Save(@$"WATERUSAGE_{DateTime.Now.Year}_{DateTime.Now.Month}", oldList);
