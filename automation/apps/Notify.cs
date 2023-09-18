@@ -82,7 +82,7 @@ public class Notify : INotify
         _storage.Save("notificationHistory", oldData);
     }
 
-    private void SubscribeToNotificationAction(Action func, string key, string title)
+    private void SubscribeToNotificationAction(Action func, string key)
     {
         _ha.Events.Where(x => x.EventType == "mobile_app_notification_action")
             .Subscribe(x =>
@@ -122,9 +122,11 @@ public class Notify : INotify
         if (actions != null)
         {
             if (actions.Count > 3) throw new Exception("To many actions");
+            
             foreach (var action in actions.Where(action => action.Func != null))
             {
-                SubscribeToNotificationAction(action.Func!, action.Action, action.Title);
+                action.Action = $"{action.Action}-{Guid.NewGuid().ToString()}";
+                SubscribeToNotificationAction(action.Func!, action.Action);
                 action.Func = null;
             }
 

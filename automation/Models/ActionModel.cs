@@ -6,7 +6,7 @@ public record ActionModel
 {
     [JsonPropertyName("action")]
     // ReSharper disable once PropertyCanBeMadeInitOnly.Global
-    public string Action { get; } = default!;
+    public string Action { get; set; } = default!;
     
     [JsonPropertyName("title")]
     public string Title { get; } = default!;
