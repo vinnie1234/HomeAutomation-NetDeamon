@@ -9,7 +9,6 @@ namespace Automation.apps.General;
 public class AwayManager : BaseApp
 {
     private bool _backHome;
-    private bool _timoAtVincent;
 
     public AwayManager(
         IHaContext ha,
@@ -21,40 +20,8 @@ public class AwayManager : BaseApp
         TriggersHandler();
         VincentHomeHandler();
         VincentAwayCheck();
-        TimoIsHereCheck();
     }
-
-    private void TimoIsHereCheck()
-    {
-        _timoAtVincent = false;
-
-        Entities.Person.Timo
-            .StateChanges()
-            .Where(x => x.Old?.State != "home" && 
-                        x.New?.State == "home" && Entities.InputBoolean.Onvacation.IsOn())
-            .Subscribe(_ =>
-            {
-                _timoAtVincent = true;
-                WelcomeHome();
-            });
-        
-        Entities.Person.VincentMaarschalkerweerd
-            .StateChanges()
-            .WhenStateIsFor(x => x?.State != "home" && Entities.InputBoolean.Onvacation.IsOn(),
-                TimeSpan.FromMinutes(2), Scheduler)
-            .Subscribe(_ =>
-            {
-                Entities.Light.TurnAllOff();
-                Entities.MediaPlayer.Tv.TurnOff();
-                Entities.MediaPlayer.AvSoundbar.TurnOff();
-
-                Notify.NotifyPhoneVincent(@"Timo is net langs geweest",
-                    @"Timo is net langs geweest en nu weer weg!",
-                    false,
-                    10);
-            });
-    }
-
+    
     private void VincentAwayCheck()
     {
         Entities.Person.VincentMaarschalkerweerd
@@ -125,23 +92,6 @@ public class AwayManager : BaseApp
                 var message = @"Welkom thuis Vincent!";
                 if (Entities.Sensor.SnowyPetFeederStatus.State == "insufficient")
                     message += @" Het eten van Pixel is bijna op!";
-
-                Notify.NotifyHouse("welcomeHome", message, true);
-            });
-        }
-        else if (_timoAtVincent)
-        {
-            SetLightScene(houseState);
-            _timoAtVincent = false;
-            
-            Scheduler.Schedule(TimeSpan.FromSeconds(15), () =>
-            {
-                var message = @"Welkom Timo! Kijk even of het water van Pixel nog schoon is. 
-                                Zodra je vertrekt gaat het huis automatisch weer op de weg status!";
-                if (Entities.Sensor.SnowyPetFeederStatus.State == "insufficient")
-                    message += @" Het eten van Pixel is bijna op!";
-                
-                if (int.Parse(Entities.Sensor.PetsnowyError.State ?? "0") > 0) message += "De kattenbak heeft een error, even de la e er uit en er in moet het probleem op lossen";
 
                 Notify.NotifyHouse("welcomeHome", message, true);
             });
