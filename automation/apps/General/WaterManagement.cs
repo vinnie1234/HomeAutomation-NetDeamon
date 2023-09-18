@@ -38,35 +38,38 @@ public class WaterManagement : BaseApp
     {
         Entities.InputSelect.WaterUsageSelector.SelectFirst();
 
-        var guess = _waterUsages switch
+        if (_waterUsages != null)
         {
-            < 3           => "Kraan",
-            <= 3 and <= 5 => "WC Klein",
-            > 5 and <= 7  => "WC Groot",
-            > 7 and <= 30 => "Afwas",
-            > 30          => "Douchen",
-            _             => string.Empty
-        };
-
-        if (Entities.Sensor.WasmachinePower.State > 0) guess = "Wasmachine";
-        var id = Guid.NewGuid();
-        var waterUsage = _waterUsages;
-
-        Notify.NotifyPhoneVincent($@"Water Check ({_waterUsages})",
-            @$"Nieuw water gesignaleerd",
-            true,
-            action: new List<ActionModel>
+            var guess = Math.Round((double)_waterUsages) switch
             {
-                new(action: "SendNotificationWaterGuess", title: $"Gok: {guess}",
-                    func: () => { SaveWater(waterUsage.ToString()!, guess, id, DateTime.Now); }),
-                new(action: "SendNotificationWaterDifferent", title: "Anders",
-                    func: () => { SaveWater(waterUsage.ToString()!, "", id, DateTime.Now); }),
-                new(action: "SendNotificationWaterSkip", title: "Skip",
-                    func: () => { SaveWater(waterUsage.ToString()!, "Skip", id, DateTime.Now); }),
-            });
+                < 3           => "Kraan",
+                <= 3 and <= 5 => "WC Klein",
+                > 5 and <= 7  => "WC Groot",
+                > 7 and <= 30 => "Afwas",
+                > 30          => "Douchen",
+                _             => string.Empty
+            };
 
-        _waterUsages = 0;
-        Entities.InputText.Lastwaterusageinliteractual.SetValue(_waterUsages.ToString() ?? string.Empty);
+            if (Entities.Sensor.WasmachinePower.State > 0) guess = "Wasmachine";
+            var id = Guid.NewGuid();
+            var waterUsage = _waterUsages;
+
+            Notify.NotifyPhoneVincent($@"Water Check ({_waterUsages})",
+                @$"Nieuw water gesignaleerd",
+                true,
+                action: new List<ActionModel>
+                {
+                    new(action: "SendNotificationWaterGuess", title: $"Gok: {guess}",
+                        func: () => { SaveWater(waterUsage.ToString()!, guess, id, DateTime.Now); }),
+                    new(action: "SendNotificationWaterDifferent", title: "Anders",
+                        func: () => { SaveWater(waterUsage.ToString()!, "", id, DateTime.Now); }),
+                    new(action: "SendNotificationWaterSkip", title: "Skip",
+                        func: () => { SaveWater(waterUsage.ToString()!, "Skip", id, DateTime.Now); }),
+                });
+
+            _waterUsages = 0;
+            Entities.InputText.Lastwaterusageinliteractual.SetValue(_waterUsages.ToString() ?? string.Empty);
+        }
     }
 
     private void SaveWater(string value, string guess, Guid id, DateTime dateTime)
