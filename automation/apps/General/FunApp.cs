@@ -1,6 +1,4 @@
 using System.Reactive.Concurrency;
-using System.Threading.Tasks;
-using NetDaemon.Client;
 
 namespace Automation.apps.General;
 
@@ -13,7 +11,7 @@ public class FunApp : BaseApp
         : base(ha, logger, notify, scheduler)
     {
         Entities.Sensor.Ps5turnon.StateChanges().Where(x => x.New?.State?.ToLower() == "on")
-            .Subscribe(x =>
+            .Subscribe(_ =>
             {
                 Ps5TurnedOn();
             });

@@ -42,15 +42,15 @@ public class WaterManagement : BaseApp
         {
             var guess = Math.Round((double)_waterUsages) switch
             {
-                < 3           => "Kraan",
+                < 3           => @"Kraan",
                 <= 3 and <= 5 => "WC Klein",
                 > 5 and <= 7  => "WC Groot",
-                > 7 and <= 30 => "Afwas",
-                > 30          => "Douchen",
+                > 7 and <= 30 => @"Afwas",
+                > 30          => @"Douchen",
                 _             => string.Empty
             };
 
-            if (Entities.Sensor.WasmachinePower.State > 0) guess = "Wasmachine";
+            if (Entities.Sensor.WasmachinePower.State > 0) guess = @"Wasmachine";
             var id = Guid.NewGuid();
             var waterUsage = _waterUsages;
 

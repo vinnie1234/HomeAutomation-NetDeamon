@@ -1,6 +1,5 @@
 using System.Reactive.Concurrency;
 using System.Threading;
-using System.Threading.Tasks;
 using Automation.Helpers;
 using NetDaemon.Client;
 using NetDaemon.Client.HomeAssistant.Extensions;
@@ -114,7 +113,7 @@ public class Alarm : BaseApp
             {
                 if (x.New?.State < -20.00)
                 {
-                    Helpers.Discord.SendMessage(_discordUri, @$"ENERGY IS NEGATIEF - {x.New.State}");
+                    Discord.SendMessage(_discordUri, @$"ENERGY IS NEGATIEF - {x.New.State}");
                     Notify.NotifyPhoneVincent(@$"ENERGY IS NEGATIEF - {x.New.State}",
                         @"Je energy is negatief, dit kost geld.", false, 10);
                 }

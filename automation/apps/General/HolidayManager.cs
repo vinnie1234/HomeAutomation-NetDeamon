@@ -70,10 +70,8 @@ public class HolidayManager : BaseApp
         Scheduler.ScheduleCron("00 00 * * *", () =>
         {
             var description = Entities.Calendar.VincentmaarschalkerweerdGmailCom.Attributes?.Description?.ToLower();
-            if (description?.Contains(@"vrij") == true || description?.Contains(@"vakantie") == true)
-            {
+            if (description?.Contains(@"vrij") == true || description?.Contains(@"vakantie") == true) 
                 Entities.InputBoolean.Holliday.TurnOn();
-            }
         });
     }
 }

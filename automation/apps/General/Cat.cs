@@ -82,7 +82,7 @@ public class Cat : BaseApp
         });
 
         Logger.LogDebug(@"Dankjewel voor {Amount} porties of eten!", amount);
-        Helpers.Discord.SendMessage(_discordUri, @$"Dankjewel voor {amount} porties of eten!");
+        Discord.SendMessage(_discordUri, @$"Dankjewel voor {amount} porties of eten!");
     }
 
     private void MonitorCar()
