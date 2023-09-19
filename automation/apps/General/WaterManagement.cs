@@ -3,7 +3,6 @@ using System.Reactive.Concurrency;
 namespace Automation.apps.General;
 
 [NetDaemonApp(Id = nameof(WaterManagement))]
-[Focus]
 public class WaterManagement : BaseApp
 {
     private double? _waterUsages;
