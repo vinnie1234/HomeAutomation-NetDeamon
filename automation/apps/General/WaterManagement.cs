@@ -3,6 +3,7 @@ using System.Reactive.Concurrency;
 namespace Automation.apps.General;
 
 [NetDaemonApp(Id = nameof(WaterManagement))]
+[Focus]
 public class WaterManagement : BaseApp
 {
     private double? _waterUsages;
@@ -50,7 +51,7 @@ public class WaterManagement : BaseApp
                 _             => string.Empty
             };
 
-            if (Entities.Sensor.WasmachinePower.State > 0) guess = @"Wasmachine";
+            if (Entities.Switch.Wasmachine.IsOn()) guess = @"Wasmachine";
             var id = Guid.NewGuid();
             var waterUsage = _waterUsages;
 

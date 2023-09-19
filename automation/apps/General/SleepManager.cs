@@ -68,8 +68,8 @@ public class SleepManager : BaseApp
 
     private void SendBatteryWarning()
     {
-        if (Entities.Sensor.SmS908bBatteryLevel.State < 30)
-            if (Entities.BinarySensor.SmS908bIsCharging.IsOff())
+        if (Entities.Sensor.PhoneVincentBatteryLevel.State < 30)
+            if (Entities.BinarySensor.PhoneVincentIsCharging.IsOff())
                 Notify.NotifyPhoneVincent(@"Telefoon bijna leeg", @"Je moet je telefoon opladen", true);
 
         if (Entities.Sensor.SmT860BatteryLevel.State < 30)

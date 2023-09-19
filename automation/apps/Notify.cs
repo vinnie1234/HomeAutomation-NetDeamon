@@ -56,7 +56,7 @@ public class Notify : INotify
         SaveNotification(_storage, title, message);
 
         var data = ConstructData(action, image: image, channel: channel, vibrationPattern: vibrationPattern);
-        _services.Notify.MobileAppSmS908b(new NotifyMobileAppSmS908bParameters
+        _services.Notify.MobileAppPhoneVincent(new NotifyMobileAppPhoneVincentParameters
             { Title = title, Message = message, Data = data });
     }
 
@@ -69,7 +69,7 @@ public class Notify : INotify
         SaveNotification(_storage, title, message);
 
         var data = ConstructData(null, true, phoneMessage: message);
-        _services.Notify.MobileAppSmS908b(new NotifyMobileAppSmS908bParameters
+        _services.Notify.MobileAppPhoneVincent(new NotifyMobileAppPhoneVincentParameters
             { Message = "TTS", Data = data });
     }
 
