@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Automation.Models.DiscordNotificationModels;
 
 namespace Automation.Interfaces;
 
@@ -21,4 +22,6 @@ public interface INotify
     void NotifyPhoneVincentTts(string title, string message, bool canAlwaysSendNotification, double? sendAfterMinutes = null);
 
     void ResetNotificationHistoryForNotificationTitle(string title);
+
+    void NotifyDiscord(string message, string[] target, DiscordNotificationModel? data = null);
 }

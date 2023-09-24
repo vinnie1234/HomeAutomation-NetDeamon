@@ -1,12 +1,13 @@
 using System.Reactive.Concurrency;
 using Automation.Helpers;
+using Automation.Models.DiscordNotificationModels;
 
 namespace Automation.apps.General;
 
 [NetDaemonApp(Id = nameof(Cat))]
 public class Cat : BaseApp
 {
-    private readonly string _discordUri = ConfigManager.GetValueFromConfigNested("Discord", "Pixel") ?? "";
+    private readonly string _discordPixelChannel = ConfigManager.GetValueFromConfigNested("Discord", "Pixel") ?? "";
 
     public Cat(
         IHaContext haContext,
@@ -82,7 +83,20 @@ public class Cat : BaseApp
         });
 
         Logger.LogDebug(@"Dankjewel voor {Amount} porties of eten!", amount);
-        Discord.SendMessage(_discordUri, @$"Dankjewel voor {amount} porties of eten!");
+
+        var discordNotificationModel = new DiscordNotificationModel
+        {
+            Embed = new Embed
+            {
+                Fields = new[]
+                {
+                    new Field { Name = @"Eten gegeven", Value = amount.ToString() },
+                    new Field { Name = @"Totaal gehad vandaag", Value = Entities.InputNumber.Pixeltotalamountfeedday.ToString() }
+                }
+            }
+        };
+
+        Notify.NotifyDiscord(@$"Dankjewel voor {amount} porties of eten!", new[] { _discordPixelChannel }, discordNotificationModel);
     }
 
     private void MonitorCar()

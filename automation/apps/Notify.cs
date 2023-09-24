@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Automation.Enum;
+using Automation.Models.DiscordNotificationModels;
 using static System.Enum;
 
 namespace Automation.apps;
@@ -80,6 +81,11 @@ public class Notify : INotify
         if (data != null) oldData.Remove(data);
 
         _storage.Save("notificationHistory", oldData);
+    }
+
+    public void NotifyDiscord(string message, string[] target, DiscordNotificationModel? data = null)
+    {
+        _services.Notify.DiscordHomeassistant(message, "", target, data);
     }
 
     private void SubscribeToNotificationAction(Action func, string key)
