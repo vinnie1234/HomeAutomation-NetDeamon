@@ -91,7 +91,7 @@ public class Cat : BaseApp
                 Fields = new[]
                 {
                     new Field { Name = @"Eten gegeven", Value = amount.ToString() },
-                    new Field { Name = @"Totaal gehad vandaag", Value = Entities.InputNumber.Pixeltotalamountfeedday.ToString() }
+                    new Field { Name = @"Totaal gehad vandaag", Value = Entities.InputNumber.Pixeltotalamountfeedday.State.ToString() ?? string.Empty }
                 }
             }
         };
