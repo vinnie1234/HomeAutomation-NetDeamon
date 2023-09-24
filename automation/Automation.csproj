@@ -31,15 +31,15 @@
 
     <ItemGroup>
         <PackageReference Include="JoySoftware.NetDaemon.App" Version="22.1.12" />
-        <PackageReference Include="JoySoftware.NetDaemon.AppModel" Version="23.33.0" />
+        <PackageReference Include="JoySoftware.NetDaemon.AppModel" Version="23.38.0" />
         <PackageReference Include="JoySoftware.NetDaemon.DaemonRunner" Version="22.1.12" />
-        <PackageReference Include="JoySoftware.NetDaemon.Extensions.Mqtt" Version="23.33.0" />
-        <PackageReference Include="JoySoftware.NetDaemon.Runtime" Version="23.33.0" />
-        <PackageReference Include="JoySoftware.NetDaemon.HassModel" Version="23.33.0" />
-        <PackageReference Include="JoySoftware.NetDaemon.Client" Version="23.33.0" />
-        <PackageReference Include="JoySoftware.NetDaemon.Extensions.Scheduling" Version="23.33.0" />
-        <PackageReference Include="JoySoftware.NetDaemon.Extensions.Logging" Version="23.33.0" />
-        <PackageReference Include="JoySoftware.NetDaemon.Extensions.Tts" Version="23.33.0" />
+        <PackageReference Include="JoySoftware.NetDaemon.Extensions.Mqtt" Version="23.38.0" />
+        <PackageReference Include="JoySoftware.NetDaemon.Runtime" Version="23.38.0" />
+        <PackageReference Include="JoySoftware.NetDaemon.HassModel" Version="23.38.0" />
+        <PackageReference Include="JoySoftware.NetDaemon.Client" Version="23.38.0" />
+        <PackageReference Include="JoySoftware.NetDaemon.Extensions.Scheduling" Version="23.38.0" />
+        <PackageReference Include="JoySoftware.NetDaemon.Extensions.Logging" Version="23.38.0" />
+        <PackageReference Include="JoySoftware.NetDaemon.Extensions.Tts" Version="23.38.0" />
         <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="7.0.0" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
         <PackageReference Include="RestSharp" Version="110.2.0" />
