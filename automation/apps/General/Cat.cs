@@ -88,6 +88,9 @@ public class Cat : BaseApp
         {
             Embed = new Embed
             {
+                Title = @"Pixel heeft eten gehad",
+                Url = ConfigManager.GetValueFromConfig("BaseUrlHomeAssistant") + @"/dwains-dashboard/more_page_cat_blue_print",
+                Thumbnail = new Location("https://cdn.pixabay.com/photo/2016/10/11/18/17/black-cat-1732366_960_720.png"),
                 Fields = new[]
                 {
                     new Field { Name = @"Eten gegeven", Value = amount.ToString() },
@@ -96,7 +99,7 @@ public class Cat : BaseApp
             }
         };
 
-        Notify.NotifyDiscord(@$"Dankjewel voor {amount} porties of eten!", new[] { _discordPixelChannel }, discordNotificationModel);
+        Notify.NotifyDiscord("", new[] { _discordPixelChannel }, discordNotificationModel);
     }
 
     private void MonitorCar()

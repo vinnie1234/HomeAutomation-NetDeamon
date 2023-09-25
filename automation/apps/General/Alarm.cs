@@ -89,6 +89,7 @@ public class Alarm : BaseApp
                 {
                     Embed = new Embed
                     {
+                        Color = 15548997,
                         Fields = new[]
                         {
                             new Field { Name = @"Totaal erros", Value = Entities.Sensor.PetsnowyError.State! },

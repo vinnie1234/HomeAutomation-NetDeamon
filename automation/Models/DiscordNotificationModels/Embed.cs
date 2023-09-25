@@ -11,7 +11,7 @@ public class Embed
     public string? Description { get; set; }
 
     [JsonPropertyName("url")]
-    public Uri? Url { get; set; }
+    public string? Url { get; set; }
 
     [JsonPropertyName("color")]
     public long? Color { get; set; }
