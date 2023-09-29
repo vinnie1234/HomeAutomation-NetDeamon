@@ -5,6 +5,7 @@ using NetDaemon.Client;
 namespace Automation.apps.General;
 
 //[NetDaemonApp(Id = nameof(TestApp))]
+//[Focus]
 //ReSharper disable once UnusedType.Global
 public class TestApp : BaseApp
 {
