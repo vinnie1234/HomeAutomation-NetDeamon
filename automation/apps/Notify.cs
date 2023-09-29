@@ -30,11 +30,13 @@ public class Notify : INotify
 
         _entities.MediaPlayer.HubVincent.VolumeSet(0.4);
         _entities.MediaPlayer.Woonkamer.VolumeSet(0.4);
+        _entities.MediaPlayer.FriendsSpeakers.VolumeSet(0.4);
 
         var tasks = new List<Task>
         {
             Task.Run(() => _services.Tts.CloudSay(_entities.MediaPlayer.HubVincent.EntityId, message)),
-            Task.Run(() => _services.Tts.CloudSay(_entities.MediaPlayer.Woonkamer.EntityId, message))
+            Task.Run(() => _services.Tts.CloudSay(_entities.MediaPlayer.Woonkamer.EntityId, message)),
+            Task.Run(() => _services.Tts.CloudSay(_entities.MediaPlayer.FriendsSpeakers.EntityId, message))
         };
 
         await Task.WhenAll(tasks);
