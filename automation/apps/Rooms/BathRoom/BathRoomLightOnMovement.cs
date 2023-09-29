@@ -11,8 +11,8 @@ public class BathRoomLightOnMovement : BaseApp
     private bool IsDouching => Entities.InputBoolean.Douchen.IsOn();
 
     public BathRoomLightOnMovement(
-        IHaContext ha, 
-        ILogger<BathRoomLightOnMovement> logger, 
+        IHaContext ha,
+        ILogger<BathRoomLightOnMovement> logger,
         INotify notify,
         IScheduler scheduler)
         : base(ha, logger, notify, scheduler)
@@ -42,7 +42,8 @@ public class BathRoomLightOnMovement : BaseApp
 
         Entities.BinarySensor.BadkamerMotion
             .StateChanges()
-            .WhenStateIsFor(x => x.IsOff(), TimeSpan.FromMinutes((int)Entities.InputNumber.Bathroomlightdaytime.State!), Scheduler)
+            .WhenStateIsFor(x => x.IsOff(), TimeSpan.FromMinutes((int)Entities.InputNumber.Bathroomlightdaytime.State!),
+                Scheduler)
             .Where(x => x.Old.IsOn() && !DisableLightAutomations && !IsDouching && !IsSleeping)
             .Subscribe(_ => ChangeLight(false));
 
@@ -55,6 +56,8 @@ public class BathRoomLightOnMovement : BaseApp
     {
         if (isOn)
         {
+            Entities.MediaPlayer.Googlehome0351.VolumeSet(0.40);
+            Services.Spotcast.Start(entityId: Entities.MediaPlayer.Googlehome0351.EntityId);
             Entities.Light.BadkamerSpiegel.TurnOn(brightnessPct: 100);
             Entities.Light.PlafondBadkamer.TurnOn(brightnessPct: 100);
             Entities.Cover.Rollerblind0001.CloseCover();
@@ -63,6 +66,7 @@ public class BathRoomLightOnMovement : BaseApp
             {
                 if (IsDouching)
                 {
+                    Entities.MediaPlayer.Googlehome0351.MediaStop();
                     Entities.InputBoolean.Douchen.TurnOff();
                     Notify.NotifyHouse(@"toLongDouchen",
                         @"Je bent of een uur aan het douchen, of weer is vergeten alles uit te zetten!", false, 60);
@@ -130,4 +134,26 @@ public class BathRoomLightOnMovement : BaseApp
                     break;
             }
     }
+
+    private void ToothbrushHandler()
+    {
+        Entities.Sensor.SmartSeries400097aeToothbrushState
+            .StateChanges()
+            .Where(x => x.New?.State == @"runnig")
+            .Subscribe(_ =>
+            {
+                Entities.MediaPlayer.Googlehome0351.VolumeSet(0.15);
+                Services.Spotcast.Start(entityId: Entities.MediaPlayer.Googlehome0351.EntityId);
+            });
+        
+        Entities.Sensor.SmartSeries400097aeToothbrushState
+            .StateChanges()
+            .WhenStateIsFor(x => x?.State == "idle" && Entities.InputBoolean.Away.IsOff(),
+                TimeSpan.FromSeconds(30), Scheduler)
+            .Subscribe(_ =>
+            {
+                Entities.MediaPlayer.Googlehome0351.MediaStop();
+            });
+    }
+
 }
