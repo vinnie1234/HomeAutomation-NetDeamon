@@ -1,4 +1,5 @@
 using System.Reactive.Concurrency;
+using System.Threading;
 using Automation.Models.DiscordNotificationModels;
 using NetDaemon.Client;
 
@@ -26,6 +27,8 @@ public class NetDaemon : BaseApp
         {
             storage.Save("NetDaemonRestart", Entities.Light.Koelkast.Attributes?.RgbColor);
             Entities.Light.Koelkast.TurnOn(colorName: "red");
+            
+            Thread.Sleep(TimeSpan.FromSeconds(2));
             Services.Hassio.AddonRestart(@"c6a2317c_netdaemon3_1");
         });
     }
