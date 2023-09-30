@@ -14,5 +14,9 @@ public class TestApp : BaseApp
         INotify notify, IScheduler scheduler)
         : base(ha, logger, notify, scheduler)
     {
+        Entities.Sensor.SmartSeries400097aeToothbrushState
+            .StateChanges()
+            .Where(x => x.New?.State == @"runnig")
+            .Subscribe(_ => { Console.WriteLine("test"); });
     }
 }

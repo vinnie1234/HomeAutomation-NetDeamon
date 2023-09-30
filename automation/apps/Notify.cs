@@ -28,15 +28,11 @@ public class Notify : INotify
 
         SaveNotification(_storage, title, message);
 
-        _entities.MediaPlayer.HubVincent.VolumeSet(0.4);
-        _entities.MediaPlayer.Woonkamer.VolumeSet(0.4);
-        _entities.MediaPlayer.FriendsSpeakers.VolumeSet(0.4);
+        _entities.MediaPlayer.HeleHuis.VolumeSet(0.4);
 
         var tasks = new List<Task>
         {
-            Task.Run(() => _services.Tts.CloudSay(_entities.MediaPlayer.HubVincent.EntityId, message)),
-            Task.Run(() => _services.Tts.CloudSay(_entities.MediaPlayer.Woonkamer.EntityId, message)),
-            Task.Run(() => _services.Tts.CloudSay(_entities.MediaPlayer.FriendsSpeakers.EntityId, message))
+            Task.Run(() => _services.Tts.CloudSay(_entities.MediaPlayer.HeleHuis.EntityId, message))
         };
 
         await Task.WhenAll(tasks);
@@ -88,6 +84,18 @@ public class Notify : INotify
     public void NotifyDiscord(string message, string[] target, DiscordNotificationModel? data = null)
     {
         _services.Notify.DiscordHomeassistant(message, "", target, data);
+    }
+
+    public void SendMusicToHome(string mediaContentId)
+    {
+        _entities.MediaPlayer.HeleHuis.VolumeSet(0.5);
+        _services.MediaPlayer.PlayMedia(new ServiceTarget
+        {
+            EntityIds = new[]
+            {
+                _entities.MediaPlayer.HeleHuis.EntityId
+            }
+        }, mediaContentId, "music");
     }
 
     private void SubscribeToNotificationAction(Action func, string key)

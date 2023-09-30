@@ -24,4 +24,6 @@ public interface INotify
     void ResetNotificationHistoryForNotificationTitle(string title);
 
     void NotifyDiscord(string message, string[] target, DiscordNotificationModel? data = null);
+
+    void SendMusicToHome(string mediaContentId);
 }

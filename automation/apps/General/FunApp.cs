@@ -15,6 +15,8 @@ public class FunApp : BaseApp
             {
                 Ps5TurnedOn();
             });
+
+        Friends();
     }
 
     private void Ps5TurnedOn()
@@ -22,5 +24,15 @@ public class FunApp : BaseApp
         if (DateTime.Now.DayOfWeek == DayOfWeek.Wednesday && DateTime.Now.Hour > 19)
             Notify.NotifyHouse(@"Dewin",
                 @"Goede avond Dewin, ben je er klaar voor om weer vernederd te worden door Vincent?", true);
+    }
+
+    private void Friends()
+    {
+        Entities.InputBoolean.StartFriends.WhenTurnsOn(x =>
+        {
+            Notify.SendMusicToHome("http://192.168.50.189:8123/local/Friends.mp3");
+            Entities.InputBoolean.StartFriends.TurnOff();
+            Entities.Light.Hal.TurnOn();
+        });
     }
 }
