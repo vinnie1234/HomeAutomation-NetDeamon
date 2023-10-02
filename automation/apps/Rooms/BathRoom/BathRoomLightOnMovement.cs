@@ -146,6 +146,7 @@ public class BathRoomLightOnMovement : BaseApp
             {
                 Entities.MediaPlayer.Googlehome0351.VolumeSet(0.15);
                 Services.Spotcast.Start(entityId: Entities.MediaPlayer.Googlehome0351.EntityId);
+                Entities.MediaPlayer.Googlehome0351.MediaPlay();
             });
         
         Entities.Sensor.SmartSeries400097aeToothbrushState
