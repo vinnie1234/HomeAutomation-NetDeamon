@@ -24,6 +24,7 @@ public class BathRoomLightOnMovement : BaseApp
         });
 
         InitializeLights();
+        ToothbrushHandler();
     }
 
     private void InitializeLights()
@@ -58,6 +59,7 @@ public class BathRoomLightOnMovement : BaseApp
         {
             Entities.MediaPlayer.Googlehome0351.VolumeSet(0.40);
             Services.Spotcast.Start(entityId: Entities.MediaPlayer.Googlehome0351.EntityId);
+            Entities.MediaPlayer.Googlehome0351.MediaPause();
             Entities.Light.BadkamerSpiegel.TurnOn(brightnessPct: 100);
             Entities.Light.PlafondBadkamer.TurnOn(brightnessPct: 100);
             Entities.Cover.Rollerblind0001.CloseCover();
