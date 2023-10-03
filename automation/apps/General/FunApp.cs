@@ -28,10 +28,9 @@ public class FunApp : BaseApp
 
     private void Friends()
     {
-        Entities.InputBoolean.StartFriends.WhenTurnsOn(x =>
+        Entities.InputButton.StartFriends.WhenTurnsOn(x =>
         {
             Notify.SendMusicToHome("http://192.168.50.189:8123/local/Friends.mp3");
-            Entities.InputBoolean.StartFriends.TurnOff();
             Entities.Light.Hal.TurnOn();
         });
     }
