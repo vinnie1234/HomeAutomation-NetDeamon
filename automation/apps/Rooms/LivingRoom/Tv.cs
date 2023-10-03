@@ -58,7 +58,7 @@ public class Tv : BaseApp
         Logger.LogDebug("TV Turned on");
         if (!DisableLightAutomations)
         {
-            Entities.Scene.TvKijken.TurnOn();
+            Entities.Scene.WoonkamerMovie.TurnOn();
             Entities.MediaPlayer.AvSoundbar.TurnOn();
             Entities.Light.PlafondWoonkamer.TurnOff();
             Entities.Light.HueFilamentBulb1.TurnOff();
