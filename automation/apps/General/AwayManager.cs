@@ -32,7 +32,7 @@ public class AwayManager : BaseApp
             {
                 Notify.NotifyPhoneVincent(@"Het lijkt er op dat je weg bent!",
                     @"Je gaat weg zonder wat te zeggen...",
-                    false,
+                    true,
                     10,
                     new List<ActionModel>
                     {

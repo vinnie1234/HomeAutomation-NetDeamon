@@ -56,7 +56,7 @@ public class Alarm : BaseApp
                 {
                     Notify.NotifyPhoneVincent(@"Hoog energie verbruik",
                         @$"Energie verbruik is al voor 10 minuten {x.Entity.State}",
-                        false,
+                        true,
                         10,
                         new List<ActionModel>
                         {
