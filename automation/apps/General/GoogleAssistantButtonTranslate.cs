@@ -5,7 +5,7 @@ namespace Automation.apps.General;
 [NetDaemonApp(Id = nameof(GoogleAssistantButtonTranslate))]
 public class GoogleAssistantButtonTranslate : BaseApp
 {
-    protected GoogleAssistantButtonTranslate(IHaContext haContext, ILogger logger, INotify notify, IScheduler scheduler)
+    public GoogleAssistantButtonTranslate(IHaContext haContext, ILogger<GoogleAssistantButtonTranslate> logger, INotify notify, IScheduler scheduler)
         : base(haContext, logger, notify, scheduler)
     {
         foreach (var translateEntity in TranslationEntities())
