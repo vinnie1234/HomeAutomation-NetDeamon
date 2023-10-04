@@ -1,7 +1,5 @@
 using System.Reactive.Concurrency;
 using System.Threading;
-using Automation.Models.DiscordNotificationModels;
-using NetDaemon.Client;
 
 namespace Automation.apps.General;
 

@@ -3,6 +3,7 @@ using System.Reactive.Concurrency;
 namespace Automation.apps.General;
 
 [NetDaemonApp(Id = nameof(FunApp))]
+[Focus]
 //ReSharper disable once UnusedType.Global
 public class FunApp : BaseApp
 {
@@ -21,17 +22,18 @@ public class FunApp : BaseApp
 
     private void Ps5TurnedOn()
     {
-        if (DateTime.Now.DayOfWeek == DayOfWeek.Wednesday && DateTime.Now.Hour > 19)
+        if (DateTime.Now.DayOfWeek == DayOfWeek.Wednesday && DateTime.Now.Hour >= 19)
             Notify.NotifyHouse(@"Dewin",
                 @"Goede avond Dewin, ben je er klaar voor om weer vernederd te worden door Vincent?", true);
     }
 
     private void Friends()
     {
-        Entities.InputButton.StartFriends.WhenTurnsOn(x =>
-        {
-            Notify.SendMusicToHome("http://192.168.50.189:8123/local/Friends.mp3");
-            Entities.Light.Hal.TurnOn();
-        });
+        Entities.InputButton.StartFriends.StateChanges()
+            .Subscribe(_ =>
+            {
+                Notify.SendMusicToHome("http://192.168.50.189:8123/local/Friends.mp3");
+                Entities.Light.Hal.TurnOn();
+            });
     }
 }
