@@ -20,11 +20,14 @@ public class NetDaemon : BaseApp
             Entities.Light.Koelkast.TurnOn(rgbColor: lightColor);
             storage.Save("NetDaemonRestart", "");
         }
+        
+        notify.NotifyHouse(@"Het huis is opnieuw opgestart", @"Het huis is opnieuw opgestart", true);
 
         Entities.InputButton.Restartnetdaemon.StateChanges().Subscribe(_ =>
         {
             storage.Save("NetDaemonRestart", Entities.Light.Koelkast.Attributes?.RgbColor);
             Entities.Light.Koelkast.TurnOn(colorName: "red");
+            notify.NotifyHouse(@"Het huis wordt opnieuw opgestart", @"Het huis wordt opnieuw opgestart", true);
             
             Thread.Sleep(TimeSpan.FromSeconds(2));
             Services.Hassio.AddonRestart(@"c6a2317c_netdaemon3_1");
