@@ -3,7 +3,7 @@ using System.Reactive.Concurrency;
 namespace Automation.apps.General;
 
 [NetDaemonApp(Id = nameof(FunApp))]
-[Focus]
+//[Focus]
 //ReSharper disable once UnusedType.Global
 public class FunApp : BaseApp
 {
