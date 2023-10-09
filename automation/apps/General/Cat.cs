@@ -70,8 +70,8 @@ public class Cat : BaseApp
 
     private void FeedCat(int amount)
     {
-        Entities.InputNumber.Pixeltotalamountfeedday.SetValue(
-            Convert.ToInt32(Entities.InputNumber.Pixeltotalamountfeedday.State + amount ?? 0));
+        var amountToday = Convert.ToInt32(Entities.InputNumber.Pixeltotalamountfeedday.State + amount ?? 0);
+        Entities.InputNumber.Pixeltotalamountfeedday.SetValue(amountToday);
         Entities.InputNumber.Pixeltotalamountfeedalltime.SetValue(
             Convert.ToInt32(Entities.InputNumber.Pixeltotalamountfeedalltime.State + amount ?? 0));
 
@@ -94,7 +94,7 @@ public class Cat : BaseApp
                 Fields = new[]
                 {
                     new Field { Name = @"Eten gegeven", Value = amount.ToString() },
-                    new Field { Name = @"Totaal gehad vandaag", Value = Entities.InputNumber.Pixeltotalamountfeedday.State.ToString() ?? string.Empty }
+                    new Field { Name = @"Totaal gehad vandaag", Value = amountToday.ToString() }
                 }
             }
         };
