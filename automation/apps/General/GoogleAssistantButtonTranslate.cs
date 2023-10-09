@@ -3,7 +3,7 @@ using System.Reactive.Concurrency;
 namespace Automation.apps.General;
 
 [NetDaemonApp(Id = nameof(GoogleAssistantButtonTranslate))]
-[Focus]
+//[Focus]
 public class GoogleAssistantButtonTranslate : BaseApp
 {
     public GoogleAssistantButtonTranslate(IHaContext haContext, ILogger<GoogleAssistantButtonTranslate> logger, INotify notify, IScheduler scheduler)
