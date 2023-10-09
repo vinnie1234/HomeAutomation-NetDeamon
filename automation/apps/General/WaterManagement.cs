@@ -47,7 +47,7 @@ public class WaterManagement : BaseApp
                 > 5 and <= 7  => "WC Groot",
                 > 7 and <= 30 => @"Afwas",
                 > 30          => @"Douchen",
-                _             => string.Empty
+                _             => "WC Klein"
             };
 
             if (Entities.Switch.Wasmachine.IsOn()) guess = @"Wasmachine";
