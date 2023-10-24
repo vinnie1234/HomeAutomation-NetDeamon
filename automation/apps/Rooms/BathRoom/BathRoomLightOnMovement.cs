@@ -59,7 +59,6 @@ public class BathRoomLightOnMovement : BaseApp
         {
             Entities.MediaPlayer.Googlehome0351.VolumeSet(0.40);
             Services.Spotcast.Start(entityId: Entities.MediaPlayer.Googlehome0351.EntityId);
-            Entities.MediaPlayer.Googlehome0351.MediaPause();
             Entities.Light.BadkamerSpiegel.TurnOn(brightnessPct: 100);
             Entities.Light.PlafondBadkamer.TurnOn(brightnessPct: 100);
             Entities.Cover.Rollerblind0001.CloseCover();
@@ -80,6 +79,7 @@ public class BathRoomLightOnMovement : BaseApp
             Entities.Light.BadkamerSpiegel.TurnOff();
             Entities.Light.PlafondBadkamer.TurnOff();
             Entities.Cover.Rollerblind0001.OpenCover();
+            Entities.MediaPlayer.Googlehome0351.MediaPause();
             Notify.NotifyHouse("readyDouche", @"Klaar met douchen", true);
         }
     }
@@ -111,6 +111,7 @@ public class BathRoomLightOnMovement : BaseApp
     private void OverwriteSwitch(EventModel eventModel)
     {
         const string hueSwitchBathroomId = @"3dcab87acc97379282b359fdf3557a52";
+
         if (eventModel is { DeviceId: hueSwitchBathroomId, Type: "initial_press" })
             switch (eventModel.Subtype)
             {
@@ -144,19 +145,22 @@ public class BathRoomLightOnMovement : BaseApp
             .Where(x => x.New?.State == @"runnig")
             .Subscribe(_ =>
             {
-                Entities.MediaPlayer.Googlehome0351.VolumeSet(0.15);
-                Services.Spotcast.Start(entityId: Entities.MediaPlayer.Googlehome0351.EntityId);
-                Entities.MediaPlayer.Googlehome0351.MediaPlay();
+                if (!IsDouching)
+                {
+                    Entities.MediaPlayer.Googlehome0351.VolumeSet(0.15);
+                    Services.Spotcast.Start(entityId: Entities.MediaPlayer.Googlehome0351.EntityId);
+                    Entities.MediaPlayer.Googlehome0351.MediaPlay();
+                }
             });
-        
+
         Entities.Sensor.SmartSeries400097aeToothbrushState
             .StateChanges()
             .WhenStateIsFor(x => x?.State == "idle" && Entities.InputBoolean.Away.IsOff(),
                 TimeSpan.FromSeconds(30), Scheduler)
             .Subscribe(_ =>
             {
-                Entities.MediaPlayer.Googlehome0351.MediaStop();
+                if (!IsDouching)
+                    Entities.MediaPlayer.Googlehome0351.MediaStop();
             });
     }
-
 }
