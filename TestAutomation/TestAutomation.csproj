@@ -16,7 +16,7 @@
         <PackageReference Include="JoySoftware.NetDaemon.Extensions.Scheduling" Version="23.38.0" />
         <PackageReference Include="JoySoftware.NetDaemon.Extensions.Tts" Version="23.38.0" />
         <PackageReference Include="JoySoftware.NetDaemon.Fakes" Version="22.1.12" />
-        <PackageReference Include="JoySoftware.NetDaemon.HassModel" Version="23.38.0" />
+        <PackageReference Include="JoySoftware.NetDaemon.HassModel" Version="23.43.1" />
         <PackageReference Include="JoySoftware.NetDaemon.Runtime" Version="23.38.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
         <PackageReference Include="Microsoft.Reactive.Testing" Version="6.0.0" />
