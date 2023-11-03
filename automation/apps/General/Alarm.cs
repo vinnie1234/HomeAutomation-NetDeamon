@@ -12,12 +12,12 @@ public class Alarm : BaseApp
 {
     private bool IsSleeping => Entities.InputBoolean.Sleeping.IsOn();
     private readonly string _discordLogChannel = ConfigManager.GetValueFromConfigNested("Discord", "Logs") ?? "";
-    
+
     public Alarm(
-        IHaContext ha, 
-        ILogger<Alarm> logger, 
-        INotify notify, 
-        IScheduler scheduler, 
+        IHaContext ha,
+        ILogger<Alarm> logger,
+        INotify notify,
+        IScheduler scheduler,
         IHomeAssistantConnection homeAssistantConnection)
         : base(ha, logger, notify, scheduler)
     {
@@ -32,7 +32,7 @@ public class Alarm : BaseApp
         {
             if (Globals.AmIHomeCheck(Entities))
                 Notify.NotifyPhoneVincent("ALARM", @"Beweging gedetecteerd", false, 5, channel: "ALARM",
-                    vibrationPattern: "100, 1000, 100, 1000, 100", ledColor: "red");
+                    vibrationPattern: "100, 1000, 100, 1000, 100");
         });
     }
 
@@ -44,7 +44,7 @@ public class Alarm : BaseApp
                 .Where(x => x.Entity.State > 25 && !IsSleeping)
                 .Subscribe(x => Notify.NotifyPhoneVincent(@"Hoge temperatuur gedetecteerd",
                     @$"{temperatureSensor.Value} is {x.Entity.State} graden", true, channel: "ALARM",
-                    vibrationPattern: "100, 1000, 100, 1000, 100", ledColor: "red"));
+                    vibrationPattern: "100, 1000, 100, 1000, 100"));
     }
 
     private void EnergyCheck()
@@ -63,7 +63,7 @@ public class Alarm : BaseApp
                             new(action: "URI", title: @"Ga naar dashboard",
                                 uri: ConfigManager.GetValueFromConfig("BaseUrlHomeAssistant") + "/energy")
                         },
-                        channel: "ALARM", vibrationPattern: "100, 1000, 100, 1000, 100", ledColor: "red");
+                        channel: "ALARM", vibrationPattern: "100, 1000, 100, 1000, 100");
                 }
             );
     }
@@ -77,8 +77,8 @@ public class Alarm : BaseApp
                 Notify.NotifyPhoneVincent(@"Vergeet het afval niet",
                     @$"Vergeet je niet op {message} buiten te zetten?", true);
         });
-    }    
-    
+    }
+
     private void PetSnowyCheck()
     {
         Scheduler.ScheduleCron("00 22 * * *", () =>
@@ -97,19 +97,20 @@ public class Alarm : BaseApp
                         }
                     }
                 };
-                
+
                 Notify.NotifyDiscord(@"PetSnowy heeft errors", new[] { _discordLogChannel }, discordNotificationModel);
                 Notify.NotifyPhoneVincent(@"PetSnowy heeft errors",
                     @"Er staat nog een error open voor de PetSnowy", false, 10);
             }
         });
     }
-    
+
     private void HaChecks(IHomeAssistantConnection homeAssistantConnection)
     {
         Scheduler.RunEvery(TimeSpan.FromSeconds(30), DateTimeOffset.Now, () =>
         {
             var entities = homeAssistantConnection.GetEntitiesAsync(new CancellationToken()).Result;
+
             if (!(entities?.Count > 0))
             {
                 Notify.NotifyDiscord(@"NetDeamon heeft geen verbinding meer met HA", new[] { _discordLogChannel });

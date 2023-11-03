@@ -1,5 +1,8 @@
 using System.Text.Json.Serialization;
 
+// ReSharper disable UnusedMember.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+
 namespace Automation.Models.DiscordNotificationModels;
 
 public class Embed

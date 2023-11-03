@@ -1,7 +1,4 @@
 using Automation.apps;
-using Automation.apps.General;
-using Automation.Enum;
-using Moq;
 using TestAutomation.Helpers;
 using Xunit;
 

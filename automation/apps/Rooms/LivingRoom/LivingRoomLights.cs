@@ -24,6 +24,7 @@ public class LivingRoomLights : BaseApp
     private void TurnOnPlafond(EventModel eventModel)
     {
         const string hueWallLivingRoomId = "b4784a8e43cc6f5aabfb6895f3a8dbac";
+
         if (eventModel is { DeviceId: hueWallLivingRoomId, Type: "initial_press" })
         {
             if (Entities.Light.HueFilamentBulb2.IsOff())
@@ -33,18 +34,12 @@ public class LivingRoomLights : BaseApp
                     .StateChanges()
                     .Where(x => x.Old.IsOff())
                     .Throttle(TimeSpan.FromMilliseconds(50))
-                    .Subscribe(_ =>
-                    {
-                        Entities.Light.PlafondWoonkamer.TurnOn(brightnessPct: 100, kelvin: GetColorTemp());
-                    });
+                    .Subscribe(_ => { Entities.Light.PlafondWoonkamer.TurnOn(brightnessPct: 100, kelvin: GetColorTemp()); });
                 Entities.Light.PlafondWoonkamer
                     .StateChanges()
                     .Where(x => x.Old.IsOff())
                     .Throttle(TimeSpan.FromMilliseconds(50))
-                    .Subscribe(_ =>
-                    {
-                        Entities.Light.HueFilamentBulb1.TurnOn(brightnessPct: 100, kelvin: GetColorTemp());
-                    });
+                    .Subscribe(_ => { Entities.Light.HueFilamentBulb1.TurnOn(brightnessPct: 100, kelvin: GetColorTemp()); });
 
                 Scheduler.Schedule(TimeSpan.FromMilliseconds(200), () =>
                 {

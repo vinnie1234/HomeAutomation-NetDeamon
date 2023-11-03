@@ -55,7 +55,7 @@ public class WaterManagement : BaseApp
             var waterUsage = _waterUsages;
 
             Notify.NotifyPhoneVincent($@"Water Check ({_waterUsages})",
-                @$"Nieuw water gesignaleerd",
+                @"Nieuw water gesignaleerd",
                 true,
                 action: new List<ActionModel>
                 {
@@ -64,7 +64,7 @@ public class WaterManagement : BaseApp
                     new(action: "SendNotificationWaterDifferent", title: "Anders",
                         func: () => { SaveWater(waterUsage.ToString()!, "", id, DateTime.Now); }),
                     new(action: "SendNotificationWaterSkip", title: "Skip",
-                        func: () => { SaveWater(waterUsage.ToString()!, "Skip", id, DateTime.Now); }),
+                        func: () => { SaveWater(waterUsage.ToString()!, "Skip", id, DateTime.Now); })
                 });
 
             _waterUsages = 0;

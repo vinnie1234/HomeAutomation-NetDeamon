@@ -17,7 +17,7 @@ public class HallLightOnMovement : BaseApp
         IScheduler scheduler)
         : base(ha, logger, notify, scheduler)
     {
-        //InitializeDayLights();
+        InitializeLights();
 
         HaContext.Events.Where(x => x.EventType == "hue_event").Subscribe(x =>
         {
@@ -26,7 +26,7 @@ public class HallLightOnMovement : BaseApp
         });
     }
 
-    private void InitializeDayLights()
+    private void InitializeLights()
     {
         Entities.BinarySensor.GangMotion
             .StateChanges()
@@ -75,6 +75,7 @@ public class HallLightOnMovement : BaseApp
     private void OverwriteSwitch(EventModel eventModel)
     {
         const string hueSwitchBathroomId = @"4339833970e35ff10c568a94b59e50dd";
+
         if (eventModel is { DeviceId: hueSwitchBathroomId, Type: "initial_press" })
             switch (eventModel.Subtype)
             {
@@ -107,7 +108,7 @@ public class HallLightOnMovement : BaseApp
                     Entities.Light.Hal2.TurnOff();
                     Services.MediaPlayer.PlayMedia(new ServiceTarget
                     {
-                        EntityIds = new[] { Entities.MediaPlayer.FriendsSpeakers.EntityId },
+                        EntityIds = new[] { Entities.MediaPlayer.FriendsSpeakers.EntityId }
                     }, "http://192.168.50.189:8123/local/Friends.mp3", "music");
 
                     break;

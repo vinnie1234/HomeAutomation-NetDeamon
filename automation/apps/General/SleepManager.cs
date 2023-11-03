@@ -9,21 +9,21 @@ public class SleepManager : BaseApp
     private bool DisableLightAutomations => Entities.InputBoolean.Disablelightautomationgeneral.IsOn();
 
     public SleepManager(
-        IHaContext ha, 
-        ILogger<SleepManager> logger, 
-        INotify notify, 
+        IHaContext ha,
+        ILogger<SleepManager> logger,
+        INotify notify,
         IScheduler scheduler)
         : base(ha, logger, notify, scheduler)
     {
         EnergyPriceCheck();
-        
+
         Entities.InputBoolean.Sleeping.WhenTurnsOff(_ => WakeUp());
         Entities.InputBoolean.Sleeping.WhenTurnsOn(_ => Sleeping());
 
         Scheduler.ScheduleCron("00 10 * * *", () =>
         {
             if (!((IList)Globals.WeekendDays).Contains(DateTime.Now.DayOfWeek))
-                if (Entities.InputBoolean.Sleeping.IsOn()) 
+                if (Entities.InputBoolean.Sleeping.IsOn())
                     Entities.InputBoolean.Sleeping.TurnOff();
         });
     }
@@ -91,6 +91,7 @@ public class SleepManager : BaseApp
             foreach (JsonElement price in priceList)
             {
                 var model = price.ToObject<EnergyPriceModel>();
+
                 if (model is { PriceCtPerKwh: < -20 })
                 {
                     Notify.NotifyPhoneVincent(@"Morgen is het stroom gratis", @$"Stroom kost morgen om {model.StartTime} {model.PriceCtPerKwh} cent!", false, 10);

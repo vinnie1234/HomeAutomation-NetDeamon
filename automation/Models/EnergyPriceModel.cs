@@ -1,7 +1,11 @@
 using System.Text.Json.Serialization;
 
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
+
 namespace Automation.Models;
 
+// ReSharper disable once ClassNeverInstantiated.Global
 public class EnergyPriceModel
 {
     public EnergyPriceModel(DateTime startTime, double priceCtPerKwh, DateTime endTime)

@@ -15,8 +15,7 @@ public interface INotify
         List<ActionModel>? action = null,
         string? image = null,
         string? channel = null,
-        string? vibrationPattern = null,
-        string? ledColor = null);
+        string? vibrationPattern = null);
 
     // ReSharper disable once UnusedMember.Global
     void NotifyPhoneVincentTts(string title, string message, bool canAlwaysSendNotification, double? sendAfterMinutes = null);

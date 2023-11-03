@@ -10,11 +10,11 @@ public class Tv : BaseApp
     private bool IsWorking => Entities.InputBoolean.Working.IsOn();
 
     private bool DisableLightAutomations => Entities.InputBoolean.Disablelightautomationlivingroom.IsOn();
-    
+
     public Tv(
-        IHaContext ha, 
-        ILogger<Tv> logger, 
-        INotify notify, 
+        IHaContext ha,
+        ILogger<Tv> logger,
+        INotify notify,
         IScheduler scheduler)
         : base(ha, logger, notify, scheduler)
     {
@@ -25,6 +25,7 @@ public class Tv : BaseApp
     private void LetThereBeLight()
     {
         Logger.LogDebug("TV Turned off");
+
         if (!DisableLightAutomations)
         {
             switch (GetHouseState(Entities))
@@ -45,7 +46,7 @@ public class Tv : BaseApp
                     Entities.Scene.Woonkamerday.TurnOn();
                     break;
             }
-            
+
             Entities.MediaPlayer.AvSoundbar.TurnOff();
             Entities.Switch.Ps5VincentPower.TurnOff();
 
@@ -56,6 +57,7 @@ public class Tv : BaseApp
     private void MovieTime()
     {
         Logger.LogDebug("TV Turned on");
+
         if (!DisableLightAutomations)
         {
             Entities.Scene.WoonkamerMovie.TurnOn();

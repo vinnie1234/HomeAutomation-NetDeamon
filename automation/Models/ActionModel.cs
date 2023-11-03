@@ -1,5 +1,7 @@
 using System.Text.Json.Serialization;
 
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+
 namespace Automation.Models;
 
 public record ActionModel

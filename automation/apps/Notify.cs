@@ -46,8 +46,7 @@ public class Notify : INotify
         List<ActionModel>? action = null,
         string? image = null,
         string? channel = null,
-        string? vibrationPattern = null,
-        string? ledColor = null)
+        string? vibrationPattern = null)
     {
         var canSendNotification = CanSendNotification(_storage, canAlwaysSendNotification, title, sendAfterMinutes);
         if (!canSendNotification) return;
