@@ -63,7 +63,7 @@ public class SaveInState : BaseApp
         if (oldEntity != null) LightEntitiesStates.Remove(oldEntity);
 
         LightEntitiesStates.Add(new LightStateModel(entityId: entity.EntityId, rgbColors: entity.Attributes?.RgbColor,
-            brightness: entity.Attributes?.Brightness, colorTemp: entity.Attributes?.ColorTemp, isOn: entity.IsOn(),
+            brightness: entity.Attributes?.Brightness, colorTemp: (double?)entity.Attributes?.ColorTemp, isOn: entity.IsOn(),
             supportedColorModes: entity.Attributes?.SupportedColorModes));
     }
 }
