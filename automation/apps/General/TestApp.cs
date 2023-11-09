@@ -1,5 +1,8 @@
 using System.Reactive.Concurrency;
+using System.Text.RegularExpressions;
+using Automation.Models.Yts;
 using NetDaemon.Client;
+using Newtonsoft.Json;
 
 // ReSharper disable UnusedParameter.Local
 
@@ -16,9 +19,7 @@ public class TestApp : BaseApp
         INotify notify, IScheduler scheduler)
         : base(ha, logger, notify, scheduler)
     {
-        Entities.Sensor.SmartSeries400097aeToothbrushState
-            .StateChanges()
-            .Where(x => x.New?.State == @"runnig")
-            .Subscribe(_ => { Console.WriteLine("test"); });
     }
+
+
 }
