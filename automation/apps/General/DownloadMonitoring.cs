@@ -32,16 +32,21 @@ public partial class DownloadMonitoring : BaseApp
                 var items = Entities.Sensor.YtsFeed.Attributes?.Entries!.Cast<JsonElement>()
                     .Select(o => o.Deserialize<Yts>()).ToList();
 
+                var thisYear = DateTime.Now.Year;
+                var lastYear = DateTime.Now.AddYears(-1).Year;
+
                 if (items != null)
                 {
                     var oldList = dataRepository.Get<List<Yts>>("yts");
 
                     foreach (var discordModel in from ytsItem in items
                              where ytsItem != null
-                             where oldList == null || oldList.All(x => x.Id != ytsItem.Id)
-                             let downloadLink = ytsItem.Links.First(x => x.Type == "application/x-bittorrent").Href
+                             where oldList == null || oldList.All(yts => yts.Id != ytsItem.Id)
+                             where ytsItem.Title.Contains("1080p") | ytsItem.Title.Contains("2169p")
+                             where ytsItem.Title.Contains(thisYear.ToString()) | ytsItem.Title.Contains(lastYear.ToString())
+                             let downloadLink = ytsItem.Links.First(link => link.Type == "application/x-bittorrent").Href
                              let image = GetTextFromHtmlRegex(ytsItem.Summary, ImgRegex())
-                             let imbdRating = GetTextFromHtmlRegex(ytsItem.Summary, IMDBRatingRegex())
+                             let imbdRating = GetTextFromHtmlRegex(ytsItem.Summary, ImdbRatingRegex())
                              let genre = GetTextFromHtmlRegex(ytsItem.Summary, GenreRegex())
                              let size = GetTextFromHtmlRegex(ytsItem.Summary, SizeRegex())
                              let runtime = GetTextFromHtmlRegex(ytsItem.Summary, RuntimeRegex())
@@ -71,7 +76,7 @@ public partial class DownloadMonitoring : BaseApp
         });
     }
 
-    private string GetTextFromHtmlRegex(string htmlSource, Regex regex)
+    private static string GetTextFromHtmlRegex(string htmlSource, Regex regex)
     {
         var matchesImgSrc = regex.Matches(htmlSource);
         var match = matchesImgSrc.First();
@@ -83,7 +88,7 @@ public partial class DownloadMonitoring : BaseApp
     private static partial Regex ImgRegex();
 
     [GeneratedRegex("(IMDB Rating:)(.+?)(?=<)", RegexOptions.IgnoreCase | RegexOptions.Singleline, "en-NL")]
-    private static partial Regex IMDBRatingRegex();
+    private static partial Regex ImdbRatingRegex();
 
     [GeneratedRegex("(Genre:)(.+?)(?=<)", RegexOptions.IgnoreCase | RegexOptions.Singleline, "en-NL")]
     private static partial Regex GenreRegex();
