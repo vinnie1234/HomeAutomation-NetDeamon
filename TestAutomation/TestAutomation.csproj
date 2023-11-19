@@ -8,20 +8,19 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="NetDaemon.AppModel" Version="23.46.0" />
-        <PackageReference Include="NetDaemon.Client" Version="23.46.0" />
-        <PackageReference Include="NetDaemon.Extensions.Logging" Version="23.46.0" />
-        <PackageReference Include="NetDaemon.Extensions.Mqtt" Version="23.46.0" />
-        <PackageReference Include="NetDaemon.Extensions.Scheduling" Version="23.46.0" />
-        <PackageReference Include="NetDaemon.Extensions.Tts" Version="23.46.0" />
-        <PackageReference Include="NetDaemon.Fakes" Version="22.1.12" />
-        <PackageReference Include="NetDaemon.HassModel" Version="23.46.0" />
-        <PackageReference Include="NetDaemon.Runtime" Version="23.46.0" />
+        <PackageReference Include="NetDaemon.AppModel" Version="23.46.1" />
+        <PackageReference Include="NetDaemon.Client" Version="23.46.1" />
+        <PackageReference Include="NetDaemon.Extensions.Logging" Version="23.46.1" />
+        <PackageReference Include="NetDaemon.Extensions.Mqtt" Version="23.46.1" />
+        <PackageReference Include="NetDaemon.Extensions.Scheduling" Version="23.46.1" />
+        <PackageReference Include="NetDaemon.Extensions.Tts" Version="23.46.1" />
+        <PackageReference Include="NetDaemon.HassModel" Version="23.46.1" />
+        <PackageReference Include="NetDaemon.Runtime" Version="23.46.1" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
         <PackageReference Include="Microsoft.Reactive.Testing" Version="6.0.0" />
         <PackageReference Include="Moq" Version="4.20.69" />
         <PackageReference Include="NSubstitute" Version="5.1.0" />
-        <PackageReference Include="xunit" Version="2.6.1" />
+        <PackageReference Include="xunit" Version="2.6.2" />
     </ItemGroup>
 
     <ItemGroup>

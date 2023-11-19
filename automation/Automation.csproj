@@ -26,21 +26,21 @@
         </None>
     </ItemGroup>
     <Target Name="AfterPublishMessage" AfterTargets="Publish">
-        <Message Text="Publish done! Copy all content in directory: $(PublishDir) to the `/config/netdaemon3' folder for add-on or your custom folder to deplpoy" Importance="high" />
+        <Message Text="Publish done! Copy all content in directory: $(PublishDir) to the `/config/netdaemon4' folder for add-on or your custom folder to deplpoy" Importance="high" />
     </Target>
 
     <ItemGroup>
-        <PackageReference Include="NetDaemon.AppModel" Version="23.46.0" />
-        <PackageReference Include="NetDaemon.Extensions.Mqtt" Version="23.46.0" />
-        <PackageReference Include="NetDaemon.Runtime" Version="23.46.0" />
-        <PackageReference Include="NetDaemon.HassModel" Version="23.46.0" />
-        <PackageReference Include="NetDaemon.Client" Version="23.46.0" />
-        <PackageReference Include="NetDaemon.Extensions.Scheduling" Version="23.46.0" />
-        <PackageReference Include="NetDaemon.Extensions.Logging" Version="23.46.0" />
-        <PackageReference Include="NetDaemon.Extensions.Tts" Version="23.46.0" />
+        <PackageReference Include="NetDaemon.AppModel" Version="23.46.1" />
+        <PackageReference Include="NetDaemon.Extensions.Mqtt" Version="23.46.1" />
+        <PackageReference Include="NetDaemon.Runtime" Version="23.46.1" />
+        <PackageReference Include="NetDaemon.HassModel" Version="23.46.1" />
+        <PackageReference Include="NetDaemon.Client" Version="23.46.1" />
+        <PackageReference Include="NetDaemon.Extensions.Scheduling" Version="23.46.1" />
+        <PackageReference Include="NetDaemon.Extensions.Logging" Version="23.46.1" />
+        <PackageReference Include="NetDaemon.Extensions.Tts" Version="23.46.1" />
         <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="8.0.0" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="RestSharp" Version="110.2.0" />
         <PackageReference Include="Serilog.AspNetCore" Version="8.0.0" />
         <PackageReference Include="System.Reactive" Version="6.0.0" />
