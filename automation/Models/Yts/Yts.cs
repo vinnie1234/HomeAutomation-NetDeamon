@@ -1,7 +1,11 @@
 using System.Text.Json.Serialization;
 
+// ReSharper disable UnusedMember.Global
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
+
 namespace Automation.Models.Yts;
 
+// ReSharper disable once ClassNeverInstantiated.Global
 public class Yts
 {
     [JsonPropertyName("title")]
@@ -25,7 +29,7 @@ public class Yts
     [JsonPropertyName("id")]
     public string Id { get; set; } = default!;
     
-    [JsonPropertyName("guidislink")]
+    [JsonPropertyName(@"guidislink")]
     public bool GuidIsLink { get; set; } = default!;
     
     [JsonPropertyName("published")]

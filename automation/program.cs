@@ -1,7 +1,6 @@
 using System.Reflection;
 using Automation;
 using Microsoft.Extensions.Hosting;
-using NetDaemon;
 using NetDaemon.Extensions.Logging;
 using NetDaemon.Extensions.Tts;
 using NetDaemon.Runtime;

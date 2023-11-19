@@ -1,8 +1,5 @@
 using System.Reactive.Concurrency;
-using System.Text.RegularExpressions;
-using Automation.Models.Yts;
 using NetDaemon.Client;
-using Newtonsoft.Json;
 
 // ReSharper disable UnusedParameter.Local
 
@@ -20,6 +17,4 @@ public class TestApp : BaseApp
         : base(ha, logger, notify, scheduler)
     {
     }
-
-
 }

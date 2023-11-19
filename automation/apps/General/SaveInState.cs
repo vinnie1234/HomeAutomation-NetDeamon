@@ -40,7 +40,7 @@ public class SaveInState : BaseApp
         Logger.LogDebug("Save state");
     }
 
-    private IEnumerable<AlarmStateModel?> SetAlarmState()
+    private List<AlarmStateModel?> SetAlarmState()
     {
         var activeAlarmsHub = new List<AlarmStateModel?>();
         var activeAlarmsHubJson = Entities.Sensor.HubVincentAlarms.Attributes?.Alarms;

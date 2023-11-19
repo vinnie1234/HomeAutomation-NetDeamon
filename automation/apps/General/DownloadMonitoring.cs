@@ -23,7 +23,7 @@ public partial class DownloadMonitoring : BaseApp
 
     private void YtsMonitoring(INotify notify, IDataRepository dataRepository)
     {
-        Entities.Sensor.YtsFeed.StateChanges().Subscribe(x =>
+        Entities.Sensor.YtsFeed.StateChanges().Subscribe(_ =>
         {
             if (Entities.Sensor.YtsFeed.Attributes?.Entries != null)
             {

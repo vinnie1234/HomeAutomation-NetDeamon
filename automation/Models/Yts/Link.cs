@@ -1,7 +1,11 @@
 using System.Text.Json.Serialization;
 
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
+// ReSharper disable UnusedMember.Global
+
 namespace Automation.Models.Yts;
 
+// ReSharper disable once ClassNeverInstantiated.Global
 public class Link
 {
     [JsonPropertyName("rel")]
