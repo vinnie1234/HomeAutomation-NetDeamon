@@ -4,8 +4,6 @@ using Automation.Helpers;
 using Automation.Repository;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
-using NetDaemon.Common.Configuration;
 
 namespace Automation;
 
@@ -17,9 +15,7 @@ internal static class AppServicesExtension
         {
             services.AddSingleton<IDataRepository>(provider => new DataRepository(
                     Path.Combine(
-                        provider
-                            .GetRequiredService<IOptions<NetDaemonSettings>>()
-                            .Value.GetAppSourceDirectory(),
+                        Directory.GetCurrentDirectory(),
                         ".storage"),
                     provider.GetRequiredService<ILogger<DataRepository>>()))
                 .AddSingleton<INotify>(provider =>
