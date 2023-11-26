@@ -16,6 +16,7 @@ public class SleepManager : BaseApp
         : base(ha, logger, notify, scheduler)
     {
         EnergyPriceCheck();
+        AwakeExtraChecks();
 
         Entities.InputBoolean.Sleeping.WhenTurnsOff(_ => WakeUp());
         Entities.InputBoolean.Sleeping.WhenTurnsOn(_ => Sleeping());
@@ -98,5 +99,18 @@ public class SleepManager : BaseApp
                     break;
                 }
             }
+    }
+
+    private void AwakeExtraChecks()
+    {
+        Entities.MediaPlayer.Tv.WhenTurnsOn(x =>
+        {
+            if (Entities.InputBoolean.Sleeping.IsOn()) Entities.InputBoolean.Sleeping.TurnOff();
+        });
+
+        Entities.Light.Bureau.WhenTurnsOn(_ =>
+        {
+            if (Entities.InputBoolean.Sleeping.IsOn()) Entities.InputBoolean.Sleeping.TurnOff();
+        });
     }
 }
