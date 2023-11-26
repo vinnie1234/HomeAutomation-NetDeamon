@@ -27,6 +27,7 @@ public class Alarm : BaseApp
         PetSnowyCheck();
         HaChecks(homeAssistantConnection);
         EnergyNegativeCheck();
+        BackUpCheck();
 
         Entities.BinarySensor.GangMotion.WhenTurnsOn(_ =>
         {
@@ -133,5 +134,39 @@ public class Alarm : BaseApp
                         @"Je energy is negatief, dit kost geld.", false, 10);
                 }
             });
+    }
+
+    private void BackUpCheck()
+    {
+        Scheduler.ScheduleCron("00 22 * * *", () =>
+        {
+            var lastLocalBackString = Entities.Sensor.Onedrivebackup
+                .Attributes?.LastLocalbackupdate;
+
+            var lastOneDriveBackString = Entities.Sensor.Onedrivebackup
+                .Attributes?.LastOneDrivebackupdate;
+
+            if (!string.IsNullOrEmpty(lastLocalBackString))
+            {
+                var dateTime = DateTime.Parse(lastLocalBackString);
+                if (dateTime < DateTime.Now.AddDays(-2))
+                    Notify.NotifyDiscord(@$"Er is al 2 dagen geen locale backup, laatste backup is van {lastLocalBackString}", new[] { _discordLogChannel });
+            }
+            else
+            {
+                Notify.NotifyDiscord(@$"Er is geen laatste locale backup", new[] { _discordLogChannel });
+            }
+
+            if (!string.IsNullOrEmpty(lastOneDriveBackString))
+            {
+                var dateTime = DateTime.Parse(lastOneDriveBackString);
+                if (dateTime < DateTime.Now.AddDays(-2))
+                    Notify.NotifyDiscord(@$"Er is al 2 dagen geen OneDrive backup, laatste backup is van {lastLocalBackString}", new[] { _discordLogChannel });
+            }
+            else
+            {
+                Notify.NotifyDiscord(@$"Er is geen laatste OneDrive backup", new[] { _discordLogChannel });
+            }
+        });
     }
 }
