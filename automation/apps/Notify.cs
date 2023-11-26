@@ -85,9 +85,8 @@ public class Notify : INotify
         _services.Notify.DiscordHomeassistant(message, "", target, data);
     }
 
-    public void SendMusicToHome(string mediaContentId)
+    public void SendMusicToHome(string mediaContentId, double volume = 0.5)
     {
-        _entities.MediaPlayer.HeleHuis.VolumeSet(0.5);
         _services.MediaPlayer.PlayMedia(new ServiceTarget
         {
             EntityIds = new[]
@@ -95,6 +94,7 @@ public class Notify : INotify
                 _entities.MediaPlayer.HeleHuis.EntityId
             }
         }, mediaContentId, "music");
+        _entities.MediaPlayer.HeleHuis.VolumeSet(volume);
     }
 
     private void SubscribeToNotificationAction(Action func, string key)

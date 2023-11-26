@@ -24,5 +24,5 @@ public interface INotify
 
     void NotifyDiscord(string message, string[] target, DiscordNotificationModel? data = null);
 
-    void SendMusicToHome(string mediaContentId);
+    void SendMusicToHome(string mediaContentId, double volume = 0.5);
 }
