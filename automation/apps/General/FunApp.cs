@@ -18,6 +18,7 @@ public class FunApp : BaseApp
             });
 
         Friends();
+        NewYear();
     }
 
     private void Ps5TurnedOn()
@@ -35,5 +36,18 @@ public class FunApp : BaseApp
                 Notify.SendMusicToHome("http://192.168.50.189:8123/local/Friends.mp3");
                 Entities.Light.Hal.TurnOn();
             });
+    }
+
+    private void NewYear()
+    {
+        Scheduler.ScheduleCron("10 58 23 31 12 *", () =>
+        {
+            Notify.SendMusicToHome("http://192.168.50.189:8123/local/HappyNewYear.mp3", 0.9);
+        }, true);
+        
+        Scheduler.ScheduleCron("59 58 23 31 12 *", () =>
+        {
+            Entities.MediaPlayer.HeleHuis.VolumeSet(0.9);
+        }, true);
     }
 }
