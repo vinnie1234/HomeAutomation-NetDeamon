@@ -60,11 +60,11 @@ public class WaterManagement : BaseApp
                 action: new List<ActionModel>
                 {
                     new(action: "SendNotificationWaterGuess", title: $"Gok: {guess}",
-                        func: () => { SaveWater(waterUsage.ToString()!, guess, id, DateTime.Now); }),
+                        func: () => { SaveWater(waterUsage.ToString()!, guess, id, DateTimeOffset.Now); }),
                     new(action: "SendNotificationWaterDifferent", title: "Anders",
-                        func: () => { SaveWater(waterUsage.ToString()!, "", id, DateTime.Now); }),
+                        func: () => { SaveWater(waterUsage.ToString()!, "", id, DateTimeOffset.Now); }),
                     new(action: "SendNotificationWaterSkip", title: "Skip",
-                        func: () => { SaveWater(waterUsage.ToString()!, "Skip", id, DateTime.Now); })
+                        func: () => { SaveWater(waterUsage.ToString()!, "Skip", id, DateTimeOffset.Now); })
                 });
 
             _waterUsages = 0;
@@ -72,7 +72,7 @@ public class WaterManagement : BaseApp
         }
     }
 
-    private void SaveWater(string value, string guess, Guid id, DateTime dateTime)
+    private void SaveWater(string value, string guess, Guid id, DateTimeOffset dateTime)
     {
         Entities.InputText.Lastwaterusageguess.SetValue(guess);
 
@@ -85,10 +85,10 @@ public class WaterManagement : BaseApp
             if (!string.IsNullOrEmpty(guess))
             {
                 var oldList =
-                    _storage.Get<List<WaterSavingModel>>(@$"WATERUSAGE_{DateTime.Now.Year}_{DateTime.Now.Month}") ??
+                    _storage.Get<List<WaterSavingModel>>(@$"WATERUSAGE_{DateTimeOffset.Now.Year}_{DateTimeOffset.Now.Month}") ??
                     new List<WaterSavingModel>();
 
-                if (oldList.FirstOrDefault(x => x.Id == id) != null) return;
+                if (oldList.Find(x => x.Id == id) != null) return;
 
                 oldList.Add(new WaterSavingModel
                 {
@@ -98,7 +98,7 @@ public class WaterManagement : BaseApp
                     DateTime = dateTime
                 });
 
-                _storage.Save(@$"WATERUSAGE_{DateTime.Now.Year}_{DateTime.Now.Month}", oldList);
+                _storage.Save(@$"WATERUSAGE_{DateTimeOffset.Now.Year}_{DateTimeOffset.Now.Month}", oldList);
             }
         }
         else

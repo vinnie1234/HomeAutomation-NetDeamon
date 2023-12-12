@@ -32,8 +32,8 @@ public partial class DownloadMonitoring : BaseApp
                 var items = Entities.Sensor.YtsFeed.Attributes?.Entries!.Cast<JsonElement>()
                     .Select(o => o.Deserialize<Yts>()).ToList();
 
-                var thisYear = DateTime.Now.Year;
-                var lastYear = DateTime.Now.AddYears(-1).Year;
+                var thisYear = DateTimeOffset.Now.Year;
+                var lastYear = DateTimeOffset.Now.AddYears(-1).Year;
 
                 if (items != null)
                 {
@@ -41,9 +41,9 @@ public partial class DownloadMonitoring : BaseApp
 
                     foreach (var discordModel in from ytsItem in items
                              where ytsItem != null
-                             where oldList == null || oldList.All(yts => yts.Id != ytsItem.Id)
-                             where ytsItem.Title.Contains("1080p") | ytsItem.Title.Contains("2169p")
-                             where ytsItem.Title.Contains(thisYear.ToString()) | ytsItem.Title.Contains(lastYear.ToString())
+                             where oldList == null || oldList.TrueForAll(yts => yts.Id != ytsItem.Id)
+                             where ytsItem.Title.Contains("1080p") || ytsItem.Title.Contains("2169p")
+                             where ytsItem.Title.Contains(thisYear.ToString()) || ytsItem.Title.Contains(lastYear.ToString())
                              let downloadLink = ytsItem.Links.First(link => link.Type == "application/x-bittorrent").Href
                              let image = GetTextFromHtmlRegex(ytsItem.Summary, ImgRegex())
                              let imbdRating = GetTextFromHtmlRegex(ytsItem.Summary, ImdbRatingRegex())
@@ -79,7 +79,7 @@ public partial class DownloadMonitoring : BaseApp
     private static string GetTextFromHtmlRegex(string htmlSource, Regex regex)
     {
         var matchesImgSrc = regex.Matches(htmlSource);
-        var match = matchesImgSrc.First();
+        var match = matchesImgSrc[0];
         return match.Groups.Count == 2 ? match.Groups[1].Value : match.Groups[2].Value;
     }
 

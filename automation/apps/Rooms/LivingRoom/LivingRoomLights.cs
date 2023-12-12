@@ -75,13 +75,16 @@ public class LivingRoomLights : BaseApp
     private int GetColorTemp()
     {
         var houseState = Globals.GetHouseState(Entities);
+        const int whiteColor = 4504;
+        const int warmColor = 4504;
+        const int someColor = 4504;
 
         return houseState
             switch
             {
-                HouseStateEnum.Day or HouseStateEnum.Morning   => 4504, // White color
-                HouseStateEnum.Evening or HouseStateEnum.Night => 2300, // Warm Color
-                _                                              => 150   // Some Color
+                HouseState.Day or HouseState.Morning   => whiteColor, // White color
+                HouseState.Evening or HouseState.Night => warmColor,  // Warm Color
+                _                                              => someColor   // Some Color
             };
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Automation.Enum;
 
-public enum NotifyPriorityEnum
+public enum NotifyPriority
 {
     Urgent,
     High,

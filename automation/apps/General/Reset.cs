@@ -43,7 +43,7 @@ public class Reset : BaseApp
         foreach (var alarm in activeAlarmsHub
                      .Where(alarm => alarm?.Status == "set")
                      .Where(alarm => oldAlarms
-                         .All(alarmStateModel => alarmStateModel?.AlarmId != alarm?.AlarmId)))
+                         .TrueForAll(alarmStateModel => alarmStateModel?.AlarmId != alarm?.AlarmId)))
             if (alarm is { EntityId: not null, AlarmId: not null })
             {
                 Notify.NotifyHouse("deleteAlarm", @$"Alarm van {alarm.LocalTime} word verwijderd", true);
@@ -65,7 +65,7 @@ public class Reset : BaseApp
             var light = (LightEntity)property.GetValue(Entities.Light, null)!;
 
             var oldStateLight = LightEntitiesStates?
-                .FirstOrDefault(lightStateModel => lightStateModel.EntityId == light.EntityId);
+                .Find(lightStateModel => lightStateModel.EntityId == light.EntityId);
 
             ActualResetLight(oldStateLight, light);
         }
@@ -80,28 +80,33 @@ public class Reset : BaseApp
                     light.TurnOff();
                     break;
                 case true:
-                    if ((light.Attributes?.SupportedColorModes ?? Array.Empty<string>()).Any(x => x == "xy"))
-                    {
-                        light.TurnOn(
-                            rgbColor: oldStateLight.RgbColors,
-                            brightness: Convert.ToInt64(oldStateLight.Brightness)
-                        );
-                    }
-                    else
-                    {
-                        if (light.Attributes == null ||
-                            (light.Attributes?.SupportedColorModes ?? 
-                             Array.Empty<string>())
-                            .Any(x => x == @"onoff"))
-                            light.TurnOn();
-                        else
-                            light.TurnOn(
-                                colorTemp: oldStateLight.ColorTemp,
-                                brightness: Convert.ToInt64(oldStateLight.Brightness)
-                            );
-                    }
+                    TurnOnReset(oldStateLight, light);
 
                     break;
             }
+    }
+
+    private static void TurnOnReset(LightStateModel oldStateLight, LightEntity light)
+    {
+        if ((light.Attributes?.SupportedColorModes ?? Array.Empty<string>()).Any(x => x == "xy"))
+        {
+            light.TurnOn(
+                rgbColor: oldStateLight.RgbColors,
+                brightness: Convert.ToInt64(oldStateLight.Brightness)
+            );
+        }
+        else
+        {
+            if (light.Attributes == null ||
+                (light.Attributes?.SupportedColorModes ?? 
+                 Array.Empty<string>())
+                .Any(x => x == @"onoff"))
+                light.TurnOn();
+            else
+                light.TurnOn(
+                    colorTemp: oldStateLight.ColorTemp,
+                    brightness: Convert.ToInt64(oldStateLight.Brightness)
+                );
+        }
     }
 }

@@ -2,7 +2,7 @@ namespace Automation.Models;
 
 public class NotificationModel
 {
-    public NotificationModel(string name, string value, DateTime lastSendNotification)
+    public NotificationModel(string name, string value, DateTimeOffset lastSendNotification)
     {
         Name = name;
         Value = value;
@@ -13,5 +13,5 @@ public class NotificationModel
     
     // ReSharper disable once UnusedAutoPropertyAccessor.Global
     public string Value { get; set; }
-    public DateTime LastSendNotification { get; }
+    public DateTimeOffset LastSendNotification { get; }
 }

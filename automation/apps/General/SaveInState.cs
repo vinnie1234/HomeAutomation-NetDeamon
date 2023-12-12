@@ -50,7 +50,7 @@ public class SaveInState : BaseApp
 
         foreach (var alarmState in activeAlarmsHub.Where(alarmState => alarmState != null))
             if (alarmState != null) 
-                alarmState.EntityId = Entities?.Sensor.HubVincentAlarms.EntityId;
+                alarmState.EntityId = Entities.Sensor.HubVincentAlarms.EntityId;
 
         return activeAlarmsHub;
     }
@@ -59,7 +59,7 @@ public class SaveInState : BaseApp
     private void SetLightEntityState(LightEntity entity)
     {
         var oldEntity = LightEntitiesStates
-            .FirstOrDefault(lightStateModel => lightStateModel.EntityId == entity.EntityId);
+            .Find(lightStateModel => lightStateModel.EntityId == entity.EntityId);
         if (oldEntity != null) LightEntitiesStates.Remove(oldEntity);
 
         LightEntitiesStates.Add(new LightStateModel(entityId: entity.EntityId, rgbColors: entity.Attributes?.RgbColor,

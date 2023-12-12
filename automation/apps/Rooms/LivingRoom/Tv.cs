@@ -30,16 +30,16 @@ public class Tv : BaseApp
         {
             switch (GetHouseState(Entities))
             {
-                case HouseStateEnum.Morning:
+                case HouseState.Morning:
                     Entities.Scene.Woonkamermorning.TurnOn();
                     break;
-                case HouseStateEnum.Day:
+                case HouseState.Day:
                     Entities.Scene.Woonkamerday.TurnOn();
                     break;
-                case HouseStateEnum.Evening:
+                case HouseState.Evening:
                     Entities.Scene.Woonkamerevening.TurnOn();
                     break;
-                case HouseStateEnum.Night:
+                case HouseState.Night:
                     Entities.Scene.Woonkamernight.TurnOn();
                     break;
                 default:

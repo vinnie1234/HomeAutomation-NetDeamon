@@ -23,16 +23,15 @@ public class SleepManager : BaseApp
 
         Scheduler.ScheduleCron("00 10 * * *", () =>
         {
-            if (!((IList)Globals.WeekendDays).Contains(DateTime.Now.DayOfWeek))
-                if (Entities.InputBoolean.Sleeping.IsOn())
-                    Entities.InputBoolean.Sleeping.TurnOff();
+            if (!((IList)Globals.WeekendDays).Contains(DateTimeOffset.Now.DayOfWeek) && Entities.InputBoolean.Sleeping.IsOn())
+                Entities.InputBoolean.Sleeping.TurnOff();
         });
     }
 
     private void WakeUp()
     {
         Logger.LogDebug("Wake up Routine");
-        if (((IList)Globals.WeekendDays).Contains(DateTime.Now.DayOfWeek))
+        if (((IList)Globals.WeekendDays).Contains(DateTimeOffset.Now.DayOfWeek))
             Entities.Cover.Rollerblind0001.SetCoverPosition(100);
         else if (Entities.Cover.Rollerblind0001.Attributes?.CurrentPosition < 100) Entities.Cover.Rollerblind0001.SetCoverPosition(45);
 
@@ -48,7 +47,7 @@ public class SleepManager : BaseApp
         SendBatteryWarning();
         Entities.MediaPlayer.Tv.TurnOff();
         Entities.Cover.Rollerblind0001.SetCoverPosition(0);
-        var checkDate = DateTime.Now;
+        var checkDate = DateTimeOffset.Now;
         var message = Entities.Sensor.AfvalMorgen.State;
         if (checkDate.Hour is >= 00 and < 07) message = Entities.Sensor.AfvalVandaag.State;
 
@@ -69,13 +68,11 @@ public class SleepManager : BaseApp
 
     private void SendBatteryWarning()
     {
-        if (Entities.Sensor.PhoneVincentBatteryLevel.State < 30)
-            if (Entities.BinarySensor.PhoneVincentIsCharging.IsOff())
-                Notify.NotifyPhoneVincent(@"Telefoon bijna leeg", @"Je moet je telefoon opladen", true);
+        if (Entities.Sensor.PhoneVincentBatteryLevel.State < 30 && Entities.BinarySensor.PhoneVincentIsCharging.IsOff())
+            Notify.NotifyPhoneVincent(@"Telefoon bijna leeg", @"Je moet je telefoon opladen", true);
 
-        if (Entities.Sensor.SmT860BatteryLevel.State < 30)
-            if (Entities.BinarySensor.SmT860IsCharging.IsOff())
-                Notify.NotifyPhoneVincent(@"Tabled bijna leeg", @"Je moet je tabled opladen", true);
+        if (Entities.Sensor.SmT860BatteryLevel.State < 30 && Entities.BinarySensor.SmT860IsCharging.IsOff())
+            Notify.NotifyPhoneVincent(@"Tabled bijna leeg", @"Je moet je tabled opladen", true);
     }
 
     private void TurnAllLightsOut()

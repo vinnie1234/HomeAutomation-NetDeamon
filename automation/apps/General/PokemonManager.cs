@@ -16,7 +16,7 @@ public class PokemonManager : BaseApp
         Entities.Person
             .VincentMaarschalkerweerd
             .StateChanges()
-            .Where(x => x.Old?.State?.ToLower() == "pokemon raid hour" && DateTime.Now.DayOfWeek == DayOfWeek.Wednesday && DateTime.Now.Hour >= 18)
+            .Where(x => x.Old?.State?.ToLower() == "pokemon raid hour" && DateTimeOffset.Now.DayOfWeek == DayOfWeek.Wednesday && DateTimeOffset.Now.Hour >= 18)
             .Subscribe(_ =>
             {
                 notify.NotifyDiscord(@"Vincent rijd nu weg van Pokémon", new[] { _discordDewinChannel });

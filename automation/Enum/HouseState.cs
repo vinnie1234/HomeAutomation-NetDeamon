@@ -1,6 +1,6 @@
 namespace Automation.Enum;
 
-public enum HouseStateEnum
+public enum HouseState
 {
     Morning,
     Day,

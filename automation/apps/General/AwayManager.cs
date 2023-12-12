@@ -63,8 +63,8 @@ public class AwayManager : BaseApp
     {
         _backHome = false;
 
-        if (OfficeDays.Contains(DateTime.Now.DayOfWeek)
-            && DateTime.Now.Hour < 9
+        if (OfficeDays.Contains(DateTimeOffset.Now.DayOfWeek)
+            && DateTimeOffset.Now.Hour < 9
             && Entities.InputBoolean.Holliday.IsOff())
             Notify.NotifyPhoneVincent(@"Werkse Vincent", @"Succes op kantoor :)", false, 5);
         else
@@ -98,20 +98,20 @@ public class AwayManager : BaseApp
         }
     }
 
-    private void SetLightScene(HouseStateEnum houseState)
+    private void SetLightScene(HouseState houseState)
     {
         switch (houseState)
         {
-            case HouseStateEnum.Morning:
+            case HouseState.Morning:
                 Entities.Scene.Woonkamermorning.TurnOn();
                 break;
-            case HouseStateEnum.Day:
+            case HouseState.Day:
                 Entities.Scene.Woonkamerday.TurnOn();
                 break;
-            case HouseStateEnum.Evening:
+            case HouseState.Evening:
                 Entities.Scene.Woonkamerevening.TurnOn();
                 break;
-            case HouseStateEnum.Night:
+            case HouseState.Night:
                 Entities.Scene.Woonkamernight.TurnOn();
                 break;
             default:
@@ -119,7 +119,7 @@ public class AwayManager : BaseApp
         }
     }
 
-    private void NotifyVincentHome(HouseStateEnum houseState)
+    private void NotifyVincentHome(HouseState houseState)
     {
         Notify.NotifyPhoneVincent(@"Welkom thuis Vincent",
             @$"De huis status is nu: {houseState}. Je lampen worden voor je ingesteld.",

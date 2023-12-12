@@ -8,5 +8,5 @@ public class WaterSavingModel
     public string? Value { get; set; }
     public string? Guess { get; set; }
     
-    public DateTime DateTime { get; set; }
+    public DateTimeOffset DateTime { get; set; }
 }

@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Reactive.Concurrency;
 using Automation.Helpers;
 using Automation.Models.DiscordNotificationModels;
@@ -127,7 +128,7 @@ public class Cat : BaseApp
     {
         foreach (var autoFeed in
                  Collections.GetFeedTimes(Entities).Where(autoFeed => autoFeed.Key.State != null))
-            Scheduler.RunDaily(TimeSpan.Parse(autoFeed.Key.State!), () =>
+            Scheduler.RunDaily(TimeSpan.Parse(autoFeed.Key.State!, new CultureInfo("nl-Nl")), () =>
             {
                 if (Entities.InputBoolean.Pixelskipnextautofeed.IsOff())
                 {
@@ -166,7 +167,7 @@ public class Cat : BaseApp
                 .GetFeedTimes(Entities)
                 .MinBy(pair =>
                     Math.Abs(
-                        (DateTime.Parse(pair.Key.State ?? throw new InvalidOperationException()) - DateTime.Now)
+                        (DateTimeOffset.Parse(pair.Key.State ?? throw new InvalidOperationException(), new CultureInfo("nl-Nl")) - DateTimeOffset.Now)
                         .Ticks));
         return closestFeed;
     }

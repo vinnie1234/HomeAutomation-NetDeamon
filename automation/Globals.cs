@@ -42,16 +42,16 @@ public static class Globals
 
     #endregion
 
-    public static HouseStateEnum GetHouseState(Entities entities)
+    public static HouseState GetHouseState(Entities entities)
     {
         return entities.InputSelect.Housemodeselect.State
             switch
             {
-                "Morning" => HouseStateEnum.Morning,
-                "Day"     => HouseStateEnum.Day,
-                "Evening" => HouseStateEnum.Evening,
-                "Night"   => HouseStateEnum.Night,
-                _         => HouseStateEnum.Day
+                "Morning" => HouseState.Morning,
+                "Day"     => HouseState.Day,
+                "Evening" => HouseState.Evening,
+                "Night"   => HouseState.Night,
+                _         => HouseState.Day
             };
     }
 

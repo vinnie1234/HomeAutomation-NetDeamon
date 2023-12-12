@@ -74,7 +74,7 @@ public class Notify : INotify
     public void ResetNotificationHistoryForNotificationTitle(string title)
     {
         var oldData = _storage.Get<List<NotificationModel>>("notificationHistory") ?? new List<NotificationModel>();
-        var data = oldData.FirstOrDefault(x => x.Name == title);
+        var data = oldData.Find(x => x.Name == title);
         if (data != null) oldData.Remove(data);
 
         _storage.Save("notificationHistory", oldData);
@@ -109,7 +109,7 @@ public class Notify : INotify
 
     private RecordNotifyData ConstructData(List<ActionModel>? actions = null,
         bool tts = false,
-        NotifyPriorityEnum priority = NotifyPriorityEnum.High,
+        NotifyPriority priority = NotifyPriority.High,
         string? phoneMessage = null,
         string? image = null,
         string? channel = null,
@@ -136,7 +136,7 @@ public class Notify : INotify
 
         if (actions != null)
         {
-            if (actions.Count > 3) throw new Exception("To many actions");
+            if (actions.Count > 3) throw new ArgumentException("To many actions");
             
             foreach (var action in actions.Where(action => action.Func != null))
             {
@@ -159,17 +159,17 @@ public class Notify : INotify
         var notification = GetLastNotification(storage, title);
 
         sendAfterMinutes ??= 60;
-        return DateTime.Now.AddMinutes((double)sendAfterMinutes) >= notification?.LastSendNotification;
+        return DateTimeOffset.Now.AddMinutes((double)sendAfterMinutes) >= notification?.LastSendNotification;
     }
 
     private static void SaveNotification(IDataRepository storage, string title, string message)
     {
         var oldData = storage.Get<List<NotificationModel>>("notificationHistory") ?? new List<NotificationModel>();
-        var data = oldData.FirstOrDefault(x => x.Name == title);
+        var data = oldData.Find(x => x.Name == title);
         if (data != null)
             data.Value = message;
         else
-            oldData.Add(new NotificationModel(name: title, value: message, lastSendNotification: DateTime.Now));
+            oldData.Add(new NotificationModel(name: title, value: message, lastSendNotification: DateTimeOffset.Now));
 
         storage.Save("notificationHistory", oldData);
     }
@@ -177,6 +177,6 @@ public class Notify : INotify
     private static NotificationModel? GetLastNotification(IDataRepository storage, string title)
     {
         var oldData = storage.Get<List<NotificationModel>>("notificationHistory") ?? new List<NotificationModel>();
-        return oldData.FirstOrDefault(x => x.Name == title);
+        return oldData.Find(x => x.Name == title);
     }
 }
