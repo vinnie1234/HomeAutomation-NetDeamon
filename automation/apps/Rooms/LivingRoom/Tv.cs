@@ -60,7 +60,7 @@ public class Tv : BaseApp
 
         if (!DisableLightAutomations)
         {
-            Entities.Scene.WoonkamerMovie.TurnOn();
+            Entities.Scene.WoonkamerMovie2.TurnOn();
             Entities.MediaPlayer.AvSoundbar.TurnOn();
             Entities.Light.PlafondWoonkamer.TurnOff();
             Entities.Light.HueFilamentBulb1.TurnOff();
