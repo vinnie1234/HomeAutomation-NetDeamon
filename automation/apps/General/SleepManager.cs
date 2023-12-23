@@ -85,17 +85,27 @@ public class SleepManager : BaseApp
         var priceList = Entities.Sensor.EpexSpotNlNetPrice
             .Attributes?.Data;
 
-        if (priceList != null)
-            foreach (JsonElement price in priceList)
-            {
-                var model = price.ToObject<EnergyPriceModel>();
+        if (priceList == null) return;
+         
+        foreach (JsonElement price in priceList)
+        {
+            var model = price.ToObject<EnergyPriceModel>();
 
-                if (model is { PriceCtPerKwh: < -20 })
+            if (model != null)
+            {
+                switch (model.PriceCtPerKwh)
                 {
-                    Notify.NotifyPhoneVincent(@"Morgen is het stroom gratis", @$"Stroom kost morgen om {model.StartTime} {model.PriceCtPerKwh} cent!", false, 10);
-                    break;
+                    case <= 0 and > -20:
+                        Notify.NotifyPhoneVincent(@"Morgen is het stroom gratis",
+                            $"Stroom kost morgen om {model.StartTime} {model.PriceCtPerKwh} cent!", true);
+                        break;
+                    case <= -20:
+                        Notify.NotifyPhoneVincent(@"Morgen is het stroom gratis",
+                            $"Stroom kost morgen om {model.StartTime} {model.PriceCtPerKwh} cent!", true);
+                        break;
                 }
             }
+        }
     }
 
     private void AwakeExtraChecks()
