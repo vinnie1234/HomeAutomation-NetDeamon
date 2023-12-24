@@ -120,6 +120,7 @@ public class FunApp : BaseApp
             Thread.Sleep(TimeSpan.FromSeconds(0.5));
         } while (s.Elapsed < TimeSpan.FromMinutes(2));
         
-        Entities.Light.HueGradientStringLight1.TurnOn(effect: "Opaal");
+        Entities.MediaPlayer.HeleHuis.VolumeSet(0.4);
+        Entities.Light.HueGradientStringLight1.TurnOn(effect: "opal");
     }
 }
