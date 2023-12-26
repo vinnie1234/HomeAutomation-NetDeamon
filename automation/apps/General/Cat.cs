@@ -5,6 +5,7 @@ using Automation.Models.DiscordNotificationModels;
 
 namespace Automation.apps.General;
 
+/*
 [NetDaemonApp(Id = nameof(Cat))]
 public class Cat : BaseApp
 {
@@ -191,4 +192,4 @@ public class Cat : BaseApp
             Value = "true"
         });
     }
-}
+} */ //todo

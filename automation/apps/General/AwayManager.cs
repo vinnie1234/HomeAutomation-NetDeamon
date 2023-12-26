@@ -30,13 +30,13 @@ public class AwayManager : BaseApp
                 TimeSpan.FromMinutes(2), Scheduler)
             .Subscribe(_ =>
             {
-                Notify.NotifyPhoneVincent(@"Het lijkt er op dat je weg bent!",
-                    @"Je gaat weg zonder wat te zeggen...",
+                Notify.NotifyPhoneVincent("Het lijkt er op dat je weg bent!",
+                    "Je gaat weg zonder wat te zeggen...",
                     true,
                     10,
                     new List<ActionModel>
                     {
-                        new(action: @"SETAWAY", title: @"Ik ben weg",
+                        new(action: "SETAWAY", title: "Ik ben weg",
                             func: () => { Entities.InputBoolean.Away.TurnOn(); })
                     });
             });
@@ -66,9 +66,9 @@ public class AwayManager : BaseApp
         if (OfficeDays.Contains(DateTimeOffset.Now.DayOfWeek)
             && DateTimeOffset.Now.Hour < 9
             && Entities.InputBoolean.Holliday.IsOff())
-            Notify.NotifyPhoneVincent(@"Werkse Vincent", @"Succes op kantoor :)", false, 5);
+            Notify.NotifyPhoneVincent("Werkse Vincent", "Succes op kantoor :)", false, 5);
         else
-            Notify.NotifyPhoneVincent(@"Tot ziens", @"Je laat je huis weer alleen :(", false, 5);
+            Notify.NotifyPhoneVincent("Tot ziens", "Je laat je huis weer alleen :(", false, 5);
 
         Entities.Light.TurnAllOff();
         Entities.MediaPlayer.Tv.TurnOff();
@@ -89,9 +89,9 @@ public class AwayManager : BaseApp
 
             Scheduler.Schedule(TimeSpan.FromSeconds(15), () =>
             {
-                var message = @"Welkom thuis Vincent!";
-                if (Entities.Sensor.SnowyPetFeederStatus.State == "insufficient")
-                    message += @" Het eten van Pixel is bijna op!";
+                var message = "Welkom thuis Vincent!";
+              //  if (Entities.Sensor.SnowyPetFeederStatus.State == "insufficient") todo
+                //    message += @" Het eten van Pixel is bijna op!";
 
                 Notify.NotifyHouse("welcomeHome", message, true);
             });
@@ -121,12 +121,12 @@ public class AwayManager : BaseApp
 
     private void NotifyVincentHome(HouseState houseState)
     {
-        Notify.NotifyPhoneVincent(@"Welkom thuis Vincent",
-            @$"De huis status is nu: {houseState}. Je lampen worden voor je ingesteld.",
+        Notify.NotifyPhoneVincent("Welkom thuis Vincent",
+            $"De huis status is nu: {houseState}. Je lampen worden voor je ingesteld.",
             true,
             action: new List<ActionModel>
             {
-                new(action: @"TURNONTV", title: @"TV Aanzetten", func: () => { Entities.MediaPlayer.Tv.TurnOn(); })
+                new(action: "TURNONTV", title: "TV Aanzetten", func: () => { Entities.MediaPlayer.Tv.TurnOn(); })
             });
     }
 

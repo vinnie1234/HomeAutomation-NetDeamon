@@ -29,7 +29,7 @@ public class Yts
     [JsonPropertyName("id")]
     public string Id { get; set; } = default!;
     
-    [JsonPropertyName(@"guidislink")]
+    [JsonPropertyName("guidislink")]
     public bool GuidIsLink { get; set; } = default!;
     
     [JsonPropertyName("published")]

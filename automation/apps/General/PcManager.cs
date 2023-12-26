@@ -14,7 +14,7 @@ public class PcManager : BaseApp
     {
         Entities.Sensor.PcGeheugengebruik
             .StateChanges()
-            .Where(x => x.Entity.State > 0)
+            .Where(x => x.New?.State > 0)
             .Subscribe(_ =>
             {
                 Entities.Light.Nachtkastje.TurnOff();

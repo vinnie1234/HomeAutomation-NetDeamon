@@ -49,8 +49,8 @@ public class HolidayManager : BaseApp
                         .Select(o => o.Deserialize<AlarmStateModel>()));
 
             var firstAlarm = alarmList.Where(x => x?.Status == "set").MinBy(x => x?.LocalTime);
-            Notify.NotifyPhoneVincent(@"WEKKER UITZETTEN",
-                @$"Je moet je wekker nog uit zetten voor {firstAlarm?.LocalTime ?? ""}", true);
+            Notify.NotifyPhoneVincent("WEKKER UITZETTEN",
+                $"Je moet je wekker nog uit zetten voor {firstAlarm?.LocalTime ?? ""}", true);
 
             Logger.LogDebug("Send reminder for disable alarm");
         }
@@ -60,7 +60,7 @@ public class HolidayManager : BaseApp
     {
         if (Entities.Sensor.HubVincentAlarms.Attributes?.NextAlarmStatus == "inactive")
         {
-            Notify.NotifyPhoneVincent(@"WEKKER AANZETTEN", @"Helaas moet je je wekker nog aanzetten :(", true);
+            Notify.NotifyPhoneVincent("WEKKER AANZETTEN", "Helaas moet je je wekker nog aanzetten :(", true);
             Logger.LogDebug("Send reminder for enable alarm");
         }
     }
@@ -70,7 +70,7 @@ public class HolidayManager : BaseApp
         Scheduler.ScheduleCron("00 00 * * *", () =>
         {
             var description = Entities.Calendar.VincentmaarschalkerweerdGmailCom.Attributes?.Description?.ToLower();
-            if (description?.Contains(@"vrij") == true || description?.Contains(@"vakantie") == true) 
+            if (description?.Contains("vrij") == true || description?.Contains("vakantie") == true) 
                 Entities.InputBoolean.Holliday.TurnOn();
         });
     }

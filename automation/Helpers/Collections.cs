@@ -6,20 +6,20 @@ public static class Collections
     {
         return new Dictionary<NumericSensorEntity, string>
         {
-            { entities.Sensor.BadkamerBattery, @"Wall switch Badkamer" },
-            { entities.Sensor.BadkamerBattery2, @"Hue switch Badkamer" },
-            { entities.Sensor.BadkamermotionBattery, @"Motion Detector Badkamer" },
-            { entities.Sensor.SwitchBadkamerSpiegelBattery, @"Hue switch Badkamerspiegel" },
+            { entities.Sensor.BadkamerBattery, "Wall switch Badkamer" },
+            { entities.Sensor.BadkamerBattery2, "Hue switch Badkamer" },
+            { entities.Sensor.BadkamermotionBattery, "Motion Detector Badkamer" },
+            { entities.Sensor.SwitchBadkamerSpiegelBattery, "Hue switch Badkamerspiegel" },
             { entities.Sensor.GangBattery, "Motion Detector Gang" },
             { entities.Sensor.GangBattery2, "Hue switch switch Gang" },
             { entities.Sensor.HalBattery, "Wall switch switch Gang" },
-            { entities.Sensor.BergingBattery, @"Motion Detector Berging" },
-            { entities.Sensor.WoonkamerBattery, @"Hue switch woonkamer" },
-            { entities.Sensor.WoonkamerBattery2, @"Wall switch Woonkamer" },
-            { entities.Sensor.SlaapkamerBattery, @"Wall switch Slaapkamer" },
-            { entities.Sensor.Rollerblind0001Battery, @"Rolluik Slaapkamer" },
-            { entities.Sensor.BotA801Battery, @"Switchbot" },
-            { entities.Sensor.KeukenAfstandbediening, @"Keuken afstandbediening" },
+            { entities.Sensor.BergingBattery, "Motion Detector Berging" },
+            { entities.Sensor.WoonkamerBattery, "Hue switch woonkamer" },
+            { entities.Sensor.WoonkamerBattery2, "Wall switch Woonkamer" },
+            { entities.Sensor.SlaapkamerBattery, "Wall switch Slaapkamer" },
+            { entities.Sensor.Rollerblind0001Battery, "Rolluik Slaapkamer" },
+            { entities.Sensor.BotA801Battery, "Switchbot" },
+            { entities.Sensor.KeukenAfstandbediening, "Keuken afstandbediening" },
             { entities.Sensor.JaapBatteryLevel, "Jaap" }
         };
     }
@@ -39,9 +39,9 @@ public static class Collections
     {
         return new Dictionary<NumericSensorEntity, string>
         {
-            { entities.Sensor.BadkamerTemperature, @"Badkamer" },
-            { entities.Sensor.BergingTemperature, @"Berging" },
-            { entities.Sensor.GangTemperature, @"Gang" }
+            { entities.Sensor.BadkamerTemperature, "Badkamer" },
+            { entities.Sensor.BergingTemperature, "Berging" },
+            { entities.Sensor.GangTemperature, "Gang" }
         };
     }
 }

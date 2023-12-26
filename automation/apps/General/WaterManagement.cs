@@ -42,20 +42,20 @@ public class WaterManagement : BaseApp
         {
             var guess = Math.Round((double)_waterUsages) switch
             {
-                < 3           => @"Kraan",
-                <= 3 and <= 5 => "WC Klein",
+                <= 3          => "Kraan",
+                >= 3 and <= 5 => "WC Klein",
                 > 5 and <= 7  => "WC Groot",
-                > 7 and <= 30 => @"Afwas",
-                > 30          => @"Douchen",
+                > 7 and <= 30 => "Afwas",
+                > 30          => "Douchen",
                 _             => "WC Klein"
             };
 
-            if (Entities.Switch.Wasmachine.IsOn()) guess = @"Wasmachine";
+            if (Entities.Switch.Wasmachine.IsOn()) guess = "Wasmachine";
             var id = Guid.NewGuid();
             var waterUsage = _waterUsages;
 
-            Notify.NotifyPhoneVincent($@"Water Check ({_waterUsages})",
-                @"Nieuw water gesignaleerd",
+            Notify.NotifyPhoneVincent($"Water Check ({_waterUsages})",
+                "Nieuw water gesignaleerd",
                 true,
                 action: new List<ActionModel>
                 {
@@ -85,7 +85,7 @@ public class WaterManagement : BaseApp
             if (!string.IsNullOrEmpty(guess))
             {
                 var oldList =
-                    _storage.Get<List<WaterSavingModel>>(@$"WATERUSAGE_{DateTimeOffset.Now.Year}_{DateTimeOffset.Now.Month}") ??
+                    _storage.Get<List<WaterSavingModel>>($"WATERUSAGE_{DateTimeOffset.Now.Year}_{DateTimeOffset.Now.Month}") ??
                     new List<WaterSavingModel>();
 
                 if (oldList.Find(x => x.Id == id) != null) return;
@@ -98,7 +98,7 @@ public class WaterManagement : BaseApp
                     DateTime = dateTime
                 });
 
-                _storage.Save(@$"WATERUSAGE_{DateTimeOffset.Now.Year}_{DateTimeOffset.Now.Month}", oldList);
+                _storage.Save($"WATERUSAGE_{DateTimeOffset.Now.Year}_{DateTimeOffset.Now.Month}", oldList);
             }
         }
         else

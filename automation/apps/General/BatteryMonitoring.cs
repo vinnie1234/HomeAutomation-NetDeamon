@@ -32,15 +32,15 @@ public class BatteryMonitoring : BaseApp
 
     private void SendNotification(string name, double batterPrc)
     {
-        Logger.LogDebug(@"Batterij bijna leeg van {Name}. De batterij is nu op {BatterPrc}", name, batterPrc);
+        Logger.LogDebug("Batterij bijna leeg van {Name}. De batterij is nu op {BatterPrc}", name, batterPrc);
         Notify.NotifyPhoneVincent(
-            @$"Batterij bijna leeg van {name}",
-            @$"Het is tijd om de batterij op te laden van {name}. De batterij is nu op {batterPrc}%",
+            $"Batterij bijna leeg van {name}",
+            $"Het is tijd om de batterij op te laden van {name}. De batterij is nu op {batterPrc}%",
             false,
             TimeSpan.FromDays(7).Minutes,
             new List<ActionModel>
             {
-                new(action: "URI", title: @"Ga naar batterij checks",
+                new(action: "URI", title: "Ga naar batterij checks",
                     uri: ConfigManager.GetValueFromConfig("BaseUrlHomeAssistant") + "/status-huis")
             });
     }

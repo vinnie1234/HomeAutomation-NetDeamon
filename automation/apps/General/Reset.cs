@@ -46,7 +46,7 @@ public class Reset : BaseApp
                          .TrueForAll(alarmStateModel => alarmStateModel?.AlarmId != alarm?.AlarmId)))
             if (alarm is { EntityId: not null, AlarmId: not null })
             {
-                Notify.NotifyHouse("deleteAlarm", @$"Alarm van {alarm.LocalTime} word verwijderd", true);
+                Notify.NotifyHouse("deleteAlarm", $"Alarm van {alarm.LocalTime} word verwijderd", true);
                 Services.GoogleHome.DeleteAlarm(alarm.EntityId, alarm.AlarmId);
             }
     }
@@ -100,7 +100,7 @@ public class Reset : BaseApp
             if (light.Attributes == null ||
                 (light.Attributes?.SupportedColorModes ?? 
                  Array.Empty<string>())
-                .Any(x => x == @"onoff"))
+                .Any(x => x == "onoff"))
                 light.TurnOn();
             else
                 light.TurnOn(

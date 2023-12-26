@@ -62,15 +62,15 @@ public class BathRoomLightOnMovement : BaseApp
             Entities.Light.BadkamerSpiegel.TurnOn(brightnessPct: 100);
             Entities.Light.PlafondBadkamer.TurnOn(brightnessPct: 100);
             Entities.Cover.Rollerblind0001.CloseCover();
-            Notify.NotifyHouse("timeToDouche", @"Tijd om te douchen", true);
+            Notify.NotifyHouse("timeToDouche", "Tijd om te douchen", true);
             Scheduler.Schedule(TimeSpan.FromHours(1), () =>
             {
                 if (IsDouching)
                 {
                     Entities.MediaPlayer.Googlehome0351.MediaStop();
                     Entities.InputBoolean.Douchen.TurnOff();
-                    Notify.NotifyHouse(@"toLongDouchen",
-                        @"Je bent of een uur aan het douchen, of weer is vergeten alles uit te zetten!", false, 60);
+                    Notify.NotifyHouse("toLongDouchen",
+                        "Je bent of een uur aan het douchen, of weer is vergeten alles uit te zetten!", false, 60);
                 }
             });
         }
@@ -80,7 +80,7 @@ public class BathRoomLightOnMovement : BaseApp
             Entities.Light.PlafondBadkamer.TurnOff();
             Entities.Cover.Rollerblind0001.OpenCover();
             Entities.MediaPlayer.Googlehome0351.MediaPause();
-            Notify.NotifyHouse("readyDouche", @"Klaar met douchen", true);
+            Notify.NotifyHouse("readyDouche", "Klaar met douchen", true);
         }
     }
 
@@ -110,7 +110,7 @@ public class BathRoomLightOnMovement : BaseApp
 
     private void OverwriteSwitch(EventModel eventModel)
     {
-        const string hueSwitchBathroomId = @"3dcab87acc97379282b359fdf3557a52";
+        const string hueSwitchBathroomId = "3dcab87acc97379282b359fdf3557a52";
 
         if (eventModel is { DeviceId: hueSwitchBathroomId, Type: "initial_press" })
             switch (eventModel.Subtype)
@@ -142,7 +142,7 @@ public class BathRoomLightOnMovement : BaseApp
     {
         Entities.Sensor.SmartSeries400097aeToothbrushState
             .StateChanges()
-            .Where(x => x.New?.State == @"runnig")
+            .Where(x => x.New?.State == "runnig")
             .Subscribe(_ =>
             {
                 if (!IsDouching)

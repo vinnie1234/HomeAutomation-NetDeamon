@@ -51,13 +51,13 @@ public class SleepManager : BaseApp
         var message = Entities.Sensor.AfvalMorgen.State;
         if (checkDate.Hour is >= 00 and < 07) message = Entities.Sensor.AfvalVandaag.State;
 
-        if (message != @"Geen")
-            Notify.NotifyPhoneVincent(@"Vergeet het afval niet",
-                @$"Vergeet je niet op {message} buiten te zetten?", true);
+        if (message != "Geen")
+            Notify.NotifyPhoneVincent("Vergeet het afval niet",
+                $"Vergeet je niet op {message} buiten te zetten?", true);
 
-        if (int.Parse(Entities.Sensor.PetsnowyError.State ?? "0") > 0)
+       /* if (int.Parse(Entities.Sensor.PetsnowyError.State ?? "0") > 0)
             Notify.NotifyPhoneVincent(@"PetSnowy heeft errors",
-                @"Er staat nog een error open voor de PetSnowy", true);
+                @"Er staat nog een error open voor de PetSnowy", true); */ //todo
     }
 
     private void ChangeRelevantHouseState()
@@ -69,10 +69,10 @@ public class SleepManager : BaseApp
     private void SendBatteryWarning()
     {
         if (Entities.Sensor.PhoneVincentBatteryLevel.State < 30 && Entities.BinarySensor.PhoneVincentIsCharging.IsOff())
-            Notify.NotifyPhoneVincent(@"Telefoon bijna leeg", @"Je moet je telefoon opladen", true);
+            Notify.NotifyPhoneVincent("Telefoon bijna leeg", "Je moet je telefoon opladen", true);
 
         if (Entities.Sensor.SmT860BatteryLevel.State < 30 && Entities.BinarySensor.SmT860IsCharging.IsOff())
-            Notify.NotifyPhoneVincent(@"Tabled bijna leeg", @"Je moet je tabled opladen", true);
+            Notify.NotifyPhoneVincent("Tabled bijna leeg", "Je moet je tabled opladen", true);
     }
 
     private void TurnAllLightsOut()
@@ -96,11 +96,11 @@ public class SleepManager : BaseApp
                 switch (model.PriceCtPerKwh)
                 {
                     case <= 0 and > -20:
-                        Notify.NotifyPhoneVincent(@"Morgen is het stroom gratis",
+                        Notify.NotifyPhoneVincent("Morgen is het stroom gratis",
                             $"Stroom kost morgen om {model.StartTime} {model.PriceCtPerKwh} cent!", true);
                         break;
                     case <= -20:
-                        Notify.NotifyPhoneVincent(@"Morgen is het stroom gratis",
+                        Notify.NotifyPhoneVincent("Morgen is het stroom gratis",
                             $"Stroom kost morgen om {model.StartTime} {model.PriceCtPerKwh} cent!", true);
                         break;
                 }

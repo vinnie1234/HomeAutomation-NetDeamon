@@ -11,7 +11,7 @@ public static class LightExtension
             var light = (LightEntity)property.GetValue(lightEntities, null)!;
             // ReSharper disable once CommentTypo
             //todo light.tradfri_driver is temp
-            if (light.EntityId is "light.rt_ax88u_led" or @"light.tradfri_driver") continue;
+            if (light.EntityId is "light.rt_ax88u_led" or "light.tradfri_driver") continue;
 
             light.TurnOff(transition: 5);
         }

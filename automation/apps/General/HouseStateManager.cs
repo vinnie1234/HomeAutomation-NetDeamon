@@ -75,7 +75,7 @@ public class HouseStateManager : BaseApp
             if (alarmToday is { LocalTime: not null })
                 Scheduler.Schedule(DateTimeOffset.Parse(alarmToday.LocalTime, new CultureInfo("nl-Nl")), () =>
                 {
-                    Logger.LogDebug(@"Setting schedular for {Time}. Sleeping off from alarm",
+                    Logger.LogDebug("Setting schedular for {Time}. Sleeping off from alarm",
                         alarmToday.LocalTime);
                     Entities.InputBoolean.Sleeping.TurnOff();
                 });
@@ -154,7 +154,7 @@ public class HouseStateManager : BaseApp
             .Where(change => change.Entity.State == "below_horizon")
             .Subscribe(_ =>
             {
-                Logger.LogDebug(@"Setting current house state to {State}", HouseState.Evening);
+                Logger.LogDebug("Setting current house state to {State}", HouseState.Evening);
                 SetHouseState(HouseState.Evening);
             });
     }
@@ -169,7 +169,7 @@ public class HouseStateManager : BaseApp
             .Where(change => change.Entity.State == "above_horizon")
             .Subscribe(_ =>
             {
-                Logger.LogDebug(@"Setting current house state to {State}", HouseState.Morning);
+                Logger.LogDebug("Setting current house state to {State}", HouseState.Morning);
                 SetHouseState(HouseState.Morning);
             });
     }
@@ -180,7 +180,7 @@ public class HouseStateManager : BaseApp
     /// <param name="state">State to set</param>
     private void SetHouseState(HouseState state)
     {
-        Logger.LogDebug(@"Setting current house state to {State}", state);
+        Logger.LogDebug("Setting current house state to {State}", state);
         var selectState = state
             switch
             {

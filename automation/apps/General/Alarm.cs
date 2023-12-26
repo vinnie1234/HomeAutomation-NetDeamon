@@ -32,7 +32,7 @@ public class Alarm : BaseApp
         Entities.BinarySensor.GangMotion.WhenTurnsOn(_ =>
         {
             if (Globals.AmIHomeCheck(Entities))
-                Notify.NotifyPhoneVincent("ALARM", @"Beweging gedetecteerd", false, 5, channel: "ALARM",
+                Notify.NotifyPhoneVincent("ALARM", "Beweging gedetecteerd", false, 5, channel: "ALARM",
                     vibrationPattern: "100, 1000, 100, 1000, 100");
         });
     }
@@ -43,8 +43,8 @@ public class Alarm : BaseApp
             temperatureSensor.Key
                 .StateChanges()
                 .Where(x => x.Entity.State > 25 && !IsSleeping)
-                .Subscribe(x => Notify.NotifyPhoneVincent(@"Hoge temperatuur gedetecteerd",
-                    @$"{temperatureSensor.Value} is {x.Entity.State} graden", true, channel: "ALARM",
+                .Subscribe(x => Notify.NotifyPhoneVincent("Hoge temperatuur gedetecteerd",
+                    $"{temperatureSensor.Value} is {x.Entity.State} graden", true, channel: "ALARM",
                     vibrationPattern: "100, 1000, 100, 1000, 100"));
     }
 
@@ -55,13 +55,13 @@ public class Alarm : BaseApp
             .WhenStateIsFor(x => x?.State > 2000, TimeSpan.FromMinutes(10), Scheduler)
             .Subscribe(x =>
                 {
-                    Notify.NotifyPhoneVincent(@"Hoog energie verbruik",
-                        @$"Energie verbruik is al voor 10 minuten {x.Entity.State}",
+                    Notify.NotifyPhoneVincent("Hoog energie verbruik",
+                        $"Energie verbruik is al voor 10 minuten {x.Entity.State}",
                         true,
                         10,
                         new List<ActionModel>
                         {
-                            new(action: "URI", title: @"Ga naar dashboard",
+                            new(action: "URI", title: "Ga naar dashboard",
                                 uri: ConfigManager.GetValueFromConfig("BaseUrlHomeAssistant") + "/energy")
                         },
                         channel: "ALARM", vibrationPattern: "100, 1000, 100, 1000, 100");
@@ -74,9 +74,9 @@ public class Alarm : BaseApp
         Scheduler.ScheduleCron("00 22 * * *", () =>
         {
             var message = Entities.Sensor.AfvalMorgen.State;
-            if (message != @"Geen")
-                Notify.NotifyPhoneVincent(@"Vergeet het afval niet",
-                    @$"Vergeet je niet op {message} buiten te zetten?", true);
+            if (message != "Geen")
+                Notify.NotifyPhoneVincent("Vergeet het afval niet",
+                    $"Vergeet je niet op {message} buiten te zetten?", true);
         });
     }
 
@@ -84,7 +84,7 @@ public class Alarm : BaseApp
     {
         Scheduler.ScheduleCron("00 22 * * *", () =>
         {
-            if (int.Parse(Entities.Sensor.PetsnowyError.State ?? "0") > 0)
+        /*    if (int.Parse(Entities.Sensor.PetsnowyError.State ?? "0") > 0)
             {
                 var discordNotificationModel = new DiscordNotificationModel
                 {
@@ -102,7 +102,7 @@ public class Alarm : BaseApp
                 Notify.NotifyDiscord(@"PetSnowy heeft errors", new[] { _discordLogChannel }, discordNotificationModel);
                 Notify.NotifyPhoneVincent(@"PetSnowy heeft errors",
                     @"Er staat nog een error open voor de PetSnowy", false, 10);
-            }
+            } */ //todo
         });
     }
 
@@ -114,9 +114,9 @@ public class Alarm : BaseApp
 
             if (!(entities?.Count > 0))
             {
-                Notify.NotifyDiscord(@"NetDeamon heeft geen verbinding meer met HA", new[] { _discordLogChannel });
-                Notify.NotifyPhoneVincent(@"NetDeamon heeft geen verbinding meer met HA",
-                    @"De ping naar HA is helaas niet gelukt!", false, 10);
+                Notify.NotifyDiscord("NetDeamon heeft geen verbinding meer met HA", new[] { _discordLogChannel });
+                Notify.NotifyPhoneVincent("NetDeamon heeft geen verbinding meer met HA",
+                    "De ping naar HA is helaas niet gelukt!", false, 10);
             }
         });
     }
@@ -129,9 +129,9 @@ public class Alarm : BaseApp
             {
                 if (x.New?.State < -20.00)
                 {
-                    Notify.NotifyDiscord(@$"ENERGY IS NEGATIEF - {x.New.State}", new[] { _discordLogChannel });
-                    Notify.NotifyPhoneVincent(@$"ENERGY IS NEGATIEF - {x.New.State}",
-                        @"Je energy is negatief, dit kost geld.", false, 10);
+                    Notify.NotifyDiscord($"ENERGY IS NEGATIEF - {x.New.State}", new[] { _discordLogChannel });
+                    Notify.NotifyPhoneVincent($"ENERGY IS NEGATIEF - {x.New.State}",
+                        "Je energy is negatief, dit kost geld.", false, 10);
                 }
             });
     }
@@ -150,22 +150,22 @@ public class Alarm : BaseApp
             {
                 var dateTime = DateTime.Parse(lastLocalBackString);
                 if (dateTime < DateTime.Now.AddDays(-2))
-                    Notify.NotifyDiscord(@$"Er is al 2 dagen geen locale backup, laatste backup is van {lastLocalBackString}", new[] { _discordLogChannel });
+                    Notify.NotifyDiscord($"Er is al 2 dagen geen locale backup, laatste backup is van {lastLocalBackString}", new[] { _discordLogChannel });
             }
             else
             {
-                Notify.NotifyDiscord(@$"Er is geen laatste locale backup", new[] { _discordLogChannel });
+                Notify.NotifyDiscord($"Er is geen laatste locale backup", new[] { _discordLogChannel });
             }
 
             if (!string.IsNullOrEmpty(lastOneDriveBackString))
             {
                 var dateTime = DateTime.Parse(lastOneDriveBackString);
                 if (dateTime < DateTime.Now.AddDays(-2))
-                    Notify.NotifyDiscord(@$"Er is al 2 dagen geen OneDrive backup, laatste backup is van {lastLocalBackString}", new[] { _discordLogChannel });
+                    Notify.NotifyDiscord($"Er is al 2 dagen geen OneDrive backup, laatste backup is van {lastLocalBackString}", new[] { _discordLogChannel });
             }
             else
             {
-                Notify.NotifyDiscord(@$"Er is geen laatste OneDrive backup", new[] { _discordLogChannel });
+                Notify.NotifyDiscord($"Er is geen laatste OneDrive backup", new[] { _discordLogChannel });
             }
         });
     }

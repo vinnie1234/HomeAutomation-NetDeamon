@@ -26,8 +26,8 @@ public class FunApp : BaseApp
     private void Ps5TurnedOn()
     {
         if (DateTimeOffset.Now.DayOfWeek == DayOfWeek.Wednesday && DateTimeOffset.Now.Hour >= 19)
-            Notify.NotifyHouse(@"Dewin",
-                @"Goede avond Dewin, ben je er klaar voor om weer vernederd te worden door Vincent?", true);
+            Notify.NotifyHouse("Dewin",
+                "Goede avond Dewin, ben je er klaar voor om weer vernederd te worden door Vincent?", true);
     }
 
     private void Friends()

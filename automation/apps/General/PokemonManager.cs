@@ -6,7 +6,7 @@ namespace Automation.apps.General;
 [NetDaemonApp(Id = nameof(PokemonManager))]
 public class PokemonManager : BaseApp
 {
-    private readonly string _discordDewinChannel = ConfigManager.GetValueFromConfigNested("Discord", @"Dewin") ?? "";
+    private readonly string _discordDewinChannel = ConfigManager.GetValueFromConfigNested("Discord", "Dewin") ?? "";
 
     // ReSharper disable once SuggestBaseTypeForParameterInConstructor
     public PokemonManager(IHaContext ha, ILogger<PokemonManager> logger,
@@ -19,7 +19,7 @@ public class PokemonManager : BaseApp
             .Where(x => x.Old?.State?.ToLower() == "pokemon raid hour" && DateTimeOffset.Now.DayOfWeek == DayOfWeek.Wednesday && DateTimeOffset.Now.Hour >= 18)
             .Subscribe(_ =>
             {
-                notify.NotifyDiscord(@"Vincent rijd nu weg van Pokémon", new[] { _discordDewinChannel });
+                notify.NotifyDiscord("Vincent rijd nu weg van Pokémon", new[] { _discordDewinChannel });
             });
     }
 }

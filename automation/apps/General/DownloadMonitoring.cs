@@ -59,11 +59,11 @@ public partial class DownloadMonitoring : BaseApp
                                      Thumbnail = new Location(image),
                                      Fields = new[]
                                      {
-                                         new Field { Name = @"Rating", Value = imbdRating },
-                                         new Field { Name = @"Genre", Value = genre },
-                                         new Field { Name = @"Size", Value = size },
-                                         new Field { Name = @"Runtime", Value = runtime },
-                                         new Field { Name = @"Direct Download", Value = downloadLink }
+                                         new Field { Name = "Rating", Value = imbdRating },
+                                         new Field { Name = "Genre", Value = genre },
+                                         new Field { Name = "Size", Value = size },
+                                         new Field { Name = "Runtime", Value = runtime },
+                                         new Field { Name = "Direct Download", Value = downloadLink }
                                      }
                                  },
                                  Urls = new[] { downloadLink }
