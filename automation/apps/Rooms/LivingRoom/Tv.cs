@@ -20,6 +20,9 @@ public class Tv : BaseApp
     {
         Entities.MediaPlayer.Tv.WhenTurnsOn(_ => MovieTime());
         Entities.MediaPlayer.Tv.WhenTurnsOff(_ => LetThereBeLight());
+
+        //Green is broken, red is always good
+        Entities.Light.Bank.WhenTurnsOn(x => x.Entity.TurnOn(colorName: "Red"));
     }
 
     private void LetThereBeLight()
