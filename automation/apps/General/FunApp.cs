@@ -52,7 +52,7 @@ public class FunApp : BaseApp
             Entities.MediaPlayer.HeleHuis.VolumeSet(0.9);
         }, true);
         
-        Scheduler.ScheduleCron("00 00 01 01 *", () => { ChristmasFirework(); });
+        Scheduler.ScheduleCron("00 00 01 01 *", ChristmasFirework);
     }
 
     private void NewYear()
@@ -118,7 +118,7 @@ public class FunApp : BaseApp
             }
 
             Thread.Sleep(TimeSpan.FromSeconds(0.5));
-        } while (s.Elapsed < TimeSpan.FromMinutes(2));
+        } while (s.Elapsed < TimeSpan.FromMinutes(4));
         
         Entities.MediaPlayer.HeleHuis.VolumeSet(0.4);
         Entities.Light.HueGradientStringLight1.TurnOn(effect: "opal");
