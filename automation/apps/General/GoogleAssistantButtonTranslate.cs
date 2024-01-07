@@ -9,7 +9,14 @@ public class GoogleAssistantButtonTranslate : BaseApp
     public GoogleAssistantButtonTranslate(IHaContext haContext, ILogger<GoogleAssistantButtonTranslate> logger, INotify notify, IScheduler scheduler)
         : base(haContext, logger, notify, scheduler)
     {
-        foreach (var translateEntity in TranslationEntities())
+        foreach (var translateEntity in TranslationInputButtonEntity())
+            translateEntity.Key.WhenTurnsOn(_ =>
+            {
+                translateEntity.Key.TurnOff();
+                translateEntity.Value.Press();
+            });        
+        
+        foreach (var translateEntity in TranslationButtonEntity())
             translateEntity.Key.WhenTurnsOn(_ =>
             {
                 translateEntity.Key.TurnOff();
@@ -17,7 +24,7 @@ public class GoogleAssistantButtonTranslate : BaseApp
             });
     }
 
-    private Dictionary<InputBooleanEntity, InputButtonEntity> TranslationEntities()
+    private Dictionary<InputBooleanEntity, InputButtonEntity> TranslationInputButtonEntity()
     {
         return new Dictionary<InputBooleanEntity, InputButtonEntity>
         {
@@ -28,6 +35,14 @@ public class GoogleAssistantButtonTranslate : BaseApp
             { Entities.InputBoolean.Cleanpetsnowy, Entities.InputButton.Cleanpetsnowy },
             { Entities.InputBoolean.Feedcat, Entities.InputButton.Feedcat },
             { Entities.InputBoolean.StartPc, Entities.InputButton.StartPc }
+        };
+    }    
+    
+    private Dictionary<InputBooleanEntity, ButtonEntity> TranslationButtonEntity()
+    {
+        return new Dictionary<InputBooleanEntity, ButtonEntity>
+        {
+            { Entities.InputBoolean.VincentPcAfsluiten, Entities.Button.VincentPcAfsluiten },
         };
     }
 }
