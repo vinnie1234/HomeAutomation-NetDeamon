@@ -26,7 +26,8 @@ public class GoogleAssistantButtonTranslate : BaseApp
             { Entities.InputBoolean.Pixelgivenextfeedeary, Entities.InputButton.Pixelgivenextfeedeary },
             { Entities.InputBoolean.Emptypetsnowy, Entities.InputButton.Emptypetsnowy },
             { Entities.InputBoolean.Cleanpetsnowy, Entities.InputButton.Cleanpetsnowy },
-            { Entities.InputBoolean.Feedcat, Entities.InputButton.Feedcat }
+            { Entities.InputBoolean.Feedcat, Entities.InputButton.Feedcat },
+            { Entities.InputBoolean.StartPc, Entities.InputButton.StartPc }
         };
     }
 }
