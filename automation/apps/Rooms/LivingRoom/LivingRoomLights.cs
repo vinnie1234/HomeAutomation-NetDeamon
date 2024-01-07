@@ -1,5 +1,4 @@
 using System.Reactive.Concurrency;
-using Automation.Enum;
 
 namespace Automation.apps.Rooms.LivingRoom;
 
@@ -18,6 +17,15 @@ public class LivingRoomLights : BaseApp
             var eventModel = x.DataElement?.ToObject<EventModel>();
             if (eventModel != null) TurnOnPlafond(eventModel);
         });
+
+        Entities.InputSelect.Housemodeselect
+            .StateChanges()
+            .Where(_ => Entities.Light.HueFilamentBulb2.IsOn())
+            .Subscribe(_ =>
+            {
+                LightExtension.TurnOnLightsWoonkamer(Entities, Scheduler);
+            });
+
     }
 
     // ReSharper disable once IdentifierTypo
@@ -29,62 +37,12 @@ public class LivingRoomLights : BaseApp
         {
             if (Entities.Light.HueFilamentBulb2.IsOff())
             {
-                Entities.Light.HueFilamentBulb2.TurnOn(brightnessPct: 100, kelvin: GetColorTemp());
-                Entities.Light.HueFilamentBulb2
-                    .StateChanges()
-                    .Where(x => x.Old.IsOff())
-                    .Throttle(TimeSpan.FromMilliseconds(50))
-                    .Subscribe(_ => { Entities.Light.PlafondWoonkamer.TurnOn(brightnessPct: 100, kelvin: GetColorTemp()); });
-                Entities.Light.PlafondWoonkamer
-                    .StateChanges()
-                    .Where(x => x.Old.IsOff())
-                    .Throttle(TimeSpan.FromMilliseconds(50))
-                    .Subscribe(_ => { Entities.Light.HueFilamentBulb1.TurnOn(brightnessPct: 100, kelvin: GetColorTemp()); });
-
-                Scheduler.Schedule(TimeSpan.FromMilliseconds(200), () =>
-                {
-                    Entities.Light.HueFilamentBulb2.TurnOn();
-                    Entities.Light.PlafondWoonkamer.TurnOn();
-                    Entities.Light.HueFilamentBulb1.TurnOn();
-                });
+                LightExtension.TurnOnLightsWoonkamer(Entities, Scheduler);
             }
             else
             {
-                Entities.Light.HueFilamentBulb1.TurnOff();
-                Entities.Light.HueFilamentBulb1
-                    .StateChanges()
-                    .Where(x => x.Old.IsOn())
-                    .Throttle(TimeSpan.FromMilliseconds(50))
-                    .Subscribe(_ => { Entities.Light.PlafondWoonkamer.TurnOff(); });
-                Entities.Light.PlafondWoonkamer
-                    .StateChanges()
-                    .Where(x => x.Old.IsOn())
-                    .Throttle(TimeSpan.FromMilliseconds(50))
-                    .Subscribe(_ => { Entities.Light.HueFilamentBulb2.TurnOff(); });
-
-                Scheduler.Schedule(TimeSpan.FromMilliseconds(200), () =>
-                {
-                    Entities.Light.HueFilamentBulb1.TurnOff();
-                    Entities.Light.PlafondWoonkamer.TurnOff();
-                    Entities.Light.HueFilamentBulb2.TurnOff();
-                });
+                LightExtension.TurnOffLightsWoonkamer(Entities, Scheduler);
             }
         }
-    }
-
-    private int GetColorTemp()
-    {
-        var houseState = Globals.GetHouseState(Entities);
-        const int whiteColor = 4504;
-        const int warmColor = 4504;
-        const int someColor = 4504;
-
-        return houseState
-            switch
-            {
-                HouseState.Day or HouseState.Morning   => whiteColor, // White color
-                HouseState.Evening or HouseState.Night => warmColor,  // Warm Color
-                _                                              => someColor   // Some Color
-            };
     }
 }

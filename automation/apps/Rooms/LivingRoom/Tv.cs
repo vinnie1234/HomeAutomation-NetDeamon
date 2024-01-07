@@ -22,39 +22,41 @@ public class Tv : BaseApp
         Entities.MediaPlayer.Tv.WhenTurnsOff(_ => LetThereBeLight());
 
         //Green is broken, red is always good
-        Entities.Light.Bank.WhenTurnsOn(x => x.Entity.TurnOn(colorName: "Red"));
+        Entities.Light.Bank
+            .StateChanges()
+            .Where(x => x.New.IsOn())
+            .Subscribe(x => x.Entity.TurnOn(rgbColor: new List<int> { 255, 0, 0 }));
     }
 
     private void LetThereBeLight()
     {
         Logger.LogDebug("TV Turned off");
 
-        if (!DisableLightAutomations)
+        if (DisableLightAutomations) return;
+        
+        switch (GetHouseState(Entities))
         {
-            switch (GetHouseState(Entities))
-            {
-                case HouseState.Morning:
-                    Entities.Scene.Woonkamermorning.TurnOn();
-                    break;
-                case HouseState.Day:
-                    Entities.Scene.Woonkamerday.TurnOn();
-                    break;
-                case HouseState.Evening:
-                    Entities.Scene.Woonkamerevening.TurnOn();
-                    break;
-                case HouseState.Night:
-                    Entities.Scene.Woonkamernight.TurnOn();
-                    break;
-                default:
-                    Entities.Scene.Woonkamerday.TurnOn();
-                    break;
-            }
-
-            Entities.MediaPlayer.AvSoundbar.TurnOff();
-            Entities.Switch.Ps5VincentPower.TurnOff();
-
-            if (IsWorking) Entities.Light.Plafond.TurnOn();
+            case HouseState.Morning:
+                Entities.Scene.Woonkamermorning.TurnOn();
+                break;
+            case HouseState.Day:
+                Entities.Scene.Woonkamerday.TurnOn();
+                break;
+            case HouseState.Evening:
+                Entities.Scene.Woonkamerevening.TurnOn();
+                break;
+            case HouseState.Night:
+                Entities.Scene.Woonkamernight.TurnOn();
+                break;
+            default:
+                Entities.Scene.Woonkamerday.TurnOn();
+                break;
         }
+
+        Entities.MediaPlayer.AvSoundbar.TurnOff();
+        Entities.Switch.Ps5VincentPower.TurnOff();
+
+        if (IsWorking) Entities.Light.Plafond.TurnOn();
     }
 
     private void MovieTime()

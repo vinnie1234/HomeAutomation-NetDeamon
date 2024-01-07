@@ -42,7 +42,7 @@ public static class Globals
 
     #endregion
 
-    public static HouseState GetHouseState(Entities entities)
+    public static HouseState GetHouseState(IEntities entities)
     {
         return entities.InputSelect.Housemodeselect.State
             switch

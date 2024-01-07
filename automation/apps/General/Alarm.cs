@@ -1,7 +1,6 @@
 using System.Reactive.Concurrency;
 using System.Threading;
 using Automation.Helpers;
-using Automation.Models.DiscordNotificationModels;
 using NetDaemon.Client;
 using NetDaemon.Client.HomeAssistant.Extensions;
 
