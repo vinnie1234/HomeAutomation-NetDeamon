@@ -2,7 +2,7 @@
 
 namespace Automation.apps.General;
 
-[NetDaemonApp(Id = nameof(AwayManager))]
+[NetDaemonApp(Id = nameof(PcManager))]
 public class PcManager : BaseApp
 {
     public PcManager(
@@ -12,14 +12,33 @@ public class PcManager : BaseApp
         IScheduler scheduler)
         : base(ha, logger, notify, scheduler)
     {
-        Entities.Sensor.PcGeheugengebruik
+        Entities.InputButton.StartPc
             .StateChanges()
-            .Where(x => x.New?.State > 0)
             .Subscribe(_ =>
             {
+                Entities.Light.Bureau.TurnOn();
                 Entities.Light.Nachtkastje.TurnOff();
                 Entities.Light.Plafond.TurnOn();
                 Entities.MediaPlayer.Tv.TurnOff();
+            });
+        
+        Entities.Sensor.VincentPcLaatstopgestart
+            .StateChanges()
+            .Subscribe(_ =>
+            {
+                Entities.Light.Bureau.TurnOn();
+                Entities.Light.Nachtkastje.TurnOff();
+                Entities.Light.Plafond.TurnOn();
+                Entities.MediaPlayer.Tv.TurnOff();
+            });
+
+        Entities.Button.VincentPcAfsluiten
+            .StateChanges()
+            .Throttle(TimeSpan.FromSeconds(90))
+            .Subscribe(_ =>
+            {
+                Entities.Light.Bureau.TurnOff();
+                LightExtension.TurnOnLightsWoonkamer(Entities, scheduler);
             });
     }
 }
