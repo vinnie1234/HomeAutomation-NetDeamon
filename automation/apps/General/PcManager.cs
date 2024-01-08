@@ -1,4 +1,5 @@
 ﻿using System.Reactive.Concurrency;
+using System.Threading;
 
 namespace Automation.apps.General;
 
@@ -34,11 +35,12 @@ public class PcManager : BaseApp
 
         Entities.Button.VincentPcAfsluiten
             .StateChanges()
-            .Throttle(TimeSpan.FromSeconds(90))
             .Subscribe(_ =>
             {
-                Entities.Light.Bureau.TurnOff();
                 LightExtension.TurnOnLightsWoonkamer(Entities, scheduler);
+                
+                Thread.Sleep(TimeSpan.FromMinutes(1));
+                Entities.Light.Bureau.TurnOff();
             });
     }
 }
