@@ -68,8 +68,8 @@ public static class LightExtension
     {
         var houseState = Globals.GetHouseState(entities);
         const int whiteColor = 4504;
-        const int warmColor = 4504;
-        const int someColor = 4504;
+        const int warmColor = 2300;
+        const int someColor = 150;
 
         return houseState
             switch
