@@ -2,17 +2,17 @@ using System.Reactive.Concurrency;
 
 namespace Automation.apps.Rooms.BathRoom;
 
-[NetDaemonApp(Id = nameof(BathRoomLightOnMovement))]
-public class BathRoomLightOnMovement : BaseApp
+[NetDaemonApp(Id = nameof(BathRoomLights))]
+public class BathRoomLights : BaseApp
 {
     private bool IsNighttime => Entities.InputSelect.Housemodeselect.State == "Night";
     private bool IsSleeping => Entities.InputBoolean.Sleeping.IsOn();
     private bool DisableLightAutomations => Entities.InputBoolean.Disablelightautomationbathroom.IsOn();
     private bool IsDouching => Entities.InputBoolean.Douchen.IsOn();
 
-    public BathRoomLightOnMovement(
+    public BathRoomLights(
         IHaContext ha,
-        ILogger<BathRoomLightOnMovement> logger,
+        ILogger<BathRoomLights> logger,
         INotify notify,
         IScheduler scheduler)
         : base(ha, logger, notify, scheduler)
