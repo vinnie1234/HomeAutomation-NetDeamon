@@ -5,6 +5,7 @@ using static Automation.Globals;
 namespace Automation.apps.Rooms.LivingRoom;
 
 [NetDaemonApp(Id = nameof(Tv))]
+[Focus]
 public class Tv : BaseApp
 {
     private bool IsWorking => Entities.InputBoolean.Working.IsOn();
@@ -20,12 +21,15 @@ public class Tv : BaseApp
     {
         Entities.MediaPlayer.Tv.WhenTurnsOn(_ => MovieTime());
         Entities.MediaPlayer.Tv.WhenTurnsOff(_ => LetThereBeLight());
-
+        
         //Green is broken, red is always good
         Entities.Light.Bank
-            .StateChanges()
+            .StateAllChanges()
             .Where(x => x.New.IsOn())
-            .Subscribe(x => x.Entity.TurnOn(rgbColor: new List<int> { 255, 0, 0 }));
+            .Subscribe(x =>
+            {
+                x.Entity.TurnOn(rgbColor: new List<int> { 255, 0, 0 });
+            });
     }
 
     private void LetThereBeLight()
