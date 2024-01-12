@@ -28,6 +28,7 @@ public partial class DownloadMonitoring : BaseApp
             if (Entities.Sensor.YtsFeed.Attributes?.Entries != null)
             {
                 var discordChannel = ConfigManager.GetValueFromConfigNested("Discord", "Yts") ?? "";
+                var logChannel = ConfigManager.GetValueFromConfigNested("Discord", "Log") ?? "";
 
                 var items = Entities.Sensor.YtsFeed.Attributes?.Entries!.Cast<JsonElement>()
                     .Select(o => o.Deserialize<Yts>()).ToList();
@@ -68,6 +69,10 @@ public partial class DownloadMonitoring : BaseApp
                                  },
                                  Urls = new[] { downloadLink }
                              })
+
+                             if(discordModel.Title.ToLower().Contains("a difficult year") || discordModel.Title..ToLower().Contains("Neem me mee") || discordModel.Title.ToLower().Contains("une année difficile") || discordModel.Title.ToLower().Contains("une annee difficile"))
+                                 notify.NotifyDiscord("", new[] { logChannel }, discordModel);
+                             
                         notify.NotifyDiscord("", new[] { discordChannel }, discordModel);
 
                     dataRepository.Save("yts", items);
