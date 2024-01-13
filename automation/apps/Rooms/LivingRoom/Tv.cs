@@ -5,7 +5,6 @@ using static Automation.Globals;
 namespace Automation.apps.Rooms.LivingRoom;
 
 [NetDaemonApp(Id = nameof(Tv))]
-[Focus]
 public class Tv : BaseApp
 {
     private bool IsWorking => Entities.InputBoolean.Working.IsOn();
