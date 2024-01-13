@@ -44,8 +44,10 @@ public partial class DownloadMonitoring : BaseApp
                              where ytsItem != null
                              where oldList == null || oldList.TrueForAll(yts => yts.Id != ytsItem.Id)
                              where ytsItem.Title.Contains("1080p") || ytsItem.Title.Contains("2169p")
-                             where ytsItem.Title.Contains(thisYear.ToString()) || ytsItem.Title.Contains(lastYear.ToString())
-                             let downloadLink = ytsItem.Links.First(link => link.Type == "application/x-bittorrent").Href
+                             where ytsItem.Title.Contains(thisYear.ToString()) ||
+                                   ytsItem.Title.Contains(lastYear.ToString())
+                             let downloadLink = ytsItem.Links.First(link => link.Type == "application/x-bittorrent")
+                                 .Href
                              let image = GetTextFromHtmlRegex(ytsItem.Summary, ImgRegex())
                              let imbdRating = GetTextFromHtmlRegex(ytsItem.Summary, ImdbRatingRegex())
                              let genre = GetTextFromHtmlRegex(ytsItem.Summary, GenreRegex())
@@ -69,11 +71,17 @@ public partial class DownloadMonitoring : BaseApp
                                  },
                                  Urls = new[] { downloadLink }
                              })
-
-                             if(discordModel.Title.ToLower().Contains("a difficult year") || discordModel.Title..ToLower().Contains("Neem me mee") || discordModel.Title.ToLower().Contains("une année difficile") || discordModel.Title.ToLower().Contains("une annee difficile"))
-                                 notify.NotifyDiscord("", new[] { logChannel }, discordModel);
-                             
+                    {
+                        //Check Martin
+                        if(discordModel?.Embed?.Title != null && (discordModel.Embed.Title.ToLower().Contains("a difficult year", StringComparison.CurrentCultureIgnoreCase) || 
+                                                                  discordModel.Embed.Title.ToLower().Contains("Neem me mee", StringComparison.CurrentCultureIgnoreCase) || 
+                                                                  discordModel.Embed.Title.ToLower().Contains("une année difficile") || 
+                                                                  discordModel.Embed.Title.ToLower().Contains("une annee difficile")
+                                                                  ))
+                            notify.NotifyDiscord("Martin :) ", new[] { logChannel }, discordModel);
+                        
                         notify.NotifyDiscord("", new[] { discordChannel }, discordModel);
+                    }
 
                     dataRepository.Save("yts", items);
                 }
