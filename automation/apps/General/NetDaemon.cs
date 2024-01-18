@@ -1,6 +1,7 @@
 using System.Reactive.Concurrency;
 using System.Threading;
 using Automation.Enum;
+using Automation.Helpers;
 
 namespace Automation.apps.General;
 
@@ -9,6 +10,8 @@ namespace Automation.apps.General;
 //ReSharper disable once UnusedType.Global
 public class NetDaemon : BaseApp
 {
+    private readonly string _discordLogChannel = ConfigManager.GetValueFromConfigNested("Discord", "Logs") ?? "";
+    
     // ReSharper disable once SuggestBaseTypeForParameterInConstructor
     public NetDaemon(IHaContext ha, ILogger<NetDaemon> logger,
         INotify notify, IScheduler scheduler, IDataRepository storage)
@@ -25,6 +28,7 @@ public class NetDaemon : BaseApp
         
         if(!Entities.InputBoolean.Sleeping.IsOn())
             notify.NotifyHouse("Het huis is opnieuw opgestart", "Het huis is opnieuw opgestart", true);
+        notify.NotifyDiscord("Het huis is opnieuw opgestart", new[] { _discordLogChannel });
 
         Entities.InputButton.Restartnetdaemon.StateChanges().Subscribe(_ =>
         {
