@@ -1,5 +1,6 @@
 using System.Reactive.Concurrency;
 using System.Threading;
+using Automation.Enum;
 
 namespace Automation.apps.General;
 
@@ -21,7 +22,9 @@ public class NetDaemon : BaseApp
             storage.Save("NetDaemonRestart", "");
         }
         
-        notify.NotifyHouse("Het huis is opnieuw opgestart", "Het huis is opnieuw opgestart", true);
+        
+        if(!Entities.InputBoolean.Sleeping.IsOn())
+            notify.NotifyHouse("Het huis is opnieuw opgestart", "Het huis is opnieuw opgestart", true);
 
         Entities.InputButton.Restartnetdaemon.StateChanges().Subscribe(_ =>
         {
