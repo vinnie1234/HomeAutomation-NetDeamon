@@ -1,11 +1,12 @@
 using System.Diagnostics;
 using System.Reactive.Concurrency;
 using System.Threading;
+using Automation.Enum;
 
 namespace Automation.apps.General;
 
 [NetDaemonApp(Id = nameof(FunApp))]
-//[Focus]
+[Focus]
 //ReSharper disable once UnusedType.Global
 public class FunApp : BaseApp
 {
@@ -20,14 +21,14 @@ public class FunApp : BaseApp
             });
 
         Friends();
-        NewYear();
+        Parents();
     }
 
     private void Ps5TurnedOn()
     {
         if (DateTimeOffset.Now.DayOfWeek == DayOfWeek.Wednesday && DateTimeOffset.Now.Hour >= 19)
-            Notify.NotifyHouse("Dewin",
-                "Goede avond Dewin, ben je er klaar voor om weer vernederd te worden door Vincent?", true);
+            Notify.NotifyHouse("Déwin",
+                "Goede avond Déwin, ben je er klaar voor om weer vernederd te worden door Vincent?", true);
     }
 
     private void Friends()
@@ -38,6 +39,25 @@ public class FunApp : BaseApp
                 Notify.SendMusicToHome("http://192.168.50.189:8123/local/Friends.mp3");
                 Entities.Light.Hal.TurnOn();
             });
+    }
+
+    private void Parents()
+    {
+
+        Entities.DeviceTracker.A52sVanEddy.StateChanges()
+            .Where(x => x.Entity.State == "home")
+            .Subscribe(_ => SendMessageParents());
+        Entities.DeviceTracker.S20FeVanJannette.StateChanges()
+            .Where(x => x.Entity.State == "home")
+            .Subscribe(_ => SendMessageParents());      
+    }
+
+    private void SendMessageParents()
+    {
+        var houseState = Globals.GetHouseState(Entities);
+        var message = houseState == HouseState.Morning ? "Goedemorgen Ed en Jannette, welkom bij Vincent!" : "Goedemiddag Ed en Jannette, Welkom bij Vincent";
+        
+        Notify.NotifyHouse("Parents", message, false, 300);
     }
 
     private void StartNewYearOnNewYear()
