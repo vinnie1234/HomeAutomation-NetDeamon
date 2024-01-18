@@ -159,7 +159,7 @@ public class Notify : INotify
         var notification = GetLastNotification(storage, title);
 
         sendAfterMinutes ??= 60;
-        return DateTimeOffset.Now.AddMinutes((double)sendAfterMinutes) >= notification?.LastSendNotification;
+        return DateTimeOffset.Now.AddMinutes((double)sendAfterMinutes) >= (notification?.LastSendNotification ?? DateTime.Now.AddDays(-1000));
     }
 
     private static void SaveNotification(IDataRepository storage, string title, string message)
