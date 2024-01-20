@@ -6,7 +6,6 @@ using Automation.Enum;
 namespace Automation.apps.General;
 
 [NetDaemonApp(Id = nameof(FunApp))]
-[Focus]
 //ReSharper disable once UnusedType.Global
 public class FunApp : BaseApp
 {
