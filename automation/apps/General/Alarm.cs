@@ -1,6 +1,7 @@
 using System.Reactive.Concurrency;
 using System.Threading;
 using Automation.Helpers;
+using Automation.Models.DiscordNotificationModels;
 using NetDaemon.Client;
 using NetDaemon.Client.HomeAssistant.Extensions;
 
@@ -83,7 +84,7 @@ public class Alarm : BaseApp
     {
         Scheduler.ScheduleCron("00 22 * * *", () =>
         {
-        /*    if (int.Parse(Entities.Sensor.PetsnowyError.State ?? "0") > 0)
+            if (int.Parse(Entities.Sensor.PetsnowyLitterboxErrors.State ?? "0") > 0)
             {
                 var discordNotificationModel = new DiscordNotificationModel
                 {
@@ -92,8 +93,8 @@ public class Alarm : BaseApp
                         Color = 15548997,
                         Fields = new[]
                         {
-                            new Field { Name = @"Totaal erros", Value = Entities.Sensor.PetsnowyError.State! },
-                            new Field { Name = @"Laatste error", Value = Entities.Sensor.PetsnowyError.EntityState?.LastChanged.ToString() ?? string.Empty }
+                            new Field { Name = @"Totaal erros", Value = Entities.Sensor.PetsnowyLitterboxErrors.State! },
+                            new Field { Name = @"Laatste error", Value = Entities.Sensor.PetsnowyLitterboxErrors.EntityState?.LastChanged.ToString() ?? string.Empty }
                         }
                     }
                 };
@@ -101,7 +102,7 @@ public class Alarm : BaseApp
                 Notify.NotifyDiscord(@"PetSnowy heeft errors", new[] { _discordLogChannel }, discordNotificationModel);
                 Notify.NotifyPhoneVincent(@"PetSnowy heeft errors",
                     @"Er staat nog een error open voor de PetSnowy", false, 10);
-            } */ //todo
+            } 
         });
     }
 

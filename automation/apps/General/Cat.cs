@@ -5,7 +5,6 @@ using Automation.Models.DiscordNotificationModels;
 
 namespace Automation.apps.General;
 
-/*
 [NetDaemonApp(Id = nameof(Cat))]
 public class Cat : BaseApp
 {
@@ -35,19 +34,20 @@ public class Cat : BaseApp
 
     private void PetSnowyStatusMonitoring()
     {
-        Entities.Sensor.PetsnowyStatus
+        Entities.Sensor.PetsnowyLitterboxStatus
             .StateChanges()
             .Subscribe(x =>
             {
                 switch (x.New?.State)
                 {
                     case "pet_into":
-                        Entities.InputNumber.Pixelinpetsnowytime.SetValue(
-                            Convert.ToInt32(Entities.InputNumber.Pixelinpetsnowytime.State) + 1);
+                        Entities.Counter.Petsnowylitterboxpixelinit.Increment();
                         break;
                     case "cleaning":
-                        Entities.InputNumber.Cleaningpetsnowytime.SetValue(
-                            Convert.ToInt32(Entities.InputNumber.Cleaningpetsnowytime.State) + 1);
+                        Entities.Counter.Petsnowylittleboxcleaning.Increment();
+                        break;
+                    case "emptying":
+                        Entities.Counter.Petsnowylitterboxemptying.Increment();
                         break;
                 }
             });
@@ -192,4 +192,4 @@ public class Cat : BaseApp
             Value = "true"
         });
     }
-} */ //todo
+}

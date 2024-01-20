@@ -90,8 +90,8 @@ public class AwayManager : BaseApp
             Scheduler.Schedule(TimeSpan.FromSeconds(15), () =>
             {
                 var message = "Welkom thuis Vincent!";
-              //  if (Entities.Sensor.SnowyPetFeederStatus.State == "insufficient") todo
-                //    message += @" Het eten van Pixel is bijna op!";
+                if (Entities.Sensor.PetsnowyFeederFoodEnough.State == "insufficient")
+                    message += @" Het eten van Pixel is bijna op!";
 
                 Notify.NotifyHouse("welcomeHome", message, true);
             });
