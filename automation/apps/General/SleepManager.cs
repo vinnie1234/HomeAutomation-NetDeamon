@@ -55,9 +55,9 @@ public class SleepManager : BaseApp
             Notify.NotifyPhoneVincent("Vergeet het afval niet",
                 $"Vergeet je niet op {message} buiten te zetten?", true);
 
-       /* if (int.Parse(Entities.Sensor.PetsnowyError.State ?? "0") > 0)
+        if (int.Parse(Entities.Sensor.PetsnowyLitterboxErrors.State ?? "0") > 0)
             Notify.NotifyPhoneVincent(@"PetSnowy heeft errors",
-                @"Er staat nog een error open voor de PetSnowy", true); */ //todo
+                @"Er staat nog een error open voor de PetSnowy", true);
     }
 
     private void ChangeRelevantHouseState()
@@ -95,11 +95,11 @@ public class SleepManager : BaseApp
             {
                 switch (model.PriceCtPerKwh)
                 {
-                    case <= 0 and > -20:
+                    case <= 0 and > -15:
                         Notify.NotifyPhoneVincent("Morgen is het stroom gratis",
                             $"Stroom kost morgen om {model.StartTime} {model.PriceCtPerKwh} cent!", true);
                         break;
-                    case <= -20:
+                    case <= -15:
                         Notify.NotifyPhoneVincent("Morgen is het stroom gratis",
                             $"Stroom kost morgen om {model.StartTime} {model.PriceCtPerKwh} cent!", true);
                         break;
