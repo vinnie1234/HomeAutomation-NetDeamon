@@ -7,6 +7,7 @@ using Automation.Models.Yts;
 namespace Automation.apps.General;
 
 [NetDaemonApp(Id = nameof(DownloadMonitoring))]
+[Focus]
 public partial class DownloadMonitoring : BaseApp
 {
     // ReSharper disable once SuggestBaseTypeForParameterInConstructor
@@ -18,6 +19,8 @@ public partial class DownloadMonitoring : BaseApp
         IDataRepository dataRepository)
         : base(haContext, logger, notify, scheduler)
     {
+        YtsMonitoring(notify, dataRepository, "yts2160p", Entities.Sensor.YtsFeed2160p);
+        
         Entities.Sensor.YtsFeed1080.StateChanges()
             .Subscribe(_ =>
             {
@@ -35,7 +38,7 @@ public partial class DownloadMonitoring : BaseApp
             if (feed.Attributes?.Entries != null)
             {
                 var discordChannel = ConfigManager.GetValueFromConfigNested("Discord", "Yts") ?? "";
-                var logChannel = ConfigManager.GetValueFromConfigNested("Discord", "Log") ?? "";
+                var logChannel = ConfigManager.GetValueFromConfigNested("Discord", "Logs") ?? "";
 
                 var items = feed.Attributes?.Entries!.Cast<JsonElement>()
                     .Select(o => o.Deserialize<Yts>()).ToList();
