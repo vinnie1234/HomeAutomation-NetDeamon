@@ -7,7 +7,6 @@ using Automation.Models.Yts;
 namespace Automation.apps.General;
 
 [NetDaemonApp(Id = nameof(DownloadMonitoring))]
-[Focus]
 public partial class DownloadMonitoring : BaseApp
 {
     // ReSharper disable once SuggestBaseTypeForParameterInConstructor
