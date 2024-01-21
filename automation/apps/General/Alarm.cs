@@ -93,15 +93,15 @@ public class Alarm : BaseApp
                         Color = 15548997,
                         Fields = new[]
                         {
-                            new Field { Name = @"Totaal erros", Value = Entities.Sensor.PetsnowyLitterboxErrors.State! },
-                            new Field { Name = @"Laatste error", Value = Entities.Sensor.PetsnowyLitterboxErrors.EntityState?.LastChanged.ToString() ?? string.Empty }
+                            new Field { Name = "Totaal erros", Value = Entities.Sensor.PetsnowyLitterboxErrors.State! },
+                            new Field { Name = "Laatste error", Value = Entities.Sensor.PetsnowyLitterboxErrors.EntityState?.LastChanged.ToString() ?? string.Empty }
                         }
                     }
                 };
 
-                Notify.NotifyDiscord(@"PetSnowy heeft errors", new[] { _discordLogChannel }, discordNotificationModel);
-                Notify.NotifyPhoneVincent(@"PetSnowy heeft errors",
-                    @"Er staat nog een error open voor de PetSnowy", false, 10);
+                Notify.NotifyDiscord("PetSnowy heeft errors", new[] { _discordLogChannel }, discordNotificationModel);
+                Notify.NotifyPhoneVincent("PetSnowy heeft errors",
+                    "Er staat nog een error open voor de PetSnowy", false, 10);
             } 
         });
     }

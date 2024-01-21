@@ -91,7 +91,7 @@ public class AwayManager : BaseApp
             {
                 var message = "Welkom thuis Vincent!";
                 if (Entities.Sensor.PetsnowyFeederFoodEnough.State == "insufficient")
-                    message += @" Het eten van Pixel is bijna op!";
+                    message += " Het eten van Pixel is bijna op!";
 
                 Notify.NotifyHouse("welcomeHome", message, true);
             });

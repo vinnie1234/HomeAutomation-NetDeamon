@@ -79,46 +79,56 @@ public class Cat : BaseApp
 
         Services.Localtuya.SetDp(new LocaltuyaSetDpParameters
         {
-            DeviceId = ConfigManager.GetValueFromConfig(@"SnowyFeeder"),
+            DeviceId = ConfigManager.GetValueFromConfig("SnowyFeeder"),
             Dp = 3,
             Value = amount
         });
-
-        Logger.LogDebug(@"Dankjewel voor {Amount} porties of eten!", amount);
-
-        var discordNotificationModel = new DiscordNotificationModel
-        {
-            Embed = new Embed
-            {
-                Title = @"Pixel heeft eten gehad",
-                Url = ConfigManager.GetValueFromConfig("BaseUrlHomeAssistant") + @"/dwains-dashboard/more_page_cat_blue_print",
-                Thumbnail = new Location("https://cdn.pixabay.com/photo/2016/10/11/18/17/black-cat-1732366_960_720.png"),
-                Fields = new[]
-                {
-                    new Field { Name = @"Eten gegeven", Value = amount.ToString() },
-                    new Field { Name = @"Totaal gehad vandaag", Value = amountToday.ToString() }
-                }
-            }
-        };
-
-        Notify.NotifyDiscord("", new[] { _discordPixelChannel }, discordNotificationModel);
     }
 
     private void MonitorCar()
     {
         Entities.InputDatetime.Pixellastmanualfeed.StateChanges()
             .Subscribe(_ =>
-                Notify.NotifyPhoneVincent(@"Pixel heeft handmatig eten gehad",
-                    @$"Pixel heeft {Entities.InputNumber.Pixellastamountmanualfeed.State ?? 0} porties eten gehad",
-                    false, 5));
+                { 
+                    var discordNotificationModel = new DiscordNotificationModel
+                    {
+                        Embed = new Embed
+                        {
+                            Title = "Pixel heeft handmatig eten gehad",
+                            Url = ConfigManager.GetValueFromConfig("BaseUrlHomeAssistant") + "/dwains-dashboard/more_page_cat_blue_print",
+                            Thumbnail = new Location("https://cdn.pixabay.com/photo/2016/10/11/18/17/black-cat-1732366_960_720.png"),
+                            Fields = new[]
+                            {
+                                new Field { Name = "Eten gegeven", Value = Entities.InputNumber.Pixellastamountmanualfeed.State .ToString() ?? "0" },
+                                new Field { Name = "Totaal gehad vandaag", Value = Entities.InputNumber.Pixeltotalamountfeedday.ToString() }
+                            }
+                        }
+                    };
+
+                    Notify.NotifyDiscord("", new[] { _discordPixelChannel }, discordNotificationModel);
+                }
+                );
 
         Entities.InputDatetime.Pixellastautomatedfeed.StateChanges()
             .Subscribe(_ =>
             {
-                Logger.LogDebug(@"NOTIFICATIE: Pixel heeft automatisch eten gehad");
-                Notify.NotifyPhoneVincent(@"Pixel heeft automatisch eten gehad",
-                    @$"Pixel heeft {Entities.InputNumber.Pixellastamountautomationfeed.State ?? 0} porties eten gehad",
-                    false, 5);
+                Logger.LogDebug("NOTIFICATIE: Pixel heeft automatisch eten gehad");
+                var discordNotificationModel = new DiscordNotificationModel
+                {
+                    Embed = new Embed
+                    {
+                        Title = "Pixel heeft eten gehad",
+                        Url = ConfigManager.GetValueFromConfig("BaseUrlHomeAssistant") + "/dwains-dashboard/more_page_cat_blue_print",
+                        Thumbnail = new Location("https://cdn.pixabay.com/photo/2016/10/11/18/17/black-cat-1732366_960_720.png"),
+                        Fields = new[]
+                        {
+                            new Field { Name = "Eten gegeven", Value = Entities.InputNumber.Pixellastamountautomationfeed.State.ToString() ?? "0" },
+                            new Field { Name = "Totaal gehad vandaag", Value = Entities.InputNumber.Pixeltotalamountfeedday.ToString() }
+                        }
+                    }
+                };
+
+                Notify.NotifyDiscord("", new[] { _discordPixelChannel }, discordNotificationModel);
             });
 
 
@@ -177,7 +187,7 @@ public class Cat : BaseApp
     {
         Services.Localtuya.SetDp(new LocaltuyaSetDpParameters
         {
-            DeviceId = ConfigManager.GetValueFromConfig(@"PetSnowyDeviceId"),
+            DeviceId = ConfigManager.GetValueFromConfig("PetSnowyDeviceId"),
             Dp = 9,
             Value = "true"
         });
@@ -187,7 +197,7 @@ public class Cat : BaseApp
     {
         Services.Localtuya.SetDp(new LocaltuyaSetDpParameters
         {
-            DeviceId = ConfigManager.GetValueFromConfig(@"PetSnowyDeviceId"),
+            DeviceId = ConfigManager.GetValueFromConfig("PetSnowyDeviceId"),
             Dp = 109,
             Value = "true"
         });
