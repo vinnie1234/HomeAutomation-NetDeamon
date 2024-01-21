@@ -18,19 +18,26 @@ public partial class DownloadMonitoring : BaseApp
         IDataRepository dataRepository)
         : base(haContext, logger, notify, scheduler)
     {
-        YtsMonitoring(notify, dataRepository);
+        Entities.Sensor.YtsFeed1080.StateChanges()
+            .Subscribe(_ =>
+            {
+                YtsMonitoring(notify, dataRepository, "yts1080", Entities.Sensor.YtsFeed1080);
+            });
+        Entities.Sensor.YtsFeed2160p.StateChanges()
+            .Subscribe(_ =>
+            {
+                YtsMonitoring(notify, dataRepository, "yts2160p", Entities.Sensor.YtsFeed2160p);
+            });
     }
 
-    private void YtsMonitoring(INotify notify, IDataRepository dataRepository)
+    private static void YtsMonitoring(INotify notify, IDataRepository dataRepository, string saveId, SensorEntity feed )
     {
-        Entities.Sensor.YtsFeed.StateChanges().Subscribe(_ =>
-        {
-            if (Entities.Sensor.YtsFeed.Attributes?.Entries != null)
+            if (feed.Attributes?.Entries != null)
             {
                 var discordChannel = ConfigManager.GetValueFromConfigNested("Discord", "Yts") ?? "";
                 var logChannel = ConfigManager.GetValueFromConfigNested("Discord", "Log") ?? "";
 
-                var items = Entities.Sensor.YtsFeed.Attributes?.Entries!.Cast<JsonElement>()
+                var items = feed.Attributes?.Entries!.Cast<JsonElement>()
                     .Select(o => o.Deserialize<Yts>()).ToList();
 
                 var thisYear = DateTimeOffset.Now.Year;
@@ -38,12 +45,11 @@ public partial class DownloadMonitoring : BaseApp
 
                 if (items != null)
                 {
-                    var oldList = dataRepository.Get<List<Yts>>("yts");
+                    var oldList = dataRepository.Get<List<Yts>>(saveId);
 
                     foreach (var discordModel in from ytsItem in items
                              where ytsItem != null
                              where oldList == null || oldList.TrueForAll(yts => yts.Id != ytsItem.Id)
-                             where ytsItem.Title.Contains("1080p") || ytsItem.Title.Contains("2169p")
                              where ytsItem.Title.Contains(thisYear.ToString()) ||
                                    ytsItem.Title.Contains(lastYear.ToString())
                              let downloadLink = ytsItem.Links.First(link => link.Type == "application/x-bittorrent")
@@ -75,18 +81,17 @@ public partial class DownloadMonitoring : BaseApp
                         //Check Martin
                         if(discordModel?.Embed?.Title != null && (discordModel.Embed.Title.ToLower().Contains("a difficult year", StringComparison.CurrentCultureIgnoreCase) || 
                                                                   discordModel.Embed.Title.ToLower().Contains("Neem me mee", StringComparison.CurrentCultureIgnoreCase) || 
-                                                                  discordModel.Embed.Title.ToLower().Contains("une année difficile") || 
-                                                                  discordModel.Embed.Title.ToLower().Contains("une annee difficile")
+                                                                  discordModel.Embed.Title.Contains("une année difficile", StringComparison.CurrentCultureIgnoreCase) || 
+                                                                  discordModel.Embed.Title.Contains("une annee difficile", StringComparison.CurrentCultureIgnoreCase)
                                                                   ))
                             notify.NotifyDiscord("Martin :) ", new[] { logChannel }, discordModel);
                         
                         notify.NotifyDiscord("", new[] { discordChannel }, discordModel);
                     }
 
-                    dataRepository.Save("yts", items);
+                    dataRepository.Save(saveId, items);
                 }
             }
-        });
     }
 
     private static string GetTextFromHtmlRegex(string htmlSource, Regex regex)
