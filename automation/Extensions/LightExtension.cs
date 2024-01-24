@@ -8,7 +8,7 @@ public static class LightExtension
     public static void TurnAllOff(this LightEntities lightEntities)
     {
         lightEntities.EnumerateAll()
-            .Where(x => x.EntityId is not "light.rt_ax88u_led" and "light.tradfri_driver")
+            .Where(x => x.EntityId is not "light.rt_ax88u_led" and not "light.tradfri_driver")
             .TurnOff(transition: 5);
     }
     
