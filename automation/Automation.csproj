@@ -30,6 +30,7 @@
     </Target>
 
     <ItemGroup>
+        <PackageReference Include="Discord.Net.Webhook" Version="3.13.0" />
         <PackageReference Include="NetDaemon.AppModel" Version="24.3.1" />
         <PackageReference Include="NetDaemon.Extensions.Mqtt" Version="24.3.1" />
         <PackageReference Include="NetDaemon.Runtime" Version="24.3.1" />
@@ -53,6 +54,9 @@
 
     <ItemGroup>
         <Compile Remove="Release\**" />
+        <Compile Update="apps\**">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Compile>
     </ItemGroup>
 
     <ItemGroup>

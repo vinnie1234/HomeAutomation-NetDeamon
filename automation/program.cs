@@ -1,7 +1,7 @@
 using System.Reflection;
 using Automation;
+using Automation.CustomLogger;
 using Microsoft.Extensions.Hosting;
-using NetDaemon.Extensions.Logging;
 using NetDaemon.Extensions.Tts;
 using NetDaemon.Runtime;
 
@@ -13,10 +13,11 @@ using NetDaemon.Runtime;
 
 try
 {
+    Environment.CurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+    
     await Host.CreateDefaultBuilder(args)
+        .UseCustomLogging()
         .UseNetDaemonAppSettings()
-        .UseNetDaemonDefaultLogging()
-        //  .UseCustomLogging()
         .UseNetDaemonRuntime()
         .UseNetDaemonTextToSpeech()
         .AddAppServices()
