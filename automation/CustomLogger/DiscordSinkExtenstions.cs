@@ -2,17 +2,16 @@
 using Serilog.Configuration;
 using Serilog.Events;
 
-namespace Automation.CustomLogger
+namespace Automation.CustomLogger;
+
+public static class DiscordSinkExtensions
 {
-    public static class DiscordSinkExtensions
+    public static LoggerConfiguration Discord(
+        this LoggerSinkConfiguration loggerConfiguration,
+        IFormatProvider? formatProvider = null,
+        LogEventLevel restrictedToMinimumLevel = LogEventLevel.Verbose)
     {
-        public static LoggerConfiguration Discord(
-            this LoggerSinkConfiguration loggerConfiguration,
-            IFormatProvider? formatProvider = null,
-            LogEventLevel restrictedToMinimumLevel = LogEventLevel.Verbose)
-        {
-            return loggerConfiguration.Sink(
-                new DiscordLogger(formatProvider,restrictedToMinimumLevel));
-        }
+        return loggerConfiguration.Sink(
+            new DiscordLogger(formatProvider,restrictedToMinimumLevel));
     }
 }

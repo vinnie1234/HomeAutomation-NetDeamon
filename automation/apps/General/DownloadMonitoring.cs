@@ -1,3 +1,4 @@
+/*
 using System.Reactive.Concurrency;
 using System.Text.RegularExpressions;
 using Automation.Helpers;
@@ -5,6 +6,7 @@ using Automation.Models.DiscordNotificationModels;
 using Automation.Models.Yts;
 
 namespace Automation.apps.General;
+
 
 [NetDaemonApp(Id = nameof(DownloadMonitoring))]
 public partial class DownloadMonitoring : BaseApp
@@ -18,18 +20,18 @@ public partial class DownloadMonitoring : BaseApp
         IDataRepository dataRepository)
         : base(haContext, logger, notify, scheduler)
     {
-       // YtsMonitoring(notify, dataRepository, "yts2160p", Entities.Sensor.YtsFeed2160p);
-       // 
-       // Entities.Sensor.YtsFeed1080.StateChanges()
-       //     .Subscribe(_ =>
-       //     {
-       //         YtsMonitoring(notify, dataRepository, "yts1080", Entities.Sensor.YtsFeed1080);
-       //     });
-       // Entities.Sensor.YtsFeed2160p.StateChanges()
-       //     .Subscribe(_ =>
-       //     {
-       //         YtsMonitoring(notify, dataRepository, "yts2160p", Entities.Sensor.YtsFeed2160p);
-       //     });
+       YtsMonitoring(notify, dataRepository, "yts2160p", Entities.Sensor.YtsFeed2160p);
+       
+       Entities.Sensor.YtsFeed1080.StateChanges()
+           .Subscribe(_ =>
+           {
+               YtsMonitoring(notify, dataRepository, "yts1080", Entities.Sensor.YtsFeed1080);
+           });
+       Entities.Sensor.YtsFeed2160p.StateChanges()
+           .Subscribe(_ =>
+           {
+               YtsMonitoring(notify, dataRepository, "yts2160p", Entities.Sensor.YtsFeed2160p);
+           });
     }
 
     private static void YtsMonitoring(INotify notify, IDataRepository dataRepository, string saveId, SensorEntity feed )
@@ -118,4 +120,4 @@ public partial class DownloadMonitoring : BaseApp
 
     [GeneratedRegex("(Runtime:)(.+?)(?=<)", RegexOptions.IgnoreCase | RegexOptions.Singleline, "en-NL")]
     private static partial Regex RuntimeRegex();
-}
+} */

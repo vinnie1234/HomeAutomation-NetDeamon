@@ -45,35 +45,7 @@ public class FunApp : BaseApp
         
         Notify.NotifyHouse("Parents", message, false, 300);
     }
-
-    private void StartNewYearOnNewYear()
-    {
-        Scheduler.ScheduleCron("10 58 23 31 12 *", () =>
-        {
-            Notify.SendMusicToHome("http://192.168.50.189:8123/local/HappyNewYear.mp3", 0.4);
-        }, true);
-        
-        Scheduler.ScheduleCron("59 58 23 31 12 *", () =>
-        {
-            Entities.MediaPlayer.HeleHuis.VolumeSet(0.9);
-        }, true);
-        
-        Scheduler.ScheduleCron("00 00 01 01 *", ChristmasFirework);
-    }
-
-    private void NewYear()
-    {
-        StartNewYearOnNewYear();
-
-        Entities.InputButton.Startnewyear.StateChanges().Subscribe(_ =>
-        {
-            Notify.SendMusicToHome("http://192.168.50.189:8123/local/HappyNewYear.mp3", 0.4);
-            Thread.Sleep(TimeSpan.FromSeconds(49));
-            Entities.MediaPlayer.HeleHuis.VolumeSet(0.9);
-            ChristmasFirework();
-        });
-    }
-
+    
     private void ChristmasFirework()
     {
         var rnd = new Random();

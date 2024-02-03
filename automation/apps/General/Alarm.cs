@@ -154,7 +154,7 @@ public class Alarm : BaseApp
             }
             else
             {
-                Notify.NotifyDiscord($"Er is geen laatste locale backup", new[] { _discordLogChannel });
+                Notify.NotifyDiscord("Er is geen laatste locale backup", new[] { _discordLogChannel });
             }
 
             if (!string.IsNullOrEmpty(lastOneDriveBackString))
@@ -165,7 +165,7 @@ public class Alarm : BaseApp
             }
             else
             {
-                Notify.NotifyDiscord($"Er is geen laatste OneDrive backup", new[] { _discordLogChannel });
+                Notify.NotifyDiscord("Er is geen laatste OneDrive backup", new[] { _discordLogChannel });
             }
         });
     }

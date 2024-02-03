@@ -42,7 +42,7 @@ public class GoogleAssistantButtonTranslate : BaseApp
     {
         return new Dictionary<InputBooleanEntity, ButtonEntity>
         {
-            { Entities.InputBoolean.VincentPcAfsluiten, Entities.Button.VincentPcAfsluiten },
+            { Entities.InputBoolean.VincentPcAfsluiten, Entities.Button.VincentPcAfsluiten }
         };
     }
 }

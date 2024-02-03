@@ -24,7 +24,4 @@ public class EventModel
 
     [JsonPropertyName("subtype")]
     public int Subtype { get; set; }    
-    
-    [JsonPropertyName("friendly_name")]
-    public string FriendlyName { get; set; }
 }

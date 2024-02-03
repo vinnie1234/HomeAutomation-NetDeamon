@@ -56,8 +56,8 @@ public class SleepManager : BaseApp
                 $"Vergeet je niet op {message} buiten te zetten?", true);
 
         if (int.Parse(Entities.Sensor.PetsnowyLitterboxErrors.State ?? "0") > 0)
-            Notify.NotifyPhoneVincent(@"PetSnowy heeft errors",
-                @"Er staat nog een error open voor de PetSnowy", true);
+            Notify.NotifyPhoneVincent("PetSnowy heeft errors",
+                "Er staat nog een error open voor de PetSnowy", true);
     }
 
     private void ChangeRelevantHouseState()
@@ -110,7 +110,7 @@ public class SleepManager : BaseApp
 
     private void AwakeExtraChecks()
     {
-        Entities.MediaPlayer.Tv.WhenTurnsOn(x =>
+        Entities.MediaPlayer.Tv.WhenTurnsOn(_ =>
         {
             if (Entities.InputBoolean.Sleeping.IsOn()) Entities.InputBoolean.Sleeping.TurnOff();
         });
