@@ -26,6 +26,7 @@ public class LivingRoomLights : BaseApp
                 LightExtension.TurnOnLightsWoonkamer(Entities, Scheduler);
             });
 
+        FixLightsDifferentColorWhenTurnOn();
     }
 
     // ReSharper disable once IdentifierTypo
@@ -44,5 +45,16 @@ public class LivingRoomLights : BaseApp
                 LightExtension.TurnOffLightsWoonkamer(Entities, Scheduler);
             }
         }
+    }
+
+    private void FixLightsDifferentColorWhenTurnOn()
+    {
+        Entities.Light.HueFilamentBulb2.WhenTurnsOn(x =>
+        {
+            Scheduler.Schedule(TimeSpan.FromSeconds(10), () =>
+            {
+                LightExtension.TurnOnLightsWoonkamer(Entities, Scheduler);
+            });
+        });
     }
 }
