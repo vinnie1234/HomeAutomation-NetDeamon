@@ -16,7 +16,5 @@ public class TestApp : BaseApp
         INotify notify, IScheduler scheduler)
         : base(ha, logger, notify, scheduler)
     {
-        notify.NotifyDiscord("test", new []{"1203311959072571464"});
-        Logger.LogWarning("test");
     }
 }
