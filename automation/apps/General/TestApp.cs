@@ -1,12 +1,11 @@
 using System.Reactive.Concurrency;
-using System.Threading;
 using NetDaemon.Client;
 
 // ReSharper disable UnusedParameter.Local
 
 namespace Automation.apps.General;
 
-//[NetDaemonApp(Id = nameof(TestApp))]
+[NetDaemonApp(Id = nameof(TestApp))]
 //[Focus]
 //ReSharper disable once UnusedType.Global
 // ReSharper disable once ClassNeverInstantiated.Global
@@ -17,5 +16,7 @@ public class TestApp : BaseApp
         INotify notify, IScheduler scheduler)
         : base(ha, logger, notify, scheduler)
     {
+        notify.NotifyDiscord("test", new []{"1203311959072571464"});
+        Logger.LogWarning("test");
     }
 }

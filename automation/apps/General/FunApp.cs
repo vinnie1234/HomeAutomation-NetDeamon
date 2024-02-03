@@ -13,23 +13,9 @@ public class FunApp : BaseApp
     public FunApp(IHaContext ha, ILogger<FunApp> logger, INotify notify, IScheduler scheduler)
         : base(ha, logger, notify, scheduler)
     {
-        Entities.Sensor.Ps5turnon.StateChanges().Where(x => x.New?.State?.ToLower() == "on")
-            .Subscribe(_ =>
-            {
-                Ps5TurnedOn();
-            });
-
         Friends();
         Parents();
     }
-
-    private void Ps5TurnedOn()
-    {
-        if (DateTimeOffset.Now.DayOfWeek == DayOfWeek.Wednesday && DateTimeOffset.Now.Hour >= 19)
-            Notify.NotifyHouse("Déwin",
-                "Goede avond Déwin, ben je er klaar voor om weer vernederd te worden door Vincent?", true);
-    }
-
     private void Friends()
     {
         Entities.InputButton.StartFriends.StateChanges()
@@ -37,6 +23,7 @@ public class FunApp : BaseApp
             {
                 Notify.SendMusicToHome("http://192.168.50.189:8123/local/Friends.mp3");
                 Entities.Light.Hal.TurnOn();
+                Entities.Switch.Bot29ff.TurnOn();
             });
     }
 
@@ -104,35 +91,35 @@ public class FunApp : BaseApp
                     Entities.Light.HuePlayMidden.TurnOn(colorName: "GREEN");
                     Entities.Light.HuePlayLinks.TurnOn(colorName: "GREEN");
                     Entities.Light.HuePlayRechts.TurnOn(colorName: "GREEN");
-                    Entities.Light.HueGradientStringLight1.TurnOn(colorName: "RED");
+                    Entities.Light.Tv.TurnOn(colorName: "RED");
                     break;
                 case 2:
                     Entities.Light.Tv.TurnOn(colorName: "RED");
                     Entities.Light.HuePlayMidden.TurnOn(colorName: "RED");
                     Entities.Light.HuePlayLinks.TurnOn(colorName: "RED");
                     Entities.Light.HuePlayRechts.TurnOn(colorName: "RED");
-                    Entities.Light.HueGradientStringLight1.TurnOn(colorName: "GREEN");
+                    Entities.Light.Tv.TurnOn(colorName: "GREEN");
                     break;
                 case 3:
                     Entities.Light.Tv.TurnOn(colorName: "BLUE");
                     Entities.Light.HuePlayMidden.TurnOn(colorName: "BLUE");
                     Entities.Light.HuePlayLinks.TurnOn(colorName: "BLUE");
                     Entities.Light.HuePlayRechts.TurnOn(colorName: "BLUE");
-                    Entities.Light.HueGradientStringLight1.TurnOn(colorName: "YELLOW");
+                    Entities.Light.Tv.TurnOn(colorName: "YELLOW");
                     break;
                 case 4:
                     Entities.Light.Tv.TurnOn(colorName: "WHITE");
                     Entities.Light.HuePlayMidden.TurnOn(colorName: "WHITE");
                     Entities.Light.HuePlayLinks.TurnOn(colorName: "WHITE");
                     Entities.Light.HuePlayRechts.TurnOn(colorName: "WHITE");
-                    Entities.Light.HueGradientStringLight1.TurnOn(colorName: "BLUE");
+                    Entities.Light.Tv.TurnOn(colorName: "BLUE");
                     break;
                 case 5:
                     Entities.Light.Tv.TurnOn(colorName: "YELLOW");
                     Entities.Light.HuePlayMidden.TurnOn(colorName: "YELLOW");
                     Entities.Light.HuePlayLinks.TurnOn(colorName: "YELLOW");
                     Entities.Light.HuePlayRechts.TurnOn(colorName: "YELLOW");
-                    Entities.Light.HueGradientStringLight1.TurnOn(colorName: "WHITE");
+                    Entities.Light.Tv.TurnOn(colorName: "WHITE");
                     break;
             }
 
@@ -140,6 +127,6 @@ public class FunApp : BaseApp
         } while (s.Elapsed < TimeSpan.FromMinutes(4));
         
         Entities.MediaPlayer.HeleHuis.VolumeSet(0.4);
-        Entities.Light.HueGradientStringLight1.TurnOn(effect: "opal");
+        Entities.Light.Tv.TurnOn(effect: "opal");
     }
 }

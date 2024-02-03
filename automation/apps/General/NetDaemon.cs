@@ -1,6 +1,5 @@
 using System.Reactive.Concurrency;
 using System.Threading;
-using Automation.Enum;
 using Automation.Helpers;
 
 namespace Automation.apps.General;

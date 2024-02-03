@@ -63,7 +63,11 @@ public class HallLightOnMovement : BaseApp
         {
             case true:
                 Entities.Light.Hal2.TurnOn(brightnessPct: brightnessPct, transition: 15);
-                if (!IsNighttime && !IsSleeping) Entities.Light.Hal.TurnOn();
+                if (!IsSleeping)
+                {
+                    Entities.Light.Hal.TurnOn();
+                    Entities.Switch.Bot29ff.TurnOn();
+                }
                 break;
             case false:
                 Entities.Light.Hal.TurnOff();
@@ -90,6 +94,7 @@ public class HallLightOnMovement : BaseApp
                     {
                         Entities.Light.Hal.TurnOn();
                         Entities.Light.Hal2.TurnOn();
+                        Entities.Switch.Bot29ff.TurnOn();
                     }
 
                     break;
@@ -105,6 +110,7 @@ public class HallLightOnMovement : BaseApp
                 case 4:
                     Entities.MediaPlayer.FriendsSpeakers.VolumeSet(0.5);
                     Entities.Light.Hal.TurnOn();
+                    Entities.Switch.Bot29ff.TurnOn();
                     Entities.Light.Hal2.TurnOff();
                     Services.MediaPlayer.PlayMedia(new ServiceTarget
                     {
