@@ -30,7 +30,7 @@ public class HallLightOnMovement : BaseApp
     {
         Entities.BinarySensor.GangMotion
             .StateChanges()
-            .Where(x => x.New.IsOn() && !DisableLightAutomations)
+            .Where(x => x.New.IsOn() && !DisableLightAutomations )
             .Subscribe(_ => ChangeLight(true, GetBrightness()));
 
         Entities.BinarySensor.GangMotion
@@ -51,10 +51,11 @@ public class HallLightOnMovement : BaseApp
 
     private int GetStateTime()
     {
-        if (IsNighttime && IsSleeping) return Convert.ToInt32(Entities.InputNumber.Halllightnighttime.State);
-        if (!IsNighttime && !IsSleeping) return Convert.ToInt32(Entities.InputNumber.Halllightdaytime.State);
-
-        return 1;
+        return IsSleeping switch
+        {
+            true => Convert.ToInt32(Entities.InputNumber.Halllightnighttime.State),
+            false => Convert.ToInt32(Entities.InputNumber.Halllightdaytime.State)
+        };
     }
 
     private void ChangeLight(bool on, int brightnessPct = 0)
@@ -66,7 +67,8 @@ public class HallLightOnMovement : BaseApp
                 if (!IsSleeping)
                 {
                     Entities.Light.Hal.TurnOn();
-                    Entities.Switch.Bot29ff.TurnOn();
+                    if(Entities.Light.Hal.IsOff())
+                        Entities.Switch.Bot29ff.TurnOn();
                 }
                 break;
             case false:
