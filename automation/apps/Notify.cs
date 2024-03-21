@@ -82,13 +82,13 @@ public class Notify : INotify
 
     public void SendMusicToHome(string mediaContentId, double volume = 0.5)
     {
-        _services.MediaPlayer.PlayMedia(new ServiceTarget
+        
+        _entities.MediaPlayer.HeleHuis.PlayMedia(new MediaPlayerPlayMediaParameters
         {
-            EntityIds = new[]
-            {
-                _entities.MediaPlayer.HeleHuis.EntityId
-            }
-        }, mediaContentId, "music");
+            MediaContentId = mediaContentId,
+            MediaContentType = "music"
+        });
+        
         _entities.MediaPlayer.HeleHuis.VolumeSet(volume);
     }
 
