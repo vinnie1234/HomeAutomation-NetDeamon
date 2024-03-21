@@ -51,7 +51,7 @@ public class DiscordLogger : ILogEventSink
                 var message = FormatMessage(logEvent.Exception.Message, 1000);
                 embedBuilder.AddField("Message:", message);
 
-                var stackTrace = FormatMessage(logEvent.Exception.StackTrace ?? string.Empty, 10000);
+                var stackTrace = FormatMessage(logEvent.Exception.StackTrace ?? string.Empty, 1024);
                 embedBuilder.AddField("StackTrace:", stackTrace);
 
                 webHook.SendMessageAsync(null, false, new[] { embedBuilder.Build() })
