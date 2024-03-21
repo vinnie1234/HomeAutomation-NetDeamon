@@ -5,7 +5,7 @@ namespace Automation.Interfaces;
 
 public interface INotify
 {
-    Task NotifyHouse(string title, string message, bool canAlwaysSendNotification, double? sendAfterMinutes = null);
+    void NotifyHouse(string title, string message, bool canAlwaysSendNotification, double? sendAfterMinutes = null);
 
     void NotifyPhoneVincent(
         string title,

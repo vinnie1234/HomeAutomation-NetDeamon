@@ -20,22 +20,17 @@ public class Notify : INotify
         _services = new Services(ha);
     }
 
-    public async Task NotifyHouse(string title, string message, bool canAlwaysSendNotification,
+    public void NotifyHouse(string title, string message, bool canAlwaysSendNotification,
         double? sendAfterMinutes = null)
     {
         var canSendNotification = CanSendNotification(_storage, canAlwaysSendNotification, title, sendAfterMinutes);
         if (!canSendNotification) return;
 
-        SaveNotification(_storage, title, message);
+        SaveNotification(_storage!, title, message);
 
         _entities.MediaPlayer.HeleHuis.VolumeSet(0.4);
 
-        var tasks = new List<Task>
-        {
-            Task.Run(() => _services.Tts.CloudSay(_entities.MediaPlayer.HeleHuis.EntityId, message))
-        };
-
-        await Task.WhenAll(tasks);
+        _services.Tts.CloudSay(_entities.MediaPlayer.HeleHuis.EntityId, message);
     }
 
     public void NotifyPhoneVincent(
