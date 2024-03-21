@@ -7,17 +7,17 @@ public static class EntityExtensions
 {
     public static IDisposable WhenTurnsOn<T, TAttributes>(
         this Entity<T, EntityState<TAttributes>, TAttributes> entity,
-        Action<StateChange<T, EntityState<TAttributes>>> observer)
+        Action<StateChange<T, EntityState<TAttributes>>> observer, int throttleInSeconds = 0)
         where TAttributes : class
         where T : Entity<T, EntityState<TAttributes>, TAttributes>
-        => entity.StateChanges().Where(c => c.Old?.IsOff() == true && (c.New?.IsOn() ?? false))
+        => entity.StateChanges().Throttle(TimeSpan.FromSeconds(throttleInSeconds)).Where(c => c.Old?.IsOff() == true && (c.New?.IsOn() ?? false))
             .Subscribe(observer);
     
     public static IDisposable WhenTurnsOff<T, TAttributes>(
         this Entity<T, EntityState<TAttributes>, TAttributes> entity,
-        Action<StateChange<T, EntityState<TAttributes>>> observer)
+        Action<StateChange<T, EntityState<TAttributes>>> observer, int throttleInSeconds = 0)
         where TAttributes : class
         where T : Entity<T, EntityState<TAttributes>, TAttributes>
-        => entity.StateChanges().Where(c => c.Old?.IsOn() == true && (c.New?.IsOff() ?? false))
+        => entity.StateChanges().Throttle(TimeSpan.FromSeconds(throttleInSeconds)).Where(c => c.Old?.IsOn() == true && (c.New?.IsOff() ?? false))
             .Subscribe(observer);
 }

@@ -21,6 +21,7 @@ public class Cat : BaseApp
         PetSnowyStatusMonitoring();
         AutoFeedCat();
         MonitorCar();
+        SendAlarmWhenStuffIsOff();
 
         Entities.InputButton.Pixelgivenextfeedeary.StateChanges()
             .Subscribe(_ => GiveNextFeedEarly());
@@ -171,6 +172,32 @@ public class Cat : BaseApp
         });
     }
 
+    private void SendAlarmWhenStuffIsOff()
+    {
+        Entities.Switch.PetsnowyFountainIson.WhenTurnsOff(x =>
+        {
+            var discordNotificationModel = new DiscordNotificationModel
+            {
+                Embed = new Embed
+                {
+                    Title = "PIXEL ZIJN FOUNTAIN STAAT UIT!!!!",
+                }
+            };
+            Notify.NotifyDiscord("", new[] { _discordPixelChannel }, discordNotificationModel);
+        }, 600);
+        
+        Entities.Switch.PetsnowyLitterboxAutoClean.WhenTurnsOff(x =>
+        {
+            var discordNotificationModel = new DiscordNotificationModel
+            {
+                Embed = new Embed
+                {
+                    Title = "DE KATTENBAK STAAT UIT!!!!",
+                }
+            };
+            Notify.NotifyDiscord("", new[] { _discordPixelChannel }, discordNotificationModel);
+        }, 600);
+    }
     private KeyValuePair<InputDatetimeEntity, InputNumberEntity> GetClosestFeed()
     {
         var closestFeed =
