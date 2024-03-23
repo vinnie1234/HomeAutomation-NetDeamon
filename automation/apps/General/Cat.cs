@@ -20,7 +20,7 @@ public class Cat : BaseApp
         ButtonFeedCat();
         PetSnowyStatusMonitoring();
         AutoFeedCat();
-        MonitorCar();
+        MonitorCat();
         SendAlarmWhenStuffIsOff();
 
         Entities.InputButton.Pixelgivenextfeedeary.StateChanges()
@@ -86,7 +86,7 @@ public class Cat : BaseApp
         });
     }
 
-    private void MonitorCar()
+    private void MonitorCat()
     {
         Entities.InputDatetime.Pixellastmanualfeed.StateChanges()
             .Subscribe(_ =>

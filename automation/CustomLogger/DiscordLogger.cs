@@ -48,7 +48,7 @@ public class DiscordLogger : ILogEventSink
                 embedBuilder.WithTitle(":o: Exception");
                 embedBuilder.AddField("Type:", $"```{logEvent.Exception.GetType().FullName}```");
 
-                var message = FormatMessage(logEvent.Exception.Message, 1000);
+                var message = FormatMessage(logEvent.Exception.Message, 240);
                 embedBuilder.AddField("Message:", message);
 
                 var stackTrace = FormatMessage(logEvent.Exception.StackTrace ?? string.Empty, 1024);
