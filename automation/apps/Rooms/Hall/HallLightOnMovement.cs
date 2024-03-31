@@ -3,7 +3,6 @@ using System.Reactive.Concurrency;
 namespace Automation.apps.Rooms.Hall;
 
 [NetDaemonApp(Id = nameof(HallLightOnMovement))]
-//[Focus]
 public class HallLightOnMovement : BaseApp
 {
     private bool IsNighttime => Entities.InputSelect.Housemodeselect.State == "Night";
@@ -30,7 +29,7 @@ public class HallLightOnMovement : BaseApp
     {
         Entities.BinarySensor.GangMotion
             .StateChanges()
-            .Where(x => x.New.IsOn() && !DisableLightAutomations )
+            .Where(x => x.New.IsOn() && !DisableLightAutomations)
             .Subscribe(_ => ChangeLight(true, GetBrightness()));
 
         Entities.BinarySensor.GangMotion
@@ -44,7 +43,7 @@ public class HallLightOnMovement : BaseApp
     {
         return IsSleeping switch
         {
-            true  => 5,
+            true => 5,
             false => 100
         };
     }
@@ -67,9 +66,10 @@ public class HallLightOnMovement : BaseApp
                 if (!IsSleeping)
                 {
                     Entities.Light.Hal.TurnOn();
-                    if(Entities.Light.Hal.IsOff())
+                    if (Entities.Light.Hal.IsOff())
                         Entities.Switch.Bot29ff.TurnOn();
                 }
+
                 break;
             case false:
                 Entities.Light.Hal.TurnOff();
@@ -87,18 +87,10 @@ public class HallLightOnMovement : BaseApp
             {
                 //button one
                 case 1:
-                    if (Entities.Light.Hal.IsOn())
-                    {
-                        Entities.Light.Hal.TurnOff();
-                        Entities.Light.Hal2.TurnOff();
-                    }
-                    else
-                    {
-                        Entities.Light.Hal.TurnOn();
-                        Entities.Light.Hal2.TurnOn();
-                        Entities.Switch.Bot29ff.TurnOn();
-                    }
-
+                    if (Entities.InputBoolean.Away.IsOff())
+                        Entities.InputBoolean.Away.TurnOn();
+                    if (Entities.InputBoolean.Away.IsOn())
+                        Entities.InputBoolean.Away.TurnOff();
                     break;
                 //button two
                 case 2:
