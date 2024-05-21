@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="NetDaemon.AppModel" Version="24.16.0" />
+        <PackageReference Include="NetDaemon.AppModel" Version="24.21.0" />
         <PackageReference Include="NetDaemon.Client" Version="24.16.0" />
         <PackageReference Include="NetDaemon.Extensions.Logging" Version="24.16.0" />
         <PackageReference Include="NetDaemon.Extensions.Mqtt" Version="24.16.0" />
