@@ -79,6 +79,7 @@ public class BathRoomLights : BaseApp
             Entities.Light.BadkamerSpiegel.TurnOff();
             Entities.Light.PlafondBadkamer.TurnOff();
             Entities.Cover.Rollerblind0001.OpenCover();
+            Entities.Light.Plafond.TurnOn();
             Entities.MediaPlayer.Googlehome0351.MediaPause();
             Notify.NotifyHouse("readyDouche", "Klaar met douchen", true);
         }
