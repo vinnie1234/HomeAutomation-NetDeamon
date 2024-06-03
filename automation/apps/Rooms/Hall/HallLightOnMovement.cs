@@ -106,10 +106,7 @@ public class HallLightOnMovement : BaseApp
                     Entities.Light.Hal.TurnOn();
                     Entities.Switch.Bot29ff.TurnOn();
                     Entities.Light.Hal2.TurnOff();
-                    Services.MediaPlayer.PlayMedia(new ServiceTarget
-                    {
-                        EntityIds = new[] { Entities.MediaPlayer.FriendsSpeakers.EntityId }
-                    }, "http://192.168.50.189:8123/local/Friends.mp3", "music");
+                    Notify.SendMusicToHome("http://192.168.50.189:8123/local/Friends.mp3");
 
                     break;
             }
