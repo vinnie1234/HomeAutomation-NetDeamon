@@ -31,20 +31,20 @@
 
     <ItemGroup>
         <PackageReference Include="Discord.Net.Webhook" Version="3.15.0" />
-        <PackageReference Include="NetDaemon.AppModel" Version="24.16.0" />
-        <PackageReference Include="NetDaemon.Extensions.Mqtt" Version="24.16.0" />
-        <PackageReference Include="NetDaemon.Runtime" Version="24.16.0" />
-        <PackageReference Include="NetDaemon.HassModel" Version="24.16.0" />
-        <PackageReference Include="NetDaemon.Client" Version="24.16.0" />
-        <PackageReference Include="NetDaemon.Extensions.Scheduling" Version="24.16.0" />
-        <PackageReference Include="NetDaemon.Extensions.Logging" Version="24.16.0" />
-        <PackageReference Include="NetDaemon.Extensions.Tts" Version="24.16.0" />
+        <PackageReference Include="NetDaemon.AppModel" Version="24.21.0" />
+        <PackageReference Include="NetDaemon.Extensions.Mqtt" Version="24.21.0" />
+        <PackageReference Include="NetDaemon.Runtime" Version="24.21.0" />
+        <PackageReference Include="NetDaemon.HassModel" Version="24.21.0" />
+        <PackageReference Include="NetDaemon.Client" Version="24.21.0" />
+        <PackageReference Include="NetDaemon.Extensions.Scheduling" Version="24.21.0" />
+        <PackageReference Include="NetDaemon.Extensions.Logging" Version="24.21.0" />
+        <PackageReference Include="NetDaemon.Extensions.Tts" Version="24.21.0" />
         <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="8.0.0" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-        <PackageReference Include="RestSharp" Version="110.2.0" />
+        <PackageReference Include="RestSharp" Version="111.2.0" />
         <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
-        <PackageReference Include="System.Reactive" Version="6.0.0" />
+        <PackageReference Include="System.Reactive" Version="6.0.1" />
     </ItemGroup>
 
     <ItemGroup>
