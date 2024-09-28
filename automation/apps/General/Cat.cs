@@ -80,8 +80,8 @@ public class Cat : BaseApp
 
         Services.Localtuya.SetDp(new LocaltuyaSetDpParameters
         {
-            DeviceId = ConfigManager.GetValueFromConfig("SnowyFeeder"),
-            Dp = 3,
+            DeviceId = ConfigManager.GetValueFromConfig("ZedarDeviceId"),
+            Dp = 106,
             Value = amount
         });
     }
