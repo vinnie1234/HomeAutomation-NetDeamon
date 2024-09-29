@@ -20,7 +20,7 @@ public class BatteryMonitoring : BaseApp
         {
             battySensor.Key
                 .StateChanges()
-                .WhenStateIsFor(x => x?.State is <= BatteryWarningLevel, TimeSpan.FromMinutes(10), Scheduler)
+                .WhenStateIsFor(x => x?.State is <= BatteryWarningLevel, TimeSpan.FromHours(10), Scheduler)
                 .Subscribe(x => SendNotification(battySensor.Value, x.Entity.State ?? 0));
             
             battySensor.Key
