@@ -81,7 +81,7 @@ public class Cat : BaseApp
         Services.Localtuya.SetDp(new LocaltuyaSetDpParameters
         {
             DeviceId = ConfigManager.GetValueFromConfig("ZedarDeviceId"),
-            Dp = 106,
+            Dp = 3,
             Value = amount
         });
     }
