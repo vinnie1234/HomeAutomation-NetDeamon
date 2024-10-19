@@ -4,9 +4,7 @@ using Automation.Helpers;
 
 namespace Automation.apps.General;
 
-[NetDaemonApp(Id = nameof(TestApp))]
-//[Focus]
-//ReSharper disable once UnusedType.Global
+[NetDaemonApp(Id = nameof(NetDaemon))]
 public class NetDaemon : BaseApp, IDisposable
 {
     private readonly string _discordLogChannel = ConfigManager.GetValueFromConfigNested("Discord", "Logs") ?? "";

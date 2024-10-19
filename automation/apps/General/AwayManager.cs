@@ -4,7 +4,6 @@ using static Automation.Globals;
 
 namespace Automation.apps.General;
 
-//[Focus]
 [NetDaemonApp(Id = nameof(AwayManager))]
 public class AwayManager : BaseApp
 {
