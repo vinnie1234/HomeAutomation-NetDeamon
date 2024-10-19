@@ -17,7 +17,7 @@ public static class Collections
             { entities.Sensor.WoonkamerBattery, "Hue switch woonkamer" },
             { entities.Sensor.WoonkamerBattery2, "Wall switch Woonkamer" },
             { entities.Sensor.SlaapkamerBattery, "Wall switch Slaapkamer" },
-            { entities.Sensor.Rollerblind0001Battery, "Rolluik Slaapkamer" },
+            { entities.Sensor.Rollerblind0003Batterij, "Rolluik Slaapkamer" },
             { entities.Sensor.BotA801Battery, "Switchbot" },
             { entities.Sensor.KeukenAfstandbediening, "Keuken afstandbediening" },
             { entities.Sensor.JaapBatteryLevel, "Jaap" }

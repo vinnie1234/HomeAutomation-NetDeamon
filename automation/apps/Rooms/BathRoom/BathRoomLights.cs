@@ -61,7 +61,7 @@ public class BathRoomLights : BaseApp
             Services.Spotcast.Start(entityId: Entities.MediaPlayer.Googlehome0351.EntityId);
             Entities.Light.BadkamerSpiegel.TurnOn(brightnessPct: 100);
             Entities.Light.PlafondBadkamer.TurnOn(brightnessPct: 100);
-            Entities.Cover.Rollerblind0001.CloseCover();
+            Entities.Cover.Rollerblind0003.CloseCover();
             Notify.NotifyHouse("timeToDouche", "Tijd om te douchen", true);
             Scheduler.Schedule(TimeSpan.FromHours(1), () =>
             {
@@ -78,7 +78,7 @@ public class BathRoomLights : BaseApp
         {
             Entities.Light.BadkamerSpiegel.TurnOff();
             Entities.Light.PlafondBadkamer.TurnOff();
-            Entities.Cover.Rollerblind0001.OpenCover();
+            Entities.Cover.Rollerblind0003.OpenCover();
             Entities.Light.Plafond.TurnOn();
             Entities.MediaPlayer.Googlehome0351.MediaPause();
             Notify.NotifyHouse("readyDouche", "Klaar met douchen", true);

@@ -32,8 +32,8 @@ public class SleepManager : BaseApp
     {
         Logger.LogDebug("Wake up Routine");
         if (((IList)Globals.WeekendDays).Contains(DateTimeOffset.Now.DayOfWeek))
-            Entities.Cover.Rollerblind0001.SetCoverPosition(100);
-        else if (Entities.Cover.Rollerblind0001.Attributes?.CurrentPosition < 100) Entities.Cover.Rollerblind0001.SetCoverPosition(45);
+            Entities.Cover.Rollerblind0003.SetCoverPosition(100);
+        else if (Entities.Cover.Rollerblind0003.Attributes?.CurrentPosition < 100) Entities.Cover.Rollerblind0003.SetCoverPosition(45);
 
         SendBatteryWarning();
     }
@@ -46,7 +46,7 @@ public class SleepManager : BaseApp
         TurnAllLightsOut();
         SendBatteryWarning();
         Entities.MediaPlayer.Tv.TurnOff();
-        Entities.Cover.Rollerblind0001.SetCoverPosition(0);
+        Entities.Cover.Rollerblind0003.SetCoverPosition(0);
         var checkDate = DateTimeOffset.Now;
         var message = Entities.Sensor.AfvalMorgen.State;
         if (checkDate.Hour is >= 00 and < 07) message = Entities.Sensor.AfvalVandaag.State;
