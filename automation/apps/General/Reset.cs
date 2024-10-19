@@ -90,10 +90,18 @@ public class Reset : BaseApp
     {
         if ((light.Attributes?.SupportedColorModes ?? Array.Empty<string>()).Any(x => x == "xy"))
         {
-            light.TurnOn(
-                rgbColor: oldStateLight.RgbColors,
-                brightness: Convert.ToInt64(oldStateLight.Brightness)
-            );
+            if (oldStateLight.RgbColors != null)
+            {
+                //cause the codegen changed the input from Object to IReadOnlyCollection<int> but leaves the output to IReadOnlyList<double> I need to translate the value;
+                IReadOnlyCollection<int> lightColorInInt = new[]
+                {
+                    (int)oldStateLight.RgbColors[0], (int)oldStateLight.RgbColors[1], (int)oldStateLight.RgbColors[2]
+                };
+                light.TurnOn(
+                    rgbColor: lightColorInInt,
+                    brightness: Convert.ToInt64(oldStateLight.Brightness)
+                );
+            }
         }
         else
         {

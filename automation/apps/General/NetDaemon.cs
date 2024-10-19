@@ -16,11 +16,13 @@ public class NetDaemon : BaseApp
         INotify notify, IScheduler scheduler, IDataRepository storage)
         : base(ha, logger, notify, scheduler)
     {
-        var lightColor = storage.Get<object>("NetDaemonRestart");
+        var lightColor = storage.Get<IReadOnlyList<double>>("NetDaemonRestart");
         
         if (lightColor != null && lightColor.ToString() != "")
         {
-            Entities.Light.Koelkast.TurnOn(rgbColor: lightColor);
+            //cause the codegen changed the input from Object to IReadOnlyCollection<int> but leaves the output to IReadOnlyList<double> I need to translate the value;
+            IReadOnlyCollection<int> lightColorInInt = new[] { (int)lightColor[0], (int)lightColor[1], (int)lightColor[2] };
+            Entities.Light.Koelkast.TurnOn(rgbColor: lightColorInInt);
             storage.Save("NetDaemonRestart", "");
         }
         
