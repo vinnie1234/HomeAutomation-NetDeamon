@@ -18,8 +18,8 @@ New-Item -Path $buildPath\apps -ItemType Directory -Force
 
 # Step 2: Delete everything in the network share except 'logs' and 'apps' folders
 Write-Host "Cleaning network share..."
-Get-ChildItem -Path $buildPath -Exclude "logs","apps" | ForEach-Object {
-    if ($_.PSIsContainer -and $_.Name -ne "logs" -and $_.Name -ne "apps") {
+Get-ChildItem -Path $buildPath -Exclude "logs","apps", ".storage" | ForEach-Object {
+    if ($_.PSIsContainer -and $_.Name -ne "logs" -and $_.Name -ne "apps" -and $_.Name -ne ".storage") {
         Remove-Item $_.FullName -Recurse -Force -ErrorAction SilentlyContinue
     } elseif (!$_.PSIsContainer) {
         Remove-Item $_.FullName -Force -ErrorAction SilentlyContinue
