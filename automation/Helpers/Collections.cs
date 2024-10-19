@@ -20,7 +20,8 @@ public static class Collections
             { entities.Sensor.Rollerblind0003Batterij, "Rolluik Slaapkamer" },
             { entities.Sensor.BotA801Battery, "Switchbot" },
             { entities.Sensor.KeukenAfstandbediening, "Keuken afstandbediening" },
-            { entities.Sensor.JaapBatteryLevel, "Jaap" }
+            { entities.Sensor.JaapBatteryLevel, "Jaap" },
+            { entities.Sensor.DarkHorseRemainingBattery, "Cowboy" },
         };
     }
 
