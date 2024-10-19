@@ -28,12 +28,37 @@ public class Alarm : BaseApp
         HaChecks(homeAssistantConnection);
         EnergyNegativeCheck();
         BackUpCheck();
+        TrafficToWorkCheck();
 
         Entities.BinarySensor.GangMotion.WhenTurnsOn(_ =>
         {
             if (Globals.AmIHomeCheck(Entities))
                 Notify.NotifyPhoneVincent("ALARM", "Beweging gedetecteerd", false, 5, channel: "ALARM",
                     vibrationPattern: "100, 1000, 100, 1000, 100");
+        });
+    }
+    
+    private void TrafficToWorkCheck()
+    {
+        Scheduler.ScheduleCron("50 7 * * 4,5", () =>
+        {
+            if (Entities.InputBoolean.Holliday.IsOff())
+            {
+                if (Entities.Sensor.HereTravelTimeReistijdInHetVerkeer.State > 40)
+                {
+                    Notify.NotifyPhoneVincent(
+                        "HET IS DRUK OP DE WEG!!!",
+                        $"Het kost je momenteeel {Entities.Sensor.HereTravelTimeReistijdInHetVerkeer.State} minuten tot kantoor!",
+                        true,
+                        action: new List<ActionModel>
+                        {
+                            new(action: "URI", title: "Ga naar maps",
+                                uri: "https://www.google.nl/maps/dir/Ida+Gerhardtlaan+28,+Veenendaal/Papendorpseweg+99,+3528+BJ+Utrecht,+Nederland/@52.0460841,4.9910623,10z/data=!3m1!4b1!4m14!4m13!1m5!1m1!1s0x47c6519986b166d3:0x69ceb74bf73a6521!2m2!1d5.5278732!2d52.0275379!1m5!1m1!1s0x47c6659909ea7b8d:0x70525f5d1a86e320!2m2!1d5.0879509!2d52.0640583!3e0?entry=ttu&g_ep=EgoyMDI0MTAxNi4wIKXMDSoASAFQAw%3D%3D"
+                                )
+                        }
+                    );
+                }
+            }
         });
     }
 
@@ -94,7 +119,12 @@ public class Alarm : BaseApp
                         Fields = new[]
                         {
                             new Field { Name = "Totaal erros", Value = Entities.Sensor.PetsnowyLitterboxErrors.State! },
-                            new Field { Name = "Laatste error", Value = Entities.Sensor.PetsnowyLitterboxErrors.EntityState?.LastChanged.ToString() ?? string.Empty }
+                            new Field
+                            {
+                                Name = "Laatste error",
+                                Value = Entities.Sensor.PetsnowyLitterboxErrors.EntityState?.LastChanged.ToString() ??
+                                        string.Empty
+                            }
                         }
                     }
                 };
@@ -102,7 +132,7 @@ public class Alarm : BaseApp
                 Notify.NotifyDiscord("PetSnowy heeft errors", new[] { _discordLogChannel }, discordNotificationModel);
                 Notify.NotifyPhoneVincent("PetSnowy heeft errors",
                     "Er staat nog een error open voor de PetSnowy", false, 10);
-            } 
+            }
         });
     }
 
@@ -150,7 +180,9 @@ public class Alarm : BaseApp
             {
                 var dateTime = DateTime.Parse(lastLocalBackString);
                 if (dateTime < DateTime.Now.AddDays(-2))
-                    Notify.NotifyDiscord($"Er is al 2 dagen geen locale backup, laatste backup is van {lastLocalBackString}", new[] { _discordLogChannel });
+                    Notify.NotifyDiscord(
+                        $"Er is al 2 dagen geen locale backup, laatste backup is van {lastLocalBackString}",
+                        new[] { _discordLogChannel });
             }
             else
             {
@@ -161,7 +193,9 @@ public class Alarm : BaseApp
             {
                 var dateTime = DateTime.Parse(lastOneDriveBackString);
                 if (dateTime < DateTime.Now.AddDays(-2))
-                    Notify.NotifyDiscord($"Er is al 2 dagen geen OneDrive backup, laatste backup is van {lastLocalBackString}", new[] { _discordLogChannel });
+                    Notify.NotifyDiscord(
+                        $"Er is al 2 dagen geen OneDrive backup, laatste backup is van {lastLocalBackString}",
+                        new[] { _discordLogChannel });
             }
             else
             {
