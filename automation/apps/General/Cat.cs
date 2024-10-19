@@ -96,7 +96,7 @@ public class Cat : BaseApp
                         Embed = new Embed
                         {
                             Title = "Pixel heeft handmatig eten gehad",
-                            Url = ConfigManager.GetValueFromConfig("BaseUrlHomeAssistant") + "/dwains-dashboard/more_page_cat_blue_print",
+                            Url = ConfigManager.GetValueFromConfig("BaseUrlHomeAssistant") + "/lovelace/2",
                             Thumbnail = new Location("https://cdn.pixabay.com/photo/2016/10/11/18/17/black-cat-1732366_960_720.png"),
                             Fields = new[]
                             {
