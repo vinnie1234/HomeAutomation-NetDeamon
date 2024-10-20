@@ -20,7 +20,6 @@ public class AutoUpdateApp : BaseApp
     {
        
         _updates = Entities.Update;
-        AutoUpdate();
         scheduler.ScheduleCron("0 3 * * *", AutoUpdate);
     }
     
@@ -39,12 +38,13 @@ public class AutoUpdateApp : BaseApp
             
             updateEntity.Install();
             
-            await updateEntity.StateChanges().Where(s => s.New.IsOff() && s.New?.Attributes?.InProgress == false).Take(1);
             Logger.LogInformation($"Ready updating {updateEntity.Attributes?.FriendlyName ?? updateEntity.EntityId}");
             NotifyMeOnDiscord("Updates is geinstaleeerd",
                 $"Geinstalleerde update voor {updateEntity.Attributes?.FriendlyName ?? updateEntity.EntityId}");
             await Task.Delay(TimeSpan.FromMinutes(1));
         }
+        if(needUpdate.Length > 0)
+            Services.Homeassistant.Restart();
     }
 
     private void NotifyMeOnDiscord(string title, string message)
