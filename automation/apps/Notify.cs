@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Automation.Enum;
 using Automation.Models.DiscordNotificationModels;
 using static System.Enum;
@@ -8,7 +7,7 @@ namespace Automation.apps;
 public class Notify : INotify
 {
     private readonly Entities _entities;
-    private readonly IServices _services;
+    private readonly Services _services;
     private readonly IHaContext _ha;
     private readonly IDataRepository _storage;
 
@@ -26,7 +25,7 @@ public class Notify : INotify
         var canSendNotification = CanSendNotification(_storage, canAlwaysSendNotification, title, sendAfterMinutes);
         if (!canSendNotification) return;
 
-        SaveNotification(_storage!, title, message);
+        SaveNotification(_storage, title, message);
 
         _entities.MediaPlayer.HeleHuis.VolumeSet(0.4);
 

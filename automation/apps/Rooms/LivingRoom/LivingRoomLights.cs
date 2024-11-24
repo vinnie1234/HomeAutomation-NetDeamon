@@ -49,7 +49,7 @@ public class LivingRoomLights : BaseApp
 
     private void FixLightsDifferentColorWhenTurnOn()
     {
-        Entities.Light.HueFilamentBulb2.WhenTurnsOn(x =>
+        Entities.Light.HueFilamentBulb2.WhenTurnsOn(_ =>
         {
             Scheduler.Schedule(TimeSpan.FromSeconds(10), () =>
             {

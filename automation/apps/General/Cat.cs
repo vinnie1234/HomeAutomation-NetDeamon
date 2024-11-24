@@ -174,25 +174,25 @@ public class Cat : BaseApp
 
     private void SendAlarmWhenStuffIsOff()
     {
-        Entities.Switch.PetsnowyFountainIson.WhenTurnsOff(x =>
+        Entities.Switch.PetsnowyFountainIson.WhenTurnsOff(_ =>
         {
             var discordNotificationModel = new DiscordNotificationModel
             {
                 Embed = new Embed
                 {
-                    Title = "PIXEL ZIJN FOUNTAIN STAAT UIT!!!!",
+                    Title = "PIXEL ZIJN FOUNTAIN STAAT UIT!!!!"
                 }
             };
             Notify.NotifyDiscord("", new[] { _discordPixelChannel }, discordNotificationModel);
         }, 600);
         
-        Entities.Switch.PetsnowyLitterboxAutoClean.WhenTurnsOff(x =>
+        Entities.Switch.PetsnowyLitterboxAutoClean.WhenTurnsOff(_ =>
         {
             var discordNotificationModel = new DiscordNotificationModel
             {
                 Embed = new Embed
                 {
-                    Title = "DE KATTENBAK STAAT UIT!!!!",
+                    Title = "DE KATTENBAK STAAT UIT!!!!"
                 }
             };
             Notify.NotifyDiscord("", new[] { _discordPixelChannel }, discordNotificationModel);

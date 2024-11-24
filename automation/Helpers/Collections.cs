@@ -21,7 +21,7 @@ public static class Collections
             { entities.Sensor.BotA801Battery, "Switchbot" },
             { entities.Sensor.KeukenAfstandbediening, "Keuken afstandbediening" },
             { entities.Sensor.JaapBatteryLevel, "Jaap" },
-            { entities.Sensor.DarkHorseRemainingBattery, "Cowboy" },
+            { entities.Sensor.DarkHorseRemainingBattery, "Cowboy" }
         };
     }
 

@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Automation.Models.DiscordNotificationModels;
 
 namespace Automation.Interfaces;
