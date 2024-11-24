@@ -103,7 +103,7 @@ public class SleepManager : BaseApp
                         Notify.NotifyPhoneVincent("Morgen is het stroom gratis",
                             $"Stroom kost morgen om {model.StartTime} {model.PriceCtPerKwh} cent!", true);
                         break;                    
-                    case > 30:
+                    case > 45:
                         Notify.NotifyPhoneVincent("Morgen is het stroom duur!",
                             $"Stroom kost morgen om {model.StartTime} {model.PriceCtPerKwh} cent!", true);
                         break;
