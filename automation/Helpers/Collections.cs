@@ -45,4 +45,16 @@ public static class Collections
             { entities.Sensor.GangTemperature, "Gang" }
         };
     }
+    
+    public static Dictionary<string,  (string, string)> GetRoombaRooms()
+    {
+        return new Dictionary<string, (string, string)>
+        {
+            { "Kattenbak", ("0", "zid") },
+            { "Bank", ("1", "zid") },
+            { "Slaapkamer", ("2", "rid") },
+            { "Gang", ("4", "rid") },
+            { "Woonkamer", ("3" , "rid") },
+        };
+    }
 }
