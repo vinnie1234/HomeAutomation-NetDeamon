@@ -19,30 +19,33 @@ public class Vacuum : BaseApp
 
     private void StartFromButton()
     {
-        Entities.InputButton.Vacuumcleankattenbak.StateChanges().Subscribe(x =>
+        var buttons = new Dictionary<InputButtonEntity, string>
         {
-            Clean("Kattenbak");
-        });
+            {
+                Entities.InputButton.Vacuumcleankattenbak, "Kattenbak"
+            },
+            {
+                Entities.InputButton.Vacuumcleanbank, "Bank"
+            },
+            {
+                Entities.InputButton.Vacuumcleangang, "Gang"
+            },
+            {
+                Entities.InputButton.Vacuumcleanslaapkamer, "Slaapkamer"
+            },
+            {
+                Entities.InputButton.Vacuumcleanwoonkamer, "Woonkamer"
+            }
+
+        };
         
-        Entities.InputButton.Vacuumcleanbank.StateChanges().Subscribe(x =>
+        foreach (var button in buttons)
         {
-            Clean("Bank");
-        });
-        
-        Entities.InputButton.Vacuumcleangang.StateChanges().Subscribe(x =>
-        {
-            Clean("Gang");
-        });
-        
-        Entities.InputButton.Vacuumcleanslaapkamer.StateChanges().Subscribe(x =>
-        {
-            Clean("Slaapkamer");
-        });
-        
-        Entities.InputButton.Vacuumcleanwoonkamer.StateChanges().Subscribe(x =>
-        {
-            Clean("Woonkamer");
-        });
+            button.Key.StateChanges().Subscribe(x =>
+            {
+                Clean(button.Value);
+            });
+        }
     }
 
     private void CleanLitterBoxAfterUse()
