@@ -40,7 +40,9 @@ public class NetDaemon : BaseApp, IDisposable
         });
     }
     
+#pragma warning disable CA1816
     public void Dispose()
+#pragma warning restore CA1816
     {
         Notify.NotifyDiscord("NetDaemon stopped", new[] { _discordLogChannel });
     }

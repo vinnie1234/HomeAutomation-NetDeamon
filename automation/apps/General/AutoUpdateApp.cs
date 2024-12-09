@@ -25,29 +25,37 @@ public class AutoUpdateApp : BaseApp
     
     private async void AutoUpdate()
     {
-        var needUpdate = _updates.EnumerateAll().Where(u => u.IsOn()).ToArray();
-        if (needUpdate.Length == 0) return;
-
-        var names = string.Join(",", needUpdate.Select(u => u.Attributes?.FriendlyName ?? u.EntityId));
-        NotifyMeOnDiscord("Updates beschikbaar voor", names);
-        
-        foreach (var updateEntity in needUpdate)
+        try
         {
-            Logger.LogInformation($"Start updating {updateEntity.Attributes?.FriendlyName ?? updateEntity.EntityId}");
-            NotifyMeOnDiscord("Updates word geinstaleerd", $"Installeer update voor {updateEntity.Attributes?.FriendlyName ?? updateEntity.EntityId}");
-            
-            updateEntity.Install();
-            
-            Logger.LogInformation($"Ready updating {updateEntity.Attributes?.FriendlyName ?? updateEntity.EntityId}");
-            NotifyMeOnDiscord("Updates is geinstaleeerd",
-                $"Geinstalleerde update voor {updateEntity.Attributes?.FriendlyName ?? updateEntity.EntityId}");
-            await Task.Delay(TimeSpan.FromMinutes(1));
-        }
-        if(needUpdate.Length > 0)
-            Services.Homeassistant.Restart();
+            var needUpdate = _updates.EnumerateAll().Where(u => u.IsOn()).ToArray();
+            if (needUpdate.Length == 0) return;
+
+            var names = string.Join(",", needUpdate.Select(u => u.Attributes?.FriendlyName ?? u.EntityId));
+            NotifyMeOnDiscord("Updates beschikbaar voor", names);
         
-        Entities.InputBoolean.Sleeping.TurnOn();
-        Entities.Light.TurnAllOff();
+            foreach (var updateEntity in needUpdate)
+            {
+                var name = updateEntity.Attributes?.FriendlyName ?? updateEntity.EntityId;
+                Logger.LogInformation("Start updating {name}", name);
+                NotifyMeOnDiscord("Updates word geinstaleerd", $"Installeer update voor {updateEntity.Attributes?.FriendlyName ?? updateEntity.EntityId}");
+            
+                updateEntity.Install();
+            
+                Logger.LogInformation("Ready updating {name}", name);
+                NotifyMeOnDiscord("Updates is geinstaleeerd",
+                    $"Geinstalleerde update voor {updateEntity.Attributes?.FriendlyName ?? updateEntity.EntityId}");
+                await Task.Delay(TimeSpan.FromMinutes(1));
+            }
+            if(needUpdate.Length > 0)
+                Services.Homeassistant.Restart();
+        
+            Entities.InputBoolean.Sleeping.TurnOn();
+            Entities.Light.TurnAllOff();
+        }
+        catch (Exception)
+        {
+            //ignore
+        }
     }
 
     private void NotifyMeOnDiscord(string title, string message)

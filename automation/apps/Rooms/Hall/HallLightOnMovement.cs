@@ -5,7 +5,6 @@ namespace Automation.apps.Rooms.Hall;
 [NetDaemonApp(Id = nameof(HallLightOnMovement))]
 public class HallLightOnMovement : BaseApp
 {
-    private bool IsNighttime => Entities.InputSelect.Housemodeselect.State == "Night";
     private bool IsSleeping => Entities.InputBoolean.Sleeping.IsOn();
     private bool DisableLightAutomations => Entities.InputBoolean.Disablelightautomationhall.IsOn();
 

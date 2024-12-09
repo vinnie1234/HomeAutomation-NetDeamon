@@ -1,4 +1,3 @@
-/*
 using System.Reactive.Concurrency;
 using System.Text.RegularExpressions;
 using Automation.Helpers;
@@ -39,7 +38,6 @@ public partial class DownloadMonitoring : BaseApp
             if (feed.Attributes?.Entries != null)
             {
                 var discordChannel = ConfigManager.GetValueFromConfigNested("Discord", "Yts") ?? "";
-                var logChannel = ConfigManager.GetValueFromConfigNested("Discord", "Logs") ?? "";
 
                 var items = feed.Attributes?.Entries!.Cast<JsonElement>()
                     .Select(o => o.Deserialize<Yts>()).ToList();
@@ -82,14 +80,6 @@ public partial class DownloadMonitoring : BaseApp
                                  Urls = new[] { downloadLink }
                              })
                     {
-                        //Check Martin
-                        if(discordModel?.Embed?.Title != null && (discordModel.Embed.Title.ToLower().Contains("a difficult year", StringComparison.CurrentCultureIgnoreCase) || 
-                                                                  discordModel.Embed.Title.ToLower().Contains("Neem me mee", StringComparison.CurrentCultureIgnoreCase) || 
-                                                                  discordModel.Embed.Title.Contains("une année difficile", StringComparison.CurrentCultureIgnoreCase) || 
-                                                                  discordModel.Embed.Title.Contains("une annee difficile", StringComparison.CurrentCultureIgnoreCase)
-                                                                  ))
-                            notify.NotifyDiscord("Martin :) ", new[] { logChannel }, discordModel);
-                        
                         notify.NotifyDiscord("", new[] { discordChannel }, discordModel);
                     }
 
@@ -120,4 +110,4 @@ public partial class DownloadMonitoring : BaseApp
 
     [GeneratedRegex("(Runtime:)(.+?)(?=<)", RegexOptions.IgnoreCase | RegexOptions.Singleline, "en-NL")]
     private static partial Regex RuntimeRegex();
-} */
+}

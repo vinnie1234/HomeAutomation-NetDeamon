@@ -58,7 +58,7 @@ public class BathRoomLights : BaseApp
         if (isOn)
         {
             Entities.MediaPlayer.Googlehome0351.VolumeSet(0.40);
-            Services.Spotcast.Start(entityId: Entities.MediaPlayer.Googlehome0351.EntityId);
+            Services.Spotcast.Start(entityId: Entities.MediaPlayer.Googlehome0351.EntityId, startVolume: 50);
             Entities.Light.BadkamerSpiegel.TurnOn(brightnessPct: 100);
             Entities.Light.PlafondBadkamer.TurnOn(brightnessPct: 100);
             Entities.Cover.Rollerblind0003.CloseCover();
@@ -149,7 +149,7 @@ public class BathRoomLights : BaseApp
                 if (!IsDouching)
                 {
                     Entities.MediaPlayer.Googlehome0351.VolumeSet(0.15);
-                    Services.Spotcast.Start(entityId: Entities.MediaPlayer.Googlehome0351.EntityId);
+                    Services.Spotcast.Start(entityId: Entities.MediaPlayer.Googlehome0351.EntityId, startVolume: 50);
                     Entities.MediaPlayer.Googlehome0351.MediaPlay();
                 }
             });

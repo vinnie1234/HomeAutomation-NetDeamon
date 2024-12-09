@@ -54,7 +54,7 @@ public static class Collections
             { "Bank", ("1", "zid") },
             { "Slaapkamer", ("2", "rid") },
             { "Gang", ("4", "rid") },
-            { "Woonkamer", ("3" , "rid") },
+            { "Woonkamer", ("3" , "rid") }
         };
     }
 }

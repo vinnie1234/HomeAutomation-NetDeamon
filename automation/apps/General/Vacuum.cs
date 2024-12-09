@@ -41,7 +41,7 @@ public class Vacuum : BaseApp
         
         foreach (var button in buttons)
         {
-            button.Key.StateChanges().Subscribe(x =>
+            button.Key.StateChanges().Subscribe(_ =>
             {
                 Clean(button.Value);
             });

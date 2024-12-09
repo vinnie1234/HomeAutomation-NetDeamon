@@ -128,11 +128,4 @@ public class AwayManager : BaseApp
                 new(action: "TURNONTV", title: "TV Aanzetten", func: () => { Entities.MediaPlayer.Tv.TurnOn(); })
             });
     }
-
-    // ReSharper disable once UnusedMember.Local
-    private void HandleVacuumCleaner()
-    {
-        //todo, still need to build
-        throw new NotImplementedException();
-    }
 }
