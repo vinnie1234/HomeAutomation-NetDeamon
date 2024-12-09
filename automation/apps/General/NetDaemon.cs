@@ -36,7 +36,7 @@ public class NetDaemon : BaseApp, IDisposable
             Notify.NotifyHouse("Het huis wordt opnieuw opgestart", "Het huis wordt opnieuw opgestart", true);
             
             Thread.Sleep(TimeSpan.FromSeconds(5));
-            Services.Hassio.AddonRestart("c6a2317c_netdaemon4");
+            Services.Hassio.AddonRestart("c6a2317c_netdaemon5");
         });
     }
     
