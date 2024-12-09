@@ -59,6 +59,15 @@ public class Vacuum : BaseApp
                 {
                     Clean("Kattenbak");
                 }
+                else
+                {
+                    Entities.InputBoolean.Sleeping
+                        .StateChanges()
+                        .Where(x => x.New.IsOff()).Subscribe(_ =>
+                        {
+                            Clean("Kattenbak");
+                        });
+                }
             });
     }
     
