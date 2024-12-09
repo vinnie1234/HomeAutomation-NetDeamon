@@ -48,9 +48,6 @@ public class AutoUpdateApp : BaseApp
             }
             if(needUpdate.Length > 0)
                 Services.Homeassistant.Restart();
-        
-            Entities.InputBoolean.Sleeping.TurnOn();
-            Entities.Light.TurnAllOff();
         }
         catch (Exception)
         {
