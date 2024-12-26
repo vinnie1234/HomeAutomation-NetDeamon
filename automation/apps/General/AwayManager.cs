@@ -105,7 +105,7 @@ public class AwayManager : BaseApp
 
         if (_backHome)
         {
-            NotifyVincentHome(houseState);
+            NotifyVincentPhone(houseState);
 
             SetLightScene(houseState);
 
@@ -151,7 +151,7 @@ public class AwayManager : BaseApp
     /// Sends a notification to Vincent when he comes home.
     /// </summary>
     /// <param name="houseState">The current state of the house.</param>
-    private void NotifyVincentHome(HouseState houseState)
+    private void NotifyVincentPhone(HouseState houseState)
     {
         Notify.NotifyPhoneVincent("Welkom thuis Vincent",
             $"De huis status is nu: {houseState}. Je lampen worden voor je ingesteld.",
