@@ -57,7 +57,9 @@ public class AutoUpdateApp : BaseApp
                 NotifyMeOnDiscord("Updates is geinstaleerd", $"Geinstalleerde update voor {name}");
                 await Task.Delay(TimeSpan.FromMinutes(1));
             }
-            Services.Homeassistant.Restart();
+
+            NotifyVincentPhone(needUpdate.Length);
+
         }
         catch (Exception)
         {
@@ -84,5 +86,20 @@ public class AutoUpdateApp : BaseApp
         };
 
         Notify.NotifyDiscord("", new[] { _discordUpdateChannel }, discordNotificationModel);
+    }
+    
+    /// <summary>
+    /// Sends a notification to Vincent's phone about the updates performed.
+    /// </summary>
+    /// <param name="totalUpdates">The total number of updates performed.</param>
+    private void NotifyVincentPhone(int totalUpdates)
+    {
+        Notify.NotifyPhoneVincent("Updates uitgevoerd",
+            $"Er zijn {totalUpdates} updates uitgevoerd op de Home Assistant", 
+            true,
+            action: new List<ActionModel>
+            {
+                new(action: "REBOOTHOUSE", title: "Huis opnieuw opstarten", func: () => { Services.Homeassistant.Restart(); })
+            });
     }
 }
