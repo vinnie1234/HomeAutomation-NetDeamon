@@ -5,9 +5,23 @@ namespace Automation.apps.Rooms.Hall;
 [NetDaemonApp(Id = nameof(HallLightOnMovement))]
 public class HallLightOnMovement : BaseApp
 {
+    /// <summary>
+    /// Gets a value indicating whether the system is in sleeping mode.
+    /// </summary>
     private bool IsSleeping => Entities.InputBoolean.Sleeping.IsOn();
+
+    /// <summary>
+    /// Gets a value indicating whether light automations are disabled.
+    /// </summary>
     private bool DisableLightAutomations => Entities.InputBoolean.Disablelightautomationhall.IsOn();
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HallLightOnMovement"/> class.
+    /// </summary>
+    /// <param name="ha">The Home Assistant context.</param>
+    /// <param name="logger">The logger instance.</param>
+    /// <param name="notify">The notification service.</param>
+    /// <param name="scheduler">The scheduler for cron jobs.</param>
     public HallLightOnMovement(
         IHaContext ha,
         ILogger<HallLightOnMovement> logger,
@@ -24,6 +38,9 @@ public class HallLightOnMovement : BaseApp
         });
     }
 
+    /// <summary>
+    /// Initializes the light automation based on motion sensor state changes.
+    /// </summary>
     private void InitializeLights()
     {
         Entities.BinarySensor.GangMotion
@@ -38,6 +55,10 @@ public class HallLightOnMovement : BaseApp
             .Subscribe(_ => ChangeLight(false));
     }
 
+    /// <summary>
+    /// Gets the brightness level based on the sleeping state.
+    /// </summary>
+    /// <returns>The brightness level.</returns>
     private int GetBrightness()
     {
         return IsSleeping switch
@@ -47,6 +68,10 @@ public class HallLightOnMovement : BaseApp
         };
     }
 
+    /// <summary>
+    /// Gets the state time based on the sleeping state.
+    /// </summary>
+    /// <returns>The state time in minutes.</returns>
     private int GetStateTime()
     {
         return IsSleeping switch
@@ -56,6 +81,11 @@ public class HallLightOnMovement : BaseApp
         };
     }
 
+    /// <summary>
+    /// Changes the state of the lights.
+    /// </summary>
+    /// <param name="on">A value indicating whether to turn the lights on or off.</param>
+    /// <param name="brightnessPct">The brightness percentage.</param>
     private void ChangeLight(bool on, int brightnessPct = 0)
     {
         switch (on)
@@ -77,6 +107,10 @@ public class HallLightOnMovement : BaseApp
         }
     }
 
+    /// <summary>
+    /// Handles the switch events for the hall lights.
+    /// </summary>
+    /// <param name="eventModel">The event model containing the switch event data.</param>
     private void OverwriteSwitch(EventModel eventModel)
     {
         const string hueSwitchBathroomId = "4339833970e35ff10c568a94b59e50dd";

@@ -3,15 +3,27 @@ using Automation.Enum;
 
 namespace Automation.Extensions;
 
+/// <summary>
+/// Provides extension methods for light entities.
+/// </summary>
 public static class LightExtension
 {
+    /// <summary>
+    /// Turns off all lights except specified ones.
+    /// </summary>
+    /// <param name="lightEntities">The light entities to turn off.</param>
     public static void TurnAllOff(this LightEntities lightEntities)
     {
         lightEntities.EnumerateAll()
             .Where(x => x.EntityId is not "light.rt_ax88u_led" and not "light.tradfri_driver")
             .TurnOff(transition: 5);
     }
-    
+
+    /// <summary>
+    /// Turns on the lights in the living room with a specific brightness and color temperature.
+    /// </summary>
+    /// <param name="entities">The entities to control.</param>
+    /// <param name="scheduler">The scheduler to use for timing operations.</param>
     public static void TurnOnLightsWoonkamer(IEntities entities, IScheduler scheduler)
     {
         entities.Light.HueFilamentBulb2.TurnOn(brightnessPct: 100, kelvin: GetColorTemp(entities));
@@ -33,7 +45,12 @@ public static class LightExtension
             entities.Light.HueFilamentBulb1.TurnOn(kelvin: GetColorTemp(entities));
         });
     }
-    
+
+    /// <summary>
+    /// Turns off the lights in the living room.
+    /// </summary>
+    /// <param name="entities">The entities to control.</param>
+    /// <param name="scheduler">The scheduler to use for timing operations.</param>
     public static void TurnOffLightsWoonkamer(IEntities entities, IScheduler scheduler)
     {
         entities.Light.HueFilamentBulb1.TurnOff();
@@ -55,7 +72,12 @@ public static class LightExtension
             entities.Light.HueFilamentBulb2.TurnOff();
         });
     }
-    
+
+    /// <summary>
+    /// Gets the color temperature based on the current house state.
+    /// </summary>
+    /// <param name="entities">The entities to use for determining the house state.</param>
+    /// <returns>The color temperature in kelvin.</returns>
     private static int GetColorTemp(IEntities entities)
     {
         var houseState = Globals.GetHouseState(entities);
@@ -71,5 +93,4 @@ public static class LightExtension
                 _                                              => someColor   // Some Color
             };
     }
-    
 }

@@ -7,10 +7,23 @@ namespace Automation.apps.Rooms.LivingRoom;
 [NetDaemonApp(Id = nameof(Tv))]
 public class Tv : BaseApp
 {
+    /// <summary>
+    /// Gets a value indicating whether the system is in working mode.
+    /// </summary>
     private bool IsWorking => Entities.InputBoolean.Working.IsOn();
 
+    /// <summary>
+    /// Gets a value indicating whether light automations are disabled.
+    /// </summary>
     private bool DisableLightAutomations => Entities.InputBoolean.Disablelightautomationlivingroom.IsOn();
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Tv"/> class.
+    /// </summary>
+    /// <param name="ha">The Home Assistant context.</param>
+    /// <param name="logger">The logger instance.</param>
+    /// <param name="notify">The notification service.</param>
+    /// <param name="scheduler">The scheduler for cron jobs.</param>
     public Tv(
         IHaContext ha,
         ILogger<Tv> logger,
@@ -20,8 +33,8 @@ public class Tv : BaseApp
     {
         Entities.MediaPlayer.Tv.WhenTurnsOn(_ => MovieTime());
         Entities.MediaPlayer.Tv.WhenTurnsOff(_ => LetThereBeLight());
-        
-        //Green is broken, red is always good
+
+        // Green is broken, red is always good
         Entities.Light.Bank
             .StateAllChanges()
             .Where(x => x.New.IsOn())
@@ -31,12 +44,15 @@ public class Tv : BaseApp
             });
     }
 
+    /// <summary>
+    /// Handles the actions to be performed when the TV is turned off.
+    /// </summary>
     private void LetThereBeLight()
     {
         Logger.LogDebug("TV Turned off");
 
         if (DisableLightAutomations) return;
-        
+
         switch (GetHouseState(Entities))
         {
             case HouseState.Morning:
@@ -62,6 +78,9 @@ public class Tv : BaseApp
         if (IsWorking) Entities.Light.Plafond.TurnOn();
     }
 
+    /// <summary>
+    /// Handles the actions to be performed when the TV is turned on.
+    /// </summary>
     private void MovieTime()
     {
         Logger.LogDebug("TV Turned on");

@@ -5,11 +5,33 @@ namespace Automation.apps.Rooms.BathRoom;
 [NetDaemonApp(Id = nameof(BathRoomLights))]
 public class BathRoomLights : BaseApp
 {
+    /// <summary>
+    /// Gets a value indicating whether it is nighttime.
+    /// </summary>
     private bool IsNighttime => Entities.InputSelect.Housemodeselect.State == "Night";
+
+    /// <summary>
+    /// Gets a value indicating whether the system is in sleeping mode.
+    /// </summary>
     private bool IsSleeping => Entities.InputBoolean.Sleeping.IsOn();
+
+    /// <summary>
+    /// Gets a value indicating whether light automations are disabled.
+    /// </summary>
     private bool DisableLightAutomations => Entities.InputBoolean.Disablelightautomationbathroom.IsOn();
+
+    /// <summary>
+    /// Gets a value indicating whether the shower is in use.
+    /// </summary>
     private bool IsDouching => Entities.InputBoolean.Douchen.IsOn();
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BathRoomLights"/> class.
+    /// </summary>
+    /// <param name="ha">The Home Assistant context.</param>
+    /// <param name="logger">The logger instance.</param>
+    /// <param name="notify">The notification service.</param>
+    /// <param name="scheduler">The scheduler for cron jobs.</param>
     public BathRoomLights(
         IHaContext ha,
         ILogger<BathRoomLights> logger,
@@ -27,6 +49,9 @@ public class BathRoomLights : BaseApp
         ToothbrushHandler();
     }
 
+    /// <summary>
+    /// Initializes the light automation based on motion sensor state changes.
+    /// </summary>
     private void InitializeLights()
     {
         Entities.BinarySensor.BadkamerMotion
@@ -53,6 +78,10 @@ public class BathRoomLights : BaseApp
             .Subscribe(x => DouchingAutomation(x.New.IsOn()));
     }
 
+    /// <summary>
+    /// Handles the automation when the shower is in use.
+    /// </summary>
+    /// <param name="isOn">A value indicating whether the shower is in use.</param>
     private void DouchingAutomation(bool isOn)
     {
         if (isOn)
@@ -85,6 +114,10 @@ public class BathRoomLights : BaseApp
         }
     }
 
+    /// <summary>
+    /// Gets the brightness level based on the sleeping state.
+    /// </summary>
+    /// <returns>The brightness level.</returns>
     private int GetBrightness()
     {
         return IsSleeping switch
@@ -94,6 +127,11 @@ public class BathRoomLights : BaseApp
         };
     }
 
+    /// <summary>
+    /// Changes the state of the lights.
+    /// </summary>
+    /// <param name="on">A value indicating whether to turn the lights on or off.</param>
+    /// <param name="brightnessPct">The brightness percentage.</param>
     private void ChangeLight(bool on, int brightnessPct = 0)
     {
         switch (on)
@@ -109,6 +147,10 @@ public class BathRoomLights : BaseApp
         }
     }
 
+    /// <summary>
+    /// Handles the switch events for the bathroom lights.
+    /// </summary>
+    /// <param name="eventModel">The event model containing the switch event data.</param>
     private void OverwriteSwitch(EventModel eventModel)
     {
         const string hueSwitchBathroomId = "3dcab87acc97379282b359fdf3557a52";
@@ -139,6 +181,9 @@ public class BathRoomLights : BaseApp
             }
     }
 
+    /// <summary>
+    /// Handles the automation for the toothbrush state changes.
+    /// </summary>
     private void ToothbrushHandler()
     {
         Entities.Sensor.SmartSeries400097aeToothbrushState

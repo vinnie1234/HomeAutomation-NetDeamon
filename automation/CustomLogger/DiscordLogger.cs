@@ -7,6 +7,9 @@ using Color = Discord.Color;
 
 namespace Automation.CustomLogger;
 
+/// <summary>
+/// A custom logger that sends log events to a Discord channel using webhooks.
+/// </summary>
 public class DiscordLogger : ILogEventSink
 {
     private readonly IFormatProvider? _formatProvider;
@@ -18,6 +21,11 @@ public class DiscordLogger : ILogEventSink
     private static readonly string WebhookUrlError = ConfigManager.GetValueFromConfigNested("NetDaemonLogging", "Error") ?? throw new InvalidOperationException();
     private static readonly string WebhookUrlException = ConfigManager.GetValueFromConfigNested("NetDaemonLogging", "Exception") ?? throw new InvalidOperationException();
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DiscordLogger"/> class.
+    /// </summary>
+    /// <param name="formatProvider">The format provider for formatting log messages.</param>
+    /// <param name="restrictedToMinimumLevel">The minimum log event level to log.</param>
     public DiscordLogger(
         IFormatProvider? formatProvider,
         LogEventLevel restrictedToMinimumLevel = LogEventLevel.Information)
@@ -26,19 +34,26 @@ public class DiscordLogger : ILogEventSink
         _restrictedToMinimumLevel = restrictedToMinimumLevel;
     }
 
+    /// <summary>
+    /// Emits a log event to the Discord channel.
+    /// </summary>
+    /// <param name="logEvent">The log event to emit.</param>
     public void Emit(LogEvent logEvent)
     {
         SendMessage(logEvent);
     }
 
+    /// <summary>
+    /// Sends a log event message to the Discord channel.
+    /// </summary>
+    /// <param name="logEvent">The log event to send.</param>
     private void SendMessage(LogEvent logEvent)
     {
         if (!ShouldLogMessage(_restrictedToMinimumLevel, logEvent.Level))
             return;
 
-
         var embedBuilder = new EmbedBuilder();
-            
+
         try
         {
             if (logEvent.Exception != null)
@@ -73,7 +88,6 @@ public class DiscordLogger : ILogEventSink
                     .GetResult();
             }
         }
-
         catch (Exception ex)
         {
             var webHook = new DiscordWebhookClient(GetWebhookUrl());
@@ -84,7 +98,12 @@ public class DiscordLogger : ILogEventSink
         }
     }
 
-    private static void SpecifyEmbedLevel(LogEventLevel level, EmbedBuilder  embed)
+    /// <summary>
+    /// Specifies the embed level for the log event.
+    /// </summary>
+    /// <param name="level">The log event level.</param>
+    /// <param name="embed">The embed builder to configure.</param>
+    private static void SpecifyEmbedLevel(LogEventLevel level, EmbedBuilder embed)
     {
         switch (level)
         {
@@ -106,7 +125,7 @@ public class DiscordLogger : ILogEventSink
                 break;
             case LogEventLevel.Error:
                 embed.Title = ":x: Error";
-                embed.Color =  new Color(255, 0, 0);
+                embed.Color = new Color(255, 0, 0);
                 break;
             case LogEventLevel.Fatal:
                 embed.Title = ":skull_crossbones: Fatal";
@@ -117,6 +136,12 @@ public class DiscordLogger : ILogEventSink
         }
     }
 
+    /// <summary>
+    /// Formats a message to a specified maximum length.
+    /// </summary>
+    /// <param name="message">The message to format.</param>
+    /// <param name="maxLength">The maximum length of the message.</param>
+    /// <returns>The formatted message.</returns>
     private static string FormatMessage(string message, int maxLength)
     {
         if (message.Length > maxLength)
@@ -128,11 +153,22 @@ public class DiscordLogger : ILogEventSink
         return message;
     }
 
+    /// <summary>
+    /// Determines whether a log message should be logged based on the minimum log event level.
+    /// </summary>
+    /// <param name="minimumLogEventLevel">The minimum log event level.</param>
+    /// <param name="messageLogEventLevel">The log event level of the message.</param>
+    /// <returns>True if the message should be logged; otherwise, false.</returns>
     private static bool ShouldLogMessage(
         LogEventLevel minimumLogEventLevel,
         LogEventLevel messageLogEventLevel) =>
         (int)messageLogEventLevel >= (int)minimumLogEventLevel;
 
+    /// <summary>
+    /// Gets the webhook URL for a specific log event level.
+    /// </summary>
+    /// <param name="level">The log event level.</param>
+    /// <returns>The webhook URL.</returns>
     private static string GetWebhookUrl(LogEventLevel? level = null)
     {
         return level switch

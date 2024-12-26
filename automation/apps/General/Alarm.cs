@@ -7,12 +7,27 @@ using NetDaemon.Client.HomeAssistant.Extensions;
 
 namespace Automation.apps.General;
 
+/// <summary>
+/// Represents the Alarm application that monitors various sensors and triggers notifications based on specific conditions.
+/// </summary>
 [NetDaemonApp(Id = nameof(Alarm))]
 public class Alarm : BaseApp
 {
+    /// <summary>
+    /// Gets a value indicating whether the system is in sleeping mode.
+    /// </summary>
     private bool IsSleeping => Entities.InputBoolean.Sleeping.IsOn();
+
     private readonly string _discordLogChannel = ConfigManager.GetValueFromConfigNested("Discord", "Logs") ?? "";
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Alarm"/> class.
+    /// </summary>
+    /// <param name="ha">The Home Assistant context.</param>
+    /// <param name="logger">The logger instance.</param>
+    /// <param name="notify">The notification service.</param>
+    /// <param name="scheduler">The scheduler for timed tasks.</param>
+    /// <param name="homeAssistantConnection">The Home Assistant connection.</param>
     public Alarm(
         IHaContext ha,
         ILogger<Alarm> logger,
@@ -37,7 +52,10 @@ public class Alarm : BaseApp
                     vibrationPattern: "100, 1000, 100, 1000, 100");
         });
     }
-    
+
+    /// <summary>
+    /// Checks the traffic to work and sends a notification if the travel time exceeds the threshold.
+    /// </summary>
     private void TrafficToWorkCheck()
     {
         Scheduler.ScheduleCron("50 7 * * 4,5", () =>
@@ -62,6 +80,9 @@ public class Alarm : BaseApp
         });
     }
 
+    /// <summary>
+    /// Checks the temperature and sends a notification if it exceeds the threshold.
+    /// </summary>
     private void TemperatureCheck()
     {
         foreach (var temperatureSensor in Collections.GetAllTemperatureSensors(Entities))
@@ -73,6 +94,9 @@ public class Alarm : BaseApp
                     vibrationPattern: "100, 1000, 100, 1000, 100"));
     }
 
+    /// <summary>
+    /// Checks the energy consumption and sends a notification if it exceeds the threshold for a specified duration.
+    /// </summary>
     private void EnergyCheck()
     {
         Entities.Sensor.P1Meter3c39e72a64e8ActivePower
@@ -94,6 +118,9 @@ public class Alarm : BaseApp
             );
     }
 
+    /// <summary>
+    /// Schedules a daily check for garbage collection and sends a reminder notification.
+    /// </summary>
     private void GarbageCheck()
     {
         Scheduler.ScheduleCron("00 22 * * *", () =>
@@ -105,6 +132,9 @@ public class Alarm : BaseApp
         });
     }
 
+    /// <summary>
+    /// Schedules a daily check for PetSnowy errors and sends a notification if any errors are found.
+    /// </summary>
     private void PetSnowyCheck()
     {
         Scheduler.ScheduleCron("00 22 * * *", () =>
@@ -136,6 +166,10 @@ public class Alarm : BaseApp
         });
     }
 
+    /// <summary>
+    /// Checks the connection to Home Assistant and sends a notification if the connection is lost.
+    /// </summary>
+    /// <param name="homeAssistantConnection">The Home Assistant connection.</param>
     private void HaChecks(IHomeAssistantConnection homeAssistantConnection)
     {
         Scheduler.RunEvery(TimeSpan.FromSeconds(30), DateTimeOffset.Now, () =>
@@ -151,6 +185,9 @@ public class Alarm : BaseApp
         });
     }
 
+    /// <summary>
+    /// Checks the energy price and sends a notification if it becomes negative.
+    /// </summary>
     private void EnergyNegativeCheck()
     {
         Entities.Sensor.Energykwhnetpriceincents
@@ -166,6 +203,9 @@ public class Alarm : BaseApp
             });
     }
 
+    /// <summary>
+    /// Schedules a daily check for backups and sends a notification if no recent backups are found.
+    /// </summary>
     private void BackUpCheck()
     {
         Scheduler.ScheduleCron("00 22 * * *", () =>

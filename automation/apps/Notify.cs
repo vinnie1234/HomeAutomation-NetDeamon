@@ -4,6 +4,9 @@ using static System.Enum;
 
 namespace Automation.apps;
 
+/// <summary>
+/// Provides notification services for the home automation system.
+/// </summary>
 public class Notify : INotify
 {
     private readonly Entities _entities;
@@ -11,6 +14,11 @@ public class Notify : INotify
     private readonly IHaContext _ha;
     private readonly IDataRepository _storage;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Notify"/> class.
+    /// </summary>
+    /// <param name="ha">The Home Assistant context.</param>
+    /// <param name="storage">The data repository for storing notification history.</param>
     public Notify(IHaContext ha, IDataRepository storage)
     {
         _ha = ha;
@@ -19,6 +27,13 @@ public class Notify : INotify
         _services = new Services(ha);
     }
 
+    /// <summary>
+    /// Sends a notification to the house.
+    /// </summary>
+    /// <param name="title">The title of the notification.</param>
+    /// <param name="message">The message of the notification.</param>
+    /// <param name="canAlwaysSendNotification">Indicates whether the notification can always be sent.</param>
+    /// <param name="sendAfterMinutes">The delay in minutes after which the notification can be sent again.</param>
     public void NotifyHouse(string title, string message, bool canAlwaysSendNotification,
         double? sendAfterMinutes = null)
     {
@@ -32,6 +47,17 @@ public class Notify : INotify
         _services.Tts.CloudSay(_entities.MediaPlayer.HeleHuis.EntityId, message);
     }
 
+    /// <summary>
+    /// Sends a notification to Vincent's phone.
+    /// </summary>
+    /// <param name="title">The title of the notification.</param>
+    /// <param name="message">The message of the notification.</param>
+    /// <param name="canAlwaysSendNotification">Indicates whether the notification can always be sent.</param>
+    /// <param name="sendAfterMinutes">The delay in minutes after which the notification can be sent again.</param>
+    /// <param name="action">The list of actions associated with the notification.</param>
+    /// <param name="image">The image URL for the notification.</param>
+    /// <param name="channel">The notification channel.</param>
+    /// <param name="vibrationPattern">The vibration pattern for the notification.</param>
     public void NotifyPhoneVincent(
         string title,
         string message,
@@ -52,6 +78,13 @@ public class Notify : INotify
             { Title = title, Message = message, Data = data });
     }
 
+    /// <summary>
+    /// Sends a TTS notification to Vincent's phone.
+    /// </summary>
+    /// <param name="title">The title of the notification.</param>
+    /// <param name="message">The message of the notification.</param>
+    /// <param name="canAlwaysSendNotification">Indicates whether the notification can always be sent.</param>
+    /// <param name="sendAfterMinutes">The delay in minutes after which the notification can be sent again.</param>
     public void NotifyPhoneVincentTts(string title, string message, bool canAlwaysSendNotification,
         double? sendAfterMinutes = null)
     {
@@ -65,6 +98,10 @@ public class Notify : INotify
             { Message = "TTS", Data = data });
     }
 
+    /// <summary>
+    /// Resets the notification history for a specific notification title.
+    /// </summary>
+    /// <param name="title">The title of the notification to reset.</param>
     public void ResetNotificationHistoryForNotificationTitle(string title)
     {
         var oldData = _storage.Get<List<NotificationModel>>("notificationHistory") ?? new List<NotificationModel>();
@@ -74,23 +111,38 @@ public class Notify : INotify
         _storage.Save("notificationHistory", oldData);
     }
 
+    /// <summary>
+    /// Sends a notification to Discord.
+    /// </summary>
+    /// <param name="message">The message of the notification.</param>
+    /// <param name="target">The target channels for the notification.</param>
+    /// <param name="data">Additional data for the notification.</param>
     public void NotifyDiscord(string message, string[] target, DiscordNotificationModel? data = null)
     {
         _services.Notify.DiscordHomeassistant(message, "", target, data);
     }
 
+    /// <summary>
+    /// Sends music to the home media player.
+    /// </summary>
+    /// <param name="mediaContentId">The media content ID.</param>
+    /// <param name="volume">The volume level.</param>
     public void SendMusicToHome(string mediaContentId, double volume = 0.5)
     {
-        
         _entities.MediaPlayer.HeleHuis.PlayMedia(new MediaPlayerPlayMediaParameters
         {
             MediaContentId = mediaContentId,
             MediaContentType = "music"
         });
-        
+
         _entities.MediaPlayer.HeleHuis.VolumeSet(volume);
     }
 
+    /// <summary>
+    /// Subscribes to a notification action.
+    /// </summary>
+    /// <param name="func">The action to perform.</param>
+    /// <param name="key">The key for the action.</param>
     private void SubscribeToNotificationAction(Action func, string key)
     {
         _ha.Events.Where(x => x.EventType == "mobile_app_notification_action")
@@ -101,6 +153,17 @@ public class Notify : INotify
             });
     }
 
+    /// <summary>
+    /// Constructs the data for a notification.
+    /// </summary>
+    /// <param name="actions">The list of actions associated with the notification.</param>
+    /// <param name="tts">Indicates whether the notification is a TTS notification.</param>
+    /// <param name="priority">The priority of the notification.</param>
+    /// <param name="phoneMessage">The phone message for the notification.</param>
+    /// <param name="image">The image URL for the notification.</param>
+    /// <param name="channel">The notification channel.</param>
+    /// <param name="vibrationPattern">The vibration pattern for the notification.</param>
+    /// <returns>The constructed notification data.</returns>
     private RecordNotifyData ConstructData(List<ActionModel>? actions = null,
         bool tts = false,
         NotifyPriority priority = NotifyPriority.High,
@@ -131,7 +194,7 @@ public class Notify : INotify
         if (actions != null)
         {
             if (actions.Count > 3) throw new ArgumentException("To many actions");
-            
+
             foreach (var action in actions.Where(action => action.Func != null))
             {
                 action.Action = $"{action.Action}-{Guid.NewGuid().ToString()}";
@@ -145,6 +208,14 @@ public class Notify : INotify
         return data;
     }
 
+    /// <summary>
+    /// Determines whether a notification can be sent.
+    /// </summary>
+    /// <param name="storage">The data repository for storing notification history.</param>
+    /// <param name="canAlwaysSend">Indicates whether the notification can always be sent.</param>
+    /// <param name="title">The title of the notification.</param>
+    /// <param name="sendAfterMinutes">The delay in minutes after which the notification can be sent again.</param>
+    /// <returns>True if the notification can be sent; otherwise, false.</returns>
     private static bool CanSendNotification(IDataRepository storage, bool canAlwaysSend, string title,
         double? sendAfterMinutes)
     {
@@ -156,6 +227,12 @@ public class Notify : INotify
         return DateTimeOffset.Now.AddMinutes((double)sendAfterMinutes) >= (notification?.LastSendNotification ?? DateTime.Now.AddDays(-1000));
     }
 
+    /// <summary>
+    /// Saves a notification to the notification history.
+    /// </summary>
+    /// <param name="storage">The data repository for storing notification history.</param>
+    /// <param name="title">The title of the notification.</param>
+    /// <param name="message">The message of the notification.</param>
     private static void SaveNotification(IDataRepository storage, string title, string message)
     {
         var oldData = storage.Get<List<NotificationModel>>("notificationHistory") ?? new List<NotificationModel>();
@@ -168,6 +245,12 @@ public class Notify : INotify
         storage.Save("notificationHistory", oldData);
     }
 
+    /// <summary>
+    /// Gets the last notification for a specific title.
+    /// </summary>
+    /// <param name="storage">The data repository for storing notification history.</param>
+    /// <param name="title">The title of the notification.</param>
+    /// <returns>The last notification model for the specified title.</returns>
     private static NotificationModel? GetLastNotification(IDataRepository storage, string title)
     {
         var oldData = storage.Get<List<NotificationModel>>("notificationHistory") ?? new List<NotificationModel>();

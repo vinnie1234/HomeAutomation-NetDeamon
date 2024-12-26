@@ -1,7 +1,15 @@
 namespace Automation.Helpers;
 
+/// <summary>
+/// Provides helper methods for working with collections of entities.
+/// </summary>
 public static class Collections
 {
+    /// <summary>
+    /// Gets a dictionary of all battery sensors with their corresponding descriptions.
+    /// </summary>
+    /// <param name="entities">The entities to retrieve the battery sensors from.</param>
+    /// <returns>A dictionary where the key is a <see cref="NumericSensorEntity"/> and the value is a description string.</returns>
     public static Dictionary<NumericSensorEntity, string> GetAllBattySensors(Entities entities)
     {
         return new Dictionary<NumericSensorEntity, string>
@@ -25,6 +33,11 @@ public static class Collections
         };
     }
 
+    /// <summary>
+    /// Gets a dictionary of feed times with their corresponding feed amounts.
+    /// </summary>
+    /// <param name="entities">The entities to retrieve the feed times from.</param>
+    /// <returns>A dictionary where the key is an <see cref="InputDatetimeEntity"/> and the value is an <see cref="InputNumberEntity"/>.</returns>
     public static Dictionary<InputDatetimeEntity, InputNumberEntity> GetFeedTimes(Entities entities)
     {
         return new Dictionary<InputDatetimeEntity, InputNumberEntity>
@@ -36,6 +49,11 @@ public static class Collections
         };
     }
 
+    /// <summary>
+    /// Gets a dictionary of all temperature sensors with their corresponding descriptions.
+    /// </summary>
+    /// <param name="entities">The entities to retrieve the temperature sensors from.</param>
+    /// <returns>A dictionary where the key is a <see cref="NumericSensorEntity"/> and the value is a description string.</returns>
     public static Dictionary<NumericSensorEntity, string> GetAllTemperatureSensors(Entities entities)
     {
         return new Dictionary<NumericSensorEntity, string>
@@ -46,6 +64,10 @@ public static class Collections
         };
     }
     
+    /// <summary>
+    /// Gets a dictionary of Roomba rooms with their corresponding identifiers.
+    /// </summary>
+    /// <returns>A dictionary where the key is a room name and the value is a tuple containing two strings representing the room identifiers.</returns>
     public static Dictionary<string,  (string, string)> GetRoombaRooms()
     {
         return new Dictionary<string, (string, string)>

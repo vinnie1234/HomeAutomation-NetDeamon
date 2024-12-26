@@ -2,13 +2,27 @@ using System.Reactive.Concurrency;
 
 namespace Automation.apps.General;
 
+/// <summary>
+/// Represents an application that handles the reset logic for alarms and lights.
+/// </summary>
 [NetDaemonApp(Id = nameof(Reset))]
 public class Reset : BaseApp
 {
     private readonly IDataRepository _storage;
 
+    /// <summary>
+    /// Gets or sets the list of light entity states.
+    /// </summary>
     private List<LightStateModel>? LightEntitiesStates { get; set; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Reset"/> class.
+    /// </summary>
+    /// <param name="ha">The Home Assistant context.</param>
+    /// <param name="logger">The logger instance.</param>
+    /// <param name="storage">The data repository for storing and retrieving data.</param>
+    /// <param name="notify">The notification service.</param>
+    /// <param name="scheduler">The scheduler for cron jobs.</param>
     public Reset(
         IHaContext ha,
         ILogger<Reset> logger,
@@ -27,6 +41,9 @@ public class Reset : BaseApp
         }
     }
 
+    /// <summary>
+    /// Resets the alarms by comparing the current active alarms with the stored alarms.
+    /// </summary>
     private void ResetAlarm()
     {
         //todo TTP steps!
@@ -39,7 +56,6 @@ public class Reset : BaseApp
             activeAlarmsHub.AddRange(activeAlarmsHubJson.Cast<JsonElement>()
                 .Select(o => o.Deserialize<AlarmStateModel>()));
 
-
         foreach (var alarm in activeAlarmsHub
                      .Where(alarm => alarm?.Status == "set")
                      .Where(alarm => oldAlarms
@@ -51,6 +67,9 @@ public class Reset : BaseApp
             }
     }
 
+    /// <summary>
+    /// Resets the lights to their previous states.
+    /// </summary>
     private void ResetLights()
     {
         //todo TTP steps!
@@ -71,6 +90,11 @@ public class Reset : BaseApp
         }
     }
 
+    /// <summary>
+    /// Resets a specific light to its previous state.
+    /// </summary>
+    /// <param name="oldStateLight">The previous state of the light.</param>
+    /// <param name="light">The light entity to reset.</param>
     private static void ActualResetLight(LightStateModel? oldStateLight, LightEntity light)
     {
         if (oldStateLight != null)
@@ -81,18 +105,22 @@ public class Reset : BaseApp
                     break;
                 case true:
                     TurnOnReset(oldStateLight, light);
-
                     break;
             }
     }
 
+    /// <summary>
+    /// Turns on a light and sets its properties based on the previous state.
+    /// </summary>
+    /// <param name="oldStateLight">The previous state of the light.</param>
+    /// <param name="light">The light entity to turn on.</param>
     private static void TurnOnReset(LightStateModel oldStateLight, LightEntity light)
     {
         if ((light.Attributes?.SupportedColorModes ?? Array.Empty<string>()).Any(x => x == "xy"))
         {
             if (oldStateLight.RgbColors != null)
             {
-                //cause the codegen changed the input from Object to IReadOnlyCollection<int> but leaves the output to IReadOnlyList<double> I need to translate the value;
+                // Translate the value from IReadOnlyList<double> to IReadOnlyCollection<int>
                 IReadOnlyCollection<int> lightColorInInt = new[]
                 {
                     (int)oldStateLight.RgbColors[0], (int)oldStateLight.RgbColors[1], (int)oldStateLight.RgbColors[2]
@@ -106,7 +134,7 @@ public class Reset : BaseApp
         else
         {
             if (light.Attributes == null ||
-                (light.Attributes?.SupportedColorModes ?? 
+                (light.Attributes?.SupportedColorModes ??
                  Array.Empty<string>())
                 .Any(x => x == "onoff"))
                 light.TurnOn();

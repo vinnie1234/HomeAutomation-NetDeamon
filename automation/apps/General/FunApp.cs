@@ -6,10 +6,16 @@ using Automation.Enum;
 namespace Automation.apps.General;
 
 [NetDaemonApp(Id = nameof(FunApp))]
-//ReSharper disable once UnusedType.Global
+// ReSharper disable once UnusedType.Global
 public class FunApp : BaseApp
 {
-    // ReSharper disable once SuggestBaseTypeForParameterInConstructor
+    /// <summary>
+    /// Initializes a new instance of the <see cref="FunApp"/> class.
+    /// </summary>
+    /// <param name="ha">The Home Assistant context.</param>
+    /// <param name="logger">The logger instance.</param>
+    /// <param name="notify">The notification service.</param>
+    /// <param name="scheduler">The scheduler for cron jobs.</param>
     public FunApp(IHaContext ha, ILogger<FunApp> logger, INotify notify, IScheduler scheduler)
         : base(ha, logger, notify, scheduler)
     {
@@ -17,6 +23,10 @@ public class FunApp : BaseApp
         Parents();
         NewYear();
     }
+
+    /// <summary>
+    /// Sets up the actions to be taken when the friends button is pressed.
+    /// </summary>
     private void Friends()
     {
         Entities.InputButton.StartFriends.StateChanges()
@@ -28,40 +38,51 @@ public class FunApp : BaseApp
             });
     }
 
+    /// <summary>
+    /// Sets up the actions to be taken when the parents arrive home.
+    /// </summary>
     private void Parents()
     {
-
         Entities.DeviceTracker.A52sVanEddy.StateChanges()
             .Where(x => x.Entity.State == "home")
             .Subscribe(_ => SendMessageParents());
         Entities.DeviceTracker.S20FeVanJannette.StateChanges()
             .Where(x => x.Entity.State == "home")
-            .Subscribe(_ => SendMessageParents());      
+            .Subscribe(_ => SendMessageParents());
     }
 
+    /// <summary>
+    /// Sends a welcome message to the parents.
+    /// </summary>
     private void SendMessageParents()
     {
         var houseState = Globals.GetHouseState(Entities);
         var message = houseState == HouseState.Morning ? "Goedemorgen Ed en Jannette, welkom bij Vincent!" : "Goedemiddag Ed en Jannette, Welkom bij Vincent";
-        
+
         Notify.NotifyHouse("Parents", message, false, 300);
     }
-    
+
+    /// <summary>
+    /// Schedules the actions to be taken on New Year's Eve and New Year's Day.
+    /// </summary>
     private void StartNewYearOnNewYear()
     {
         Scheduler.ScheduleCron("10 58 23 31 12 *", () =>
         {
             Notify.SendMusicToHome("http://192.168.50.189:8123/local/HappyNewYear.mp3", 0.4);
         }, true);
-        
+
         Scheduler.ScheduleCron("59 58 23 31 12 *", () =>
         {
             Entities.MediaPlayer.HeleHuis.VolumeSet(0.9);
         }, true);
-        
+
         Scheduler.ScheduleCron("00 00 01 01 *", ChristmasFirework);
     }
 
+    /// <summary>
+    /// Sets up the actions to be taken when the New Year button is pressed or on New Year's Eve.
+    /// </summary>
     private void NewYear()
     {
         StartNewYearOnNewYear();
@@ -74,13 +95,16 @@ public class FunApp : BaseApp
             ChristmasFirework();
         });
     }
-    
+
+    /// <summary>
+    /// Simulates a Christmas firework display by changing the colors of the lights.
+    /// </summary>
     private void ChristmasFirework()
     {
         var rnd = new Random();
         var s = new Stopwatch();
         s.Start();
-            
+
         do
         {
             var num = rnd.Next(1, 6);
@@ -126,7 +150,7 @@ public class FunApp : BaseApp
 
             Thread.Sleep(TimeSpan.FromSeconds(0.5));
         } while (s.Elapsed < TimeSpan.FromMinutes(4));
-        
+
         Entities.MediaPlayer.HeleHuis.VolumeSet(0.4);
         Entities.Light.Tv.TurnOn(effect: "opal");
     }

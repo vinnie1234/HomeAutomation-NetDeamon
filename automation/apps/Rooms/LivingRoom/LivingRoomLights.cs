@@ -5,6 +5,13 @@ namespace Automation.apps.Rooms.LivingRoom;
 [NetDaemonApp(Id = nameof(LivingRoomLights))]
 public class LivingRoomLights : BaseApp
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LivingRoomLights"/> class.
+    /// </summary>
+    /// <param name="ha">The Home Assistant context.</param>
+    /// <param name="logger">The logger instance.</param>
+    /// <param name="notify">The notification service.</param>
+    /// <param name="scheduler">The scheduler for cron jobs.</param>
     public LivingRoomLights(
         IHaContext ha,
         ILogger<LivingRoomLights> logger,
@@ -29,7 +36,10 @@ public class LivingRoomLights : BaseApp
         FixLightsDifferentColorWhenTurnOn();
     }
 
-    // ReSharper disable once IdentifierTypo
+    /// <summary>
+    /// Turns on or off the living room lights based on the event model.
+    /// </summary>
+    /// <param name="eventModel">The event model containing the switch event data.</param>
     private void TurnOnPlafond(EventModel eventModel)
     {
         const string hueWallLivingRoomId = "b4784a8e43cc6f5aabfb6895f3a8dbac";
@@ -47,6 +57,9 @@ public class LivingRoomLights : BaseApp
         }
     }
 
+    /// <summary>
+    /// Fixes the issue of lights turning on with different colors by ensuring they are set correctly after turning on.
+    /// </summary>
     private void FixLightsDifferentColorWhenTurnOn()
     {
         Entities.Light.HueFilamentBulb2.WhenTurnsOn(_ =>

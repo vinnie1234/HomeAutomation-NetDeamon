@@ -2,12 +2,23 @@ using System.Reactive.Concurrency;
 
 namespace Automation.apps.General;
 
+/// <summary>
+/// Represents an application that saves the state of lights and alarms.
+/// </summary>
 [NetDaemonApp(Id = nameof(SaveInState))]
 public class SaveInState : BaseApp
 {
     private readonly IDataRepository _storage;
     private List<LightStateModel> LightEntitiesStates { get; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SaveInState"/> class.
+    /// </summary>
+    /// <param name="ha">The Home Assistant context.</param>
+    /// <param name="logger">The logger instance.</param>
+    /// <param name="storage">The data repository for storing and retrieving data.</param>
+    /// <param name="notify">The notification service.</param>
+    /// <param name="scheduler">The scheduler for cron jobs.</param>
     public SaveInState(
         IHaContext ha,
         ILogger<SaveInState> logger,
@@ -22,6 +33,9 @@ public class SaveInState : BaseApp
         SetInitialStates();
     }
 
+    /// <summary>
+    /// Sets the initial states of lights and alarms and saves them to storage.
+    /// </summary>
     private void SetInitialStates()
     {
         var properties = Entities.Light.GetType().GetProperties();
@@ -40,6 +54,10 @@ public class SaveInState : BaseApp
         Logger.LogDebug("Save state");
     }
 
+    /// <summary>
+    /// Sets the state of active alarms and returns a list of alarm states.
+    /// </summary>
+    /// <returns>A list of active alarm states.</returns>
     private List<AlarmStateModel?> SetAlarmState()
     {
         var activeAlarmsHub = new List<AlarmStateModel?>();
@@ -49,13 +67,16 @@ public class SaveInState : BaseApp
                 .AddRange(activeAlarmsHubJson.Cast<JsonElement>().Select(o => o.Deserialize<AlarmStateModel>()));
 
         foreach (var alarmState in activeAlarmsHub.Where(alarmState => alarmState != null))
-            if (alarmState != null) 
+            if (alarmState != null)
                 alarmState.EntityId = Entities.Sensor.HubVincentAlarms.EntityId;
 
         return activeAlarmsHub;
     }
 
-    // ReSharper disable once SuggestBaseTypeForParameter
+    /// <summary>
+    /// Sets the state of a light entity and adds it to the list of light states.
+    /// </summary>
+    /// <param name="entity">The light entity to set the state for.</param>
     private void SetLightEntityState(LightEntity entity)
     {
         var oldEntity = LightEntitiesStates

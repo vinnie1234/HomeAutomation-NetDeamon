@@ -17,6 +17,13 @@ public class HouseStateManager : BaseApp
     private readonly TimeSpan _startWorking = TimeSpan.Parse("08:30:00", new CultureInfo("nl-Nl"));
     private readonly TimeSpan _endWorking = TimeSpan.Parse("17:00:00", new CultureInfo("nl-Nl"));
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HouseStateManager"/> class.
+    /// </summary>
+    /// <param name="ha">The Home Assistant context.</param>
+    /// <param name="logger">The logger instance.</param>
+    /// <param name="notify">The notification service.</param>
+    /// <param name="scheduler">The scheduler for cron jobs.</param>
     public HouseStateManager(
         IHaContext ha,
         ILogger<HouseStateManager> logger,
@@ -35,12 +42,17 @@ public class HouseStateManager : BaseApp
         SetWorking();
     }
 
-
+    /// <summary>
+    /// Sets the current house state based on the sun's position.
+    /// </summary>
     private void SetCurrentStates()
     {
         SetHouseState(Entities.Sun.Sun.State == "below_horizon" ? HouseState.Evening : HouseState.Day);
     }
 
+    /// <summary>
+    /// Sets the times for various house states.
+    /// </summary>
     private void SetTimes()
     {
         _nighttimeWeekdays = TimeSpan.Parse(Entities.InputDatetime.Nighttimeweekdays.State ?? "00:00:00", new CultureInfo("nl-Nl"));
@@ -51,7 +63,7 @@ public class HouseStateManager : BaseApp
     }
 
     /// <summary>
-    ///     Sets the house state on the corresponding scene
+    /// Initializes the house state scene management.
     /// </summary>
     private void InitHouseStateSceneManagement()
     {
@@ -61,6 +73,9 @@ public class HouseStateManager : BaseApp
         Entities.Scene.Woonkamermorning.StateChanges().Subscribe(_ => SetHouseState(HouseState.Morning));
     }
 
+    /// <summary>
+    /// Sets the sleeping state off based on the alarm.
+    /// </summary>
     private void SetSleepingOffFromAlarm()
     {
         Scheduler.ScheduleCron("00 00 * * *", () =>
@@ -82,6 +97,9 @@ public class HouseStateManager : BaseApp
         });
     }
 
+    /// <summary>
+    /// Sets the working state based on the schedule.
+    /// </summary>
     private void SetWorking()
     {
         Scheduler.RunDaily(_startWorking, () =>
@@ -101,6 +119,9 @@ public class HouseStateManager : BaseApp
         });
     }
 
+    /// <summary>
+    /// Sets the daytime state based on the schedule.
+    /// </summary>
     private void SetDayTime()
     {
         Scheduler.RunDaily(_daytimeOffice, () =>
@@ -125,7 +146,7 @@ public class HouseStateManager : BaseApp
     }
 
     /// <summary>
-    ///     Set night time schedule on different time different weekdays
+    /// Sets the nighttime state based on the schedule.
     /// </summary>
     private void SetNightTime()
     {
@@ -145,7 +166,7 @@ public class HouseStateManager : BaseApp
     }
 
     /// <summary>
-    ///     Set to evening when the sun is down
+    /// Sets the evening state when the sun is down.
     /// </summary>
     private void SetEveningWhenSunIsDown()
     {
@@ -160,7 +181,7 @@ public class HouseStateManager : BaseApp
     }
 
     /// <summary>
-    ///     When sun is up considered morning time
+    /// Sets the morning state when the sun is up.
     /// </summary>
     private void SetMorningWhenSunIsUp()
     {
@@ -175,9 +196,9 @@ public class HouseStateManager : BaseApp
     }
 
     /// <summary>
-    ///     Sets the house state to specified state and updates Home Assistant InputSelect
+    /// Sets the house state to the specified state and updates the Home Assistant InputSelect.
     /// </summary>
-    /// <param name="state">State to set</param>
+    /// <param name="state">The state to set.</param>
     private void SetHouseState(HouseState state)
     {
         Logger.LogDebug("Setting current house state to {State}", state);

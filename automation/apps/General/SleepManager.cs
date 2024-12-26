@@ -3,11 +3,24 @@ using System.Reactive.Concurrency;
 
 namespace Automation.apps.General;
 
+/// <summary>
+/// Represents an application that manages sleep routines and related automations.
+/// </summary>
 [NetDaemonApp(Id = nameof(SleepManager))]
 public class SleepManager : BaseApp
 {
+    /// <summary>
+    /// Gets a value indicating whether light automations are disabled.
+    /// </summary>
     private bool DisableLightAutomations => Entities.InputBoolean.Disablelightautomationgeneral.IsOn();
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SleepManager"/> class.
+    /// </summary>
+    /// <param name="ha">The Home Assistant context.</param>
+    /// <param name="logger">The logger instance.</param>
+    /// <param name="notify">The notification service.</param>
+    /// <param name="scheduler">The scheduler for cron jobs.</param>
     public SleepManager(
         IHaContext ha,
         ILogger<SleepManager> logger,
@@ -28,16 +41,23 @@ public class SleepManager : BaseApp
         });
     }
 
+    /// <summary>
+    /// Executes the wake-up routine.
+    /// </summary>
     private void WakeUp()
     {
         Logger.LogDebug("Wake up Routine");
         if (((IList)Globals.WeekendDays).Contains(DateTimeOffset.Now.DayOfWeek))
             Entities.Cover.Rollerblind0003.SetCoverPosition(100);
-        else if (Entities.Cover.Rollerblind0003.Attributes?.CurrentPosition < 100) Entities.Cover.Rollerblind0003.SetCoverPosition(45);
+        else if (Entities.Cover.Rollerblind0003.Attributes?.CurrentPosition < 100) 
+            Entities.Cover.Rollerblind0003.SetCoverPosition(45);
 
         SendBatteryWarning();
     }
 
+    /// <summary>
+    /// Executes the sleeping routine.
+    /// </summary>
     private void Sleeping()
     {
         Logger.LogDebug("Sleep Routine started");
@@ -49,7 +69,8 @@ public class SleepManager : BaseApp
         Entities.Cover.Rollerblind0003.SetCoverPosition(0);
         var checkDate = DateTimeOffset.Now;
         var message = Entities.Sensor.AfvalMorgen.State;
-        if (checkDate.Hour is >= 00 and < 07) message = Entities.Sensor.AfvalVandaag.State;
+        if (checkDate.Hour is >= 00 and < 07) 
+            message = Entities.Sensor.AfvalVandaag.State;
 
         if (message != "Geen")
             Notify.NotifyPhoneVincent("Vergeet het afval niet",
@@ -60,12 +81,18 @@ public class SleepManager : BaseApp
                 "Er staat nog een error open voor de PetSnowy", true);
     }
 
+    /// <summary>
+    /// Changes relevant house states when sleeping.
+    /// </summary>
     private void ChangeRelevantHouseState()
     {
         Entities.InputBoolean.Away.TurnOff();
         Entities.InputBoolean.Douchen.TurnOff();
     }
 
+    /// <summary>
+    /// Sends a battery warning if certain devices have low battery.
+    /// </summary>
     private void SendBatteryWarning()
     {
         if (Entities.Sensor.PhoneVincentBatteryLevel.State < 30 && Entities.BinarySensor.PhoneVincentIsCharging.IsOff())
@@ -75,18 +102,25 @@ public class SleepManager : BaseApp
             Notify.NotifyPhoneVincent("Tabled bijna leeg", "Je moet je tabled opladen", true);
     }
 
+    /// <summary>
+    /// Turns off all lights if light automations are not disabled.
+    /// </summary>
     private void TurnAllLightsOut()
     {
-        if (!DisableLightAutomations) Entities.Light.TurnAllOff();
+        if (!DisableLightAutomations) 
+            Entities.Light.TurnAllOff();
     }
 
+    /// <summary>
+    /// Checks the energy prices and sends notifications based on the prices.
+    /// </summary>
     private void EnergyPriceCheck()
     {
         var priceList = Entities.Sensor.EpexSpotNlNetPrice
             .Attributes?.Data;
 
         if (priceList == null) return;
-         
+
         foreach (JsonElement price in priceList)
         {
             var model = price.ToObject<EnergyPriceModel>();
@@ -102,7 +136,7 @@ public class SleepManager : BaseApp
                     case <= -15:
                         Notify.NotifyPhoneVincent("Morgen is het stroom gratis",
                             $"Stroom kost morgen om {model.StartTime} {model.PriceCtPerKwh} cent!", true);
-                        break;                    
+                        break;
                     case > 45:
                         Notify.NotifyPhoneVincent("Morgen is het stroom duur!",
                             $"Stroom kost morgen om {model.StartTime} {model.PriceCtPerKwh} cent!", true);
@@ -112,16 +146,21 @@ public class SleepManager : BaseApp
         }
     }
 
+    /// <summary>
+    /// Performs extra checks when the system is awake.
+    /// </summary>
     private void AwakeExtraChecks()
     {
         Entities.MediaPlayer.Tv.WhenTurnsOn(_ =>
         {
-            if (Entities.InputBoolean.Sleeping.IsOn()) Entities.InputBoolean.Sleeping.TurnOff();
+            if (Entities.InputBoolean.Sleeping.IsOn()) 
+                Entities.InputBoolean.Sleeping.TurnOff();
         });
 
         Entities.Light.Bureau.WhenTurnsOn(_ =>
         {
-            if (Entities.InputBoolean.Sleeping.IsOn()) Entities.InputBoolean.Sleeping.TurnOff();
+            if (Entities.InputBoolean.Sleeping.IsOn()) 
+                Entities.InputBoolean.Sleeping.TurnOff();
         });
     }
 }

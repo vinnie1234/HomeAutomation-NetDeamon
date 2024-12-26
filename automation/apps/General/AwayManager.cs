@@ -4,11 +4,21 @@ using static Automation.Globals;
 
 namespace Automation.apps.General;
 
+/// <summary>
+/// Represents an application that manages the "away" state and related notifications.
+/// </summary>
 [NetDaemonApp(Id = nameof(AwayManager))]
 public class AwayManager : BaseApp
 {
     private bool _backHome;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AwayManager"/> class.
+    /// </summary>
+    /// <param name="ha">The Home Assistant context.</param>
+    /// <param name="logger">The logger instance.</param>
+    /// <param name="notify">The notification service.</param>
+    /// <param name="scheduler">The scheduler for cron jobs.</param>
     public AwayManager(
         IHaContext ha,
         ILogger<AwayManager> logger,
@@ -20,7 +30,10 @@ public class AwayManager : BaseApp
         VincentHomeHandler();
         VincentAwayCheck();
     }
-    
+
+    /// <summary>
+    /// Checks if Vincent is away and sends a notification if he is.
+    /// </summary>
     private void VincentAwayCheck()
     {
         Entities.Person.VincentMaarschalkerweerd
@@ -41,16 +54,22 @@ public class AwayManager : BaseApp
             });
     }
 
+    /// <summary>
+    /// Handles the event when Vincent comes home.
+    /// </summary>
     private void VincentHomeHandler()
     {
         Entities.Person.VincentMaarschalkerweerd
             .StateChanges()
-            .Where(x => x.Old?.State != "home" && 
-                        x.New?.State == "home" && 
+            .Where(x => x.Old?.State != "home" &&
+                        x.New?.State == "home" &&
                         Entities.InputBoolean.Away.IsOn())
             .Subscribe(_ => Entities.InputBoolean.Away.TurnOff());
     }
 
+    /// <summary>
+    /// Sets up the triggers for handling away and home states.
+    /// </summary>
     private void TriggersHandler()
     {
         Entities.InputBoolean.Away.WhenTurnsOn(_ => AwayHandler());
@@ -58,6 +77,9 @@ public class AwayManager : BaseApp
         Entities.BinarySensor.GangMotion.WhenTurnsOn(_ => WelcomeHome());
     }
 
+    /// <summary>
+    /// Handles the actions to be taken when the away state is activated.
+    /// </summary>
     private void AwayHandler()
     {
         _backHome = false;
@@ -74,6 +96,9 @@ public class AwayManager : BaseApp
         Entities.MediaPlayer.AvSoundbar.TurnOff();
     }
 
+    /// <summary>
+    /// Handles the actions to be taken when Vincent comes home.
+    /// </summary>
     private void WelcomeHome()
     {
         var houseState = GetHouseState(Entities);
@@ -97,6 +122,10 @@ public class AwayManager : BaseApp
         }
     }
 
+    /// <summary>
+    /// Sets the light scene based on the current house state.
+    /// </summary>
+    /// <param name="houseState">The current state of the house.</param>
     private void SetLightScene(HouseState houseState)
     {
         switch (houseState)
@@ -118,6 +147,10 @@ public class AwayManager : BaseApp
         }
     }
 
+    /// <summary>
+    /// Sends a notification to Vincent when he comes home.
+    /// </summary>
+    /// <param name="houseState">The current state of the house.</param>
     private void NotifyVincentHome(HouseState houseState)
     {
         Notify.NotifyPhoneVincent("Welkom thuis Vincent",
