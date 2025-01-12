@@ -47,7 +47,7 @@ public class Alarm : BaseApp
 
         Entities.BinarySensor.GangMotion.WhenTurnsOn(_ =>
         {
-            if (Globals.AmIHomeCheck(Entities))
+            if (Globals.AmIHomeCheck(Entities) && Entities.InputBoolean.Away.IsOn())
                 Notify.NotifyPhoneVincent("ALARM", "Beweging gedetecteerd", false, 5, channel: "ALARM",
                     vibrationPattern: "100, 1000, 100, 1000, 100");
         });
