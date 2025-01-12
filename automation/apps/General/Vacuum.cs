@@ -60,7 +60,7 @@ public class Vacuum : BaseApp
             .Where(x => x.New?.State == "cleaning")
             .Subscribe(_ =>
             {
-                if (Entities.InputBoolean.Sleeping.IsOff())
+                if (Entities.InputBoolean.Sleeping.IsOff() && Entities.InputBoolean.Skipvaccumlitterbox.IsOff())
                 {
                     Clean("Kattenbak");
                 }
@@ -70,7 +70,8 @@ public class Vacuum : BaseApp
                         .StateChanges()
                         .Where(x => x.New.IsOff()).Subscribe(_ =>
                         {
-                            Clean("Kattenbak");
+                            if(Entities.InputBoolean.Skipvaccumlitterbox.IsOff())
+                                Clean("Kattenbak");
                         });
                 }
             });
