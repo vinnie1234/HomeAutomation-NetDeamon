@@ -188,7 +188,7 @@ public class BathRoomLights : BaseApp
     {
         Entities.Sensor.SmartSeries400097aeToothbrushState
             .StateChanges()
-            .Where(x => x.New?.State == "runnig")
+            .Where(x => x.New?.State != "idle" && x.Old?.State == "idle")
             .Subscribe(_ =>
             {
                 if (!IsDouching)
@@ -206,7 +206,10 @@ public class BathRoomLights : BaseApp
             .Subscribe(_ =>
             {
                 if (!IsDouching)
+                {
                     Entities.MediaPlayer.Googlehome0351.MediaStop();
+                    Entities.Light.Slaapkamer.TurnOn();
+                }
             });
     }
 }
