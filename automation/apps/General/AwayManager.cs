@@ -28,31 +28,9 @@ public class AwayManager : BaseApp
     {
         TriggersHandler();
         VincentHomeHandler();
-        VincentAwayCheck();
+        AutoAway();
     }
 
-    /// <summary>
-    /// Checks if Vincent is away and sends a notification if he is.
-    /// </summary>
-    private void VincentAwayCheck()
-    {
-        Entities.Person.VincentMaarschalkerweerd
-            .StateChanges()
-            .WhenStateIsFor(x => x?.State != "home" && Entities.InputBoolean.Away.IsOff(),
-                TimeSpan.FromMinutes(2), Scheduler)
-            .Subscribe(_ =>
-            {
-                Notify.NotifyPhoneVincent("Het lijkt er op dat je weg bent!",
-                    "Je gaat weg zonder wat te zeggen...",
-                    true,
-                    10,
-                    new List<ActionModel>
-                    {
-                        new(action: "SETAWAY", title: "Ik ben weg",
-                            func: () => { Entities.InputBoolean.Away.TurnOn(); })
-                    });
-            });
-    }
 
     /// <summary>
     /// Handles the event when Vincent comes home.
@@ -159,6 +137,21 @@ public class AwayManager : BaseApp
             action: new List<ActionModel>
             {
                 new(action: "TURNONTV", title: "TV Aanzetten", func: () => { Entities.MediaPlayer.Tv.TurnOn(); })
+            });
+    }
+    
+    /// <summary>
+    /// Automatically sets the "away" state based on Vincent's phone distance and direction of travel.
+    /// </summary>
+    private void AutoAway()
+    {
+        Entities.Sensor.ThuisPhoneVincentDistance.StateChanges()
+            .WhenStateIsFor(x => x?.State > 300, TimeSpan.FromMinutes(5), Scheduler)
+            .Subscribe(_ =>
+            {
+                if (Entities.Sensor.ThuisPhoneVincentDirectionOfTravel.State == "away_from" &&
+                    Entities.InputBoolean.Away.IsOff() && Entities.Zone.Boodschappen.IsOff()) 
+                    Entities.InputBoolean.Away.TurnOn();
             });
     }
 }
