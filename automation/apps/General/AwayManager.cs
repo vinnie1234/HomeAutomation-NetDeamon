@@ -145,12 +145,12 @@ public class AwayManager : BaseApp
     /// </summary>
     private void AutoAway()
     {
-        Entities.Sensor.ThuisPhoneVincentDistance.StateChanges()
-            .WhenStateIsFor(x => x?.State > 300, TimeSpan.FromMinutes(5), Scheduler)
+        Entities.Sensor.ThuisPhoneVincentDirectionOfTravel.StateChanges()
+            .WhenStateIsFor(x => x?.State is "away_from" or "stationary", TimeSpan.FromMinutes(5), Scheduler)
             .Subscribe(_ =>
             {
-                if (Entities.Sensor.ThuisPhoneVincentDirectionOfTravel.State == "away_from" &&
-                    Entities.InputBoolean.Away.IsOff() && Entities.Zone.Boodschappen.IsOff()) 
+                if (Entities.Sensor.ThuisPhoneVincentDistance.State > 300 &&
+                    Entities.InputBoolean.Away.IsOff() && Entities.Zone.Boodschappen.IsOff())
                     Entities.InputBoolean.Away.TurnOn();
             });
     }
