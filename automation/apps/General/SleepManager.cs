@@ -127,19 +127,19 @@ public class SleepManager : BaseApp
 
             if (model != null)
             {
-                switch (model.PriceCtPerKwh)
+                switch (model.PricePerKwh)
                 {
                     case <= 0 and > -15:
                         Notify.NotifyPhoneVincent("Morgen is het stroom bijna gratis, maar belasting verpest het!",
-                            $"Stroom kost morgen om {model.StartTime} {model.PriceCtPerKwh} cent!", true);
+                            $"Stroom kost morgen om {model.StartTime} {model.PricePerKwh} cent!", true);
                         break;
                     case <= -15:
                         Notify.NotifyPhoneVincent("Morgen is het stroom gratis",
-                            $"Stroom kost morgen om {model.StartTime} {model.PriceCtPerKwh} cent!", true);
+                            $"Stroom kost morgen om {model.StartTime} {model.PricePerKwh} cent!", true);
                         break;
                     case > 45:
                         Notify.NotifyPhoneVincent("Morgen is het stroom duur!",
-                            $"Stroom kost morgen om {model.StartTime} {model.PriceCtPerKwh} cent!", true);
+                            $"Stroom kost morgen om {model.StartTime} {model.PricePerKwh} cent!", true);
                         break;
                 }
             }

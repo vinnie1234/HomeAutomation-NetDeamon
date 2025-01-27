@@ -8,10 +8,10 @@ namespace Automation.Models;
 // ReSharper disable once ClassNeverInstantiated.Global
 public class EnergyPriceModel
 {
-    public EnergyPriceModel(DateTime startTime, double priceCtPerKwh, DateTime endTime)
+    public EnergyPriceModel(DateTime startTime, double pricePerKwh, DateTime endTime)
     {
         StartTime = startTime;
-        PriceCtPerKwh = priceCtPerKwh;
+        PricePerKwh = pricePerKwh;
         EndTime = endTime;
     }
 
@@ -21,6 +21,6 @@ public class EnergyPriceModel
     [JsonPropertyName("end_time")]
     public DateTime EndTime { get; set; }
     
-    [JsonPropertyName("price_ct_per_kwh")]
-    public double PriceCtPerKwh { get; set; }
+    [JsonPropertyName("price_per_kwh")]
+    public double PricePerKwh { get; set; }
 }
