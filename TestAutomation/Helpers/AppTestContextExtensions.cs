@@ -31,6 +31,12 @@ public static class AppTestContextExtensions
     {
         ctx.HaContext.Received(times)
             .CallService(domain, service, Arg.Is<ServiceTarget>(x => x.EntityIds != null && x.EntityIds.First() == $"{domain}.{entityId}"), Arg.Any<object?>());
+    }    
+    
+    public static void VerifyCallNotify(this AppTestContext ctx, string domain, string service, int times = 1)
+    {
+        ctx.HaContext.Received(times)
+            .CallService(domain, service, null, Arg.Any<object?>());
     }
 
     public static void VerifyNotCallService(this AppTestContext ctx, string serviceCall)
