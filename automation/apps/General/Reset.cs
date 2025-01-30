@@ -26,9 +26,9 @@ public class Reset : BaseApp
     public Reset(
         IHaContext ha,
         ILogger<Reset> logger,
-        IDataRepository storage,
         INotify notify,
-        IScheduler scheduler)
+        IScheduler scheduler,
+        IDataRepository storage)
         : base(ha, logger, notify, scheduler)
     {
         _storage = storage;

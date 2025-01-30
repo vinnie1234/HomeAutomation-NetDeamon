@@ -22,9 +22,9 @@ public class SaveInState : BaseApp
     public SaveInState(
         IHaContext ha,
         ILogger<SaveInState> logger,
-        IDataRepository storage,
         INotify notify,
-        IScheduler scheduler)
+        IScheduler scheduler,
+        IDataRepository storage)
         : base(ha, logger, notify, scheduler)
     {
         _storage = storage;
