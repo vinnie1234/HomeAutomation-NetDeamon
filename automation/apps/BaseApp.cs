@@ -38,6 +38,22 @@ public class BaseApp
     internal readonly IHaContext HaContext;
 
     /// <summary>
+    /// Indicates whether the user is currently sleeping.
+    /// </summary>
+    internal readonly bool IsSleeping;
+
+    /// <summary>
+    /// Indicates whether the user is currently driving.
+    /// </summary>
+    internal readonly bool IsDriving;
+
+    /// <summary>
+    /// Indicates whether the user is currently at home.
+    /// </summary>
+    internal readonly bool IsHome;
+    
+    
+    /// <summary>
     /// Initializes a new instance of the <see cref="BaseApp"/> class.
     /// </summary>
     /// <param name="haContext">The Home Assistant context.</param>
@@ -56,6 +72,10 @@ public class BaseApp
         Scheduler = scheduler;
         Entities = new Entities(haContext);
         Services = new Services(haContext);
+        
+        IsSleeping = Entities.InputBoolean.Sleeping.IsOn();
+        IsDriving = Entities.BinarySensor.VincentPhoneAndroidAuto.IsOn();
+        IsHome = Entities.InputBoolean.Away.IsOff();
 
         Logger.LogDebug("Started {Name}", GetType().Name);
     }

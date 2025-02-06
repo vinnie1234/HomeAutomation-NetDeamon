@@ -6,11 +6,6 @@ namespace Automation.apps.Rooms.Hall;
 public class HallLightOnMovement : BaseApp
 {
     /// <summary>
-    /// Gets a value indicating whether the system is in sleeping mode.
-    /// </summary>
-    private bool IsSleeping => Entities.InputBoolean.Sleeping.IsOn();
-
-    /// <summary>
     /// Gets a value indicating whether light automations are disabled.
     /// </summary>
     private bool DisableLightAutomations => Entities.InputBoolean.Disablelightautomationhall.IsOn();
@@ -120,10 +115,16 @@ public class HallLightOnMovement : BaseApp
             {
                 //button one
                 case 1:
-                    if (Entities.InputBoolean.Away.IsOff())
-                        Entities.InputBoolean.Away.TurnOn();
-                    if (Entities.InputBoolean.Away.IsOn())
-                        Entities.InputBoolean.Away.TurnOff();
+                    switch (IsHome)
+                    {
+                        case true:
+                            Entities.InputBoolean.Away.TurnOn();
+                            break;
+                        case false:
+                            Entities.InputBoolean.Away.TurnOff();
+                            break;
+                    }
+
                     break;
                 //button two
                 case 2:

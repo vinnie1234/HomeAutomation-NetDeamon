@@ -41,7 +41,7 @@ public class AwayManager : BaseApp
             .StateChanges()
             .Where(x => x.Old?.State != "home" &&
                         x.New?.State == "home" &&
-                        Entities.InputBoolean.Away.IsOn())
+                        !IsHome)
             .Subscribe(_ => Entities.InputBoolean.Away.TurnOff());
     }
 
@@ -145,11 +145,11 @@ public class AwayManager : BaseApp
     /// </summary>
     private void AutoAway()
     {
-        Entities.Sensor.ThuisPhoneVincentDistance.StateChanges()
+        Entities.Sensor.ThuisSmS938bDistance.StateChanges()
             .WhenStateIsFor(x => x?.State > 300, TimeSpan.FromMinutes(5), Scheduler)
             .Subscribe(_ =>
             {
-                if (Entities.Sensor.ThuisPhoneVincentDirectionOfTravel.State is "away_from" or "stationary" &&
+                if (Entities.Sensor.ThuisSmS938bDirectionOfTravel.State is "away_from" or "stationary" &&
                     Entities.InputBoolean.Away.IsOff() && Entities.Zone.Boodschappen.IsOff()) 
                     Entities.InputBoolean.Away.TurnOn();
             });

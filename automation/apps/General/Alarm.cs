@@ -13,11 +13,6 @@ namespace Automation.apps.General;
 [NetDaemonApp(Id = nameof(Alarm))]
 public class Alarm : BaseApp
 {
-    /// <summary>
-    /// Gets a value indicating whether the system is in sleeping mode.
-    /// </summary>
-    private bool IsSleeping => Entities.InputBoolean.Sleeping.IsOn();
-
     private readonly string _discordLogChannel = ConfigManager.GetValueFromConfigNested("Discord", "Logs") ?? "";
 
     /// <summary>
@@ -47,7 +42,7 @@ public class Alarm : BaseApp
 
         Entities.BinarySensor.GangMotion.WhenTurnsOn(_ =>
         {
-            if (Globals.AmIHomeCheck(Entities) && Entities.InputBoolean.Away.IsOn())
+            if (Globals.AmIHomeCheck(Entities) && !IsHome)
                 Notify.NotifyPhoneVincent("ALARM", "Beweging gedetecteerd", false, 5, channel: "ALARM",
                     vibrationPattern: "100, 1000, 100, 1000, 100");
         });

@@ -9,12 +9,7 @@ public class BathRoomLights : BaseApp
     /// Gets a value indicating whether it is nighttime.
     /// </summary>
     private bool IsNighttime => Entities.InputSelect.Housemodeselect.State == "Night";
-
-    /// <summary>
-    /// Gets a value indicating whether the system is in sleeping mode.
-    /// </summary>
-    private bool IsSleeping => Entities.InputBoolean.Sleeping.IsOn();
-
+    
     /// <summary>
     /// Gets a value indicating whether light automations are disabled.
     /// </summary>
@@ -201,7 +196,7 @@ public class BathRoomLights : BaseApp
 
         Entities.Sensor.SmartSeries400097aeToothbrushState
             .StateChanges()
-            .WhenStateIsFor(x => x?.State == "idle" && Entities.InputBoolean.Away.IsOff(),
+            .WhenStateIsFor(x => x?.State == "idle" && IsHome,
                 TimeSpan.FromSeconds(30), Scheduler)
             .Subscribe(_ =>
             {
