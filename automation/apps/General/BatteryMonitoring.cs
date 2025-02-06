@@ -25,17 +25,21 @@ public class BatteryMonitoring : BaseApp
         IScheduler scheduler)
         : base(ha, logger, notify, scheduler)
     {
-        foreach (var battySensor in Collections.GetAllBattySensors(Entities))
+
+        var batterySensors = Entities.Sensor.
+            EnumerateAllNumeric().Where(x => x.Attributes?.DeviceClass == "battery");
+        
+        foreach (var battySensor in batterySensors)
         {
-            battySensor.Key
+            battySensor
                 .StateChanges()
                 .WhenStateIsFor(x => x?.State is <= BatteryWarningLevel, TimeSpan.FromHours(10), Scheduler)
-                .Subscribe(x => SendNotification(battySensor.Value, x.Entity.State ?? 0));
+                .Subscribe(x => SendNotification(battySensor.Attributes?.FriendlyName ?? "", x.Entity.State ?? 0));
 
-            battySensor.Key
+            battySensor
                 .StateChanges()
                 .Where(x => x.Entity.State is 100)
-                .Subscribe(_ => Notify.ResetNotificationHistoryForNotificationTitle(battySensor.Value));
+                .Subscribe(_ => Notify.ResetNotificationHistoryForNotificationTitle(battySensor.Attributes?.FriendlyName ?? ""));
         }
     }
 

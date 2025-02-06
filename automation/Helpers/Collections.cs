@@ -6,34 +6,6 @@ namespace Automation.Helpers;
 public static class Collections
 {
     /// <summary>
-    /// Gets a dictionary of all battery sensors with their corresponding descriptions.
-    /// </summary>
-    /// <param name="entities">The entities to retrieve the battery sensors from.</param>
-    /// <returns>A dictionary where the key is a <see cref="NumericSensorEntity"/> and the value is a description string.</returns>
-    public static Dictionary<NumericSensorEntity, string> GetAllBattySensors(Entities entities)
-    {
-        return new Dictionary<NumericSensorEntity, string>
-        {
-            { entities.Sensor.BadkamerBattery, "Wall switch Badkamer" },
-            { entities.Sensor.BadkamerBattery2, "Hue switch Badkamer" },
-            { entities.Sensor.BadkamermotionBattery, "Motion Detector Badkamer" },
-            { entities.Sensor.SwitchBadkamerSpiegelBattery, "Hue switch Badkamerspiegel" },
-            { entities.Sensor.GangBattery, "Motion Detector Gang" },
-            { entities.Sensor.GangBattery2, "Hue switch switch Gang" },
-            { entities.Sensor.HalBattery, "Wall switch switch Gang" },
-            { entities.Sensor.BergingBattery, "Motion Detector Berging" },
-            { entities.Sensor.WoonkamerBattery, "Hue switch woonkamer" },
-            { entities.Sensor.WoonkamerBattery2, "Wall switch Woonkamer" },
-            { entities.Sensor.SlaapkamerBattery, "Wall switch Slaapkamer" },
-            { entities.Sensor.Rollerblind0003Batterij, "Rolluik Slaapkamer" },
-            { entities.Sensor.BotA801Battery, "Switchbot" },
-            { entities.Sensor.KeukenAfstandbediening, "Keuken afstandbediening" },
-            { entities.Sensor.JaapBatteryLevel, "Jaap" },
-            { entities.Sensor.DarkHorseRemainingBattery, "Cowboy" }
-        };
-    }
-
-    /// <summary>
     /// Gets a dictionary of feed times with their corresponding feed amounts.
     /// </summary>
     /// <param name="entities">The entities to retrieve the feed times from.</param>
