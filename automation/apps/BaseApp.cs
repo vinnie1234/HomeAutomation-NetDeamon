@@ -37,21 +37,7 @@ public class BaseApp
     /// </summary>
     internal readonly IHaContext HaContext;
 
-    /// <summary>
-    /// Indicates whether the user is currently sleeping.
-    /// </summary>
-    internal readonly bool IsSleeping;
-
-    /// <summary>
-    /// Indicates whether the user is currently driving.
-    /// </summary>
-    internal readonly bool IsDriving;
-
-    /// <summary>
-    /// Indicates whether the user is currently at home.
-    /// </summary>
-    internal readonly bool IsHome;
-    
+    internal readonly PersonModel Vincent;
     
     /// <summary>
     /// Initializes a new instance of the <see cref="BaseApp"/> class.
@@ -72,10 +58,12 @@ public class BaseApp
         Scheduler = scheduler;
         Entities = new Entities(haContext);
         Services = new Services(haContext);
-        
-        IsSleeping = Entities.InputBoolean.Sleeping.IsOn();
-        IsDriving = Entities.BinarySensor.VincentPhoneAndroidAuto.IsOn();
-        IsHome = Entities.InputBoolean.Away.IsOff();
+
+        Vincent = new PersonModel(Entities.InputBoolean.Sleeping.IsOn(),
+            Entities.BinarySensor.VincentPhoneAndroidAuto.IsOn(), 
+            Entities.InputBoolean.Away.IsOff(),
+            Entities.Sensor.ThuisSmS938bDirectionOfTravel.State,
+        Entities.Person.VincentMaarschalkerweerd.State);
 
         Logger.LogDebug("Started {Name}", GetType().Name);
     }

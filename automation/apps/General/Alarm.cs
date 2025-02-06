@@ -42,7 +42,7 @@ public class Alarm : BaseApp
 
         Entities.BinarySensor.GangMotion.WhenTurnsOn(_ =>
         {
-            if (Globals.AmIHomeCheck(Entities) && !IsHome)
+            if (Globals.AmIHomeCheck(Entities) && !Vincent.IsHome)
                 Notify.NotifyPhoneVincent("ALARM", "Beweging gedetecteerd", false, 5, channel: "ALARM",
                     vibrationPattern: "100, 1000, 100, 1000, 100");
         });
@@ -83,7 +83,7 @@ public class Alarm : BaseApp
         foreach (var temperatureSensor in Collections.GetAllTemperatureSensors(Entities))
             temperatureSensor.Key
                 .StateChanges()
-                .Where(x => x.Entity.State > 25 && !IsSleeping)
+                .Where(x => x.Entity.State > 25 && !Vincent.IsSleeping)
                 .Subscribe(x => Notify.NotifyPhoneVincent("Hoge temperatuur gedetecteerd",
                     $"{temperatureSensor.Value} is {x.Entity.State} graden", true, channel: "ALARM",
                     vibrationPattern: "100, 1000, 100, 1000, 100"));

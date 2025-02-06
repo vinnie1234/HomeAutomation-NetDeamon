@@ -58,14 +58,14 @@ public class BathRoomLights : BaseApp
             .StateChanges()
             .WhenStateIsFor(x => x.IsOff(),
                 TimeSpan.FromMinutes((int)Entities.InputNumber.Bathroomlightnighttime.State!), Scheduler)
-            .Where(x => x.Old.IsOn() && !DisableLightAutomations && !IsDouching && IsNighttime && IsSleeping)
+            .Where(x => x.Old.IsOn() && !DisableLightAutomations && !IsDouching && IsNighttime && Vincent.IsSleeping)
             .Subscribe(_ => ChangeLight(false));
 
         Entities.BinarySensor.BadkamerMotion
             .StateChanges()
             .WhenStateIsFor(x => x.IsOff(), TimeSpan.FromMinutes((int)Entities.InputNumber.Bathroomlightdaytime.State!),
                 Scheduler)
-            .Where(x => x.Old.IsOn() && !DisableLightAutomations && !IsDouching && !IsSleeping)
+            .Where(x => x.Old.IsOn() && !DisableLightAutomations && !IsDouching && !Vincent.IsSleeping)
             .Subscribe(_ => ChangeLight(false));
 
         Entities.InputBoolean.Douchen
@@ -115,7 +115,7 @@ public class BathRoomLights : BaseApp
     /// <returns>The brightness level.</returns>
     private int GetBrightness()
     {
-        return IsSleeping switch
+        return Vincent.IsSleeping switch
         {
             true  => 5,
             false => 100
@@ -196,7 +196,7 @@ public class BathRoomLights : BaseApp
 
         Entities.Sensor.SmartSeries400097aeToothbrushState
             .StateChanges()
-            .WhenStateIsFor(x => x?.State == "idle" && IsHome,
+            .WhenStateIsFor(x => x?.State == "idle" && Vincent.IsHome,
                 TimeSpan.FromSeconds(30), Scheduler)
             .Subscribe(_ =>
             {

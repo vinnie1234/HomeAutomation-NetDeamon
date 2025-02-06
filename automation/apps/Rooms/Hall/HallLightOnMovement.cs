@@ -56,7 +56,7 @@ public class HallLightOnMovement : BaseApp
     /// <returns>The brightness level.</returns>
     private int GetBrightness()
     {
-        return IsSleeping switch
+        return Vincent.IsSleeping switch
         {
             true => 5,
             false => 100
@@ -69,7 +69,7 @@ public class HallLightOnMovement : BaseApp
     /// <returns>The state time in minutes.</returns>
     private int GetStateTime()
     {
-        return IsSleeping switch
+        return Vincent.IsSleeping switch
         {
             true => Convert.ToInt32(Entities.InputNumber.Halllightnighttime.State),
             false => Convert.ToInt32(Entities.InputNumber.Halllightdaytime.State)
@@ -87,7 +87,7 @@ public class HallLightOnMovement : BaseApp
         {
             case true:
                 Entities.Light.Hal2.TurnOn(brightnessPct: brightnessPct, transition: 15);
-                if (!IsSleeping)
+                if (!Vincent.IsSleeping)
                 {
                     Entities.Light.Hal.TurnOn();
                     if (Entities.Light.Hal.IsOff())
@@ -115,7 +115,7 @@ public class HallLightOnMovement : BaseApp
             {
                 //button one
                 case 1:
-                    switch (IsHome)
+                    switch (Vincent.IsHome)
                     {
                         case true:
                             Entities.InputBoolean.Away.TurnOn();
