@@ -1,22 +1,34 @@
-﻿namespace Automation.Models;
+﻿using System.Reactive.Disposables;
 
-/// <summary>
-/// Represents a person and their states.
-/// </summary>
 public class PersonModel
 {
-    public bool IsSleeping { get; }
-    public bool IsDriving { get; }
-    public bool IsHome { get; }
-    public string? TravelDirection { get; }
-    public string? Location { get; }
+    private readonly IEntities _entities;
+    private readonly IDisposable _subscriptions;
 
-    public PersonModel(bool sleeping, bool driving, bool home, string? travelDirection, string? location)
+    public bool IsSleeping { get; private set; }
+    public bool IsDriving { get; private set; }
+    public bool IsHome { get; private set; }
+    public string? DirectionOfTravel { get; private set; }
+    public string? State { get; private set; }
+
+    public PersonModel(IEntities entities)
     {
-        IsSleeping = sleeping;
-        IsDriving = driving;
-        IsHome = home;
-        TravelDirection = travelDirection;
-        Location = location;
+        _entities = entities;
+
+        _subscriptions = new CompositeDisposable(
+            _entities.InputBoolean.Sleeping.StateChanges().Subscribe(x => IsSleeping = x.New.IsOn()),
+            _entities.BinarySensor.VincentPhoneAndroidAuto.StateChanges().Subscribe(x => IsDriving = x.New.IsOn()),
+            _entities.InputBoolean.Away.StateChanges().Subscribe(x => IsHome = x.New.IsOff()),
+            _entities.Sensor.ThuisSmS938bDirectionOfTravel.StateChanges().Subscribe(x =>
+            {
+                if (x.New?.State != null) DirectionOfTravel = x.New.State;
+            }),
+            _entities.Person.VincentMaarschalkerweerd.StateChanges().Subscribe(x => State = x.New?.State)
+        );
+    }
+
+    public void Dispose()
+    {
+        _subscriptions.Dispose();
     }
 }

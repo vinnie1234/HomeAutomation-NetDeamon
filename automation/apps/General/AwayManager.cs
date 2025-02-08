@@ -149,7 +149,7 @@ public class AwayManager : BaseApp
             .WhenStateIsFor(x => x?.State > 300, TimeSpan.FromMinutes(5), Scheduler)
             .Subscribe(_ =>
             {
-                if (Vincent.TravelDirection is "away_from" or "stationary" &&
+                if (Vincent.DirectionOfTravel is "away_from" or "stationary" &&
                     Entities.InputBoolean.Away.IsOff() && Entities.Zone.Boodschappen.IsOff()) 
                     Entities.InputBoolean.Away.TurnOn();
             });

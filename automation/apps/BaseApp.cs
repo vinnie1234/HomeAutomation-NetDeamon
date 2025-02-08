@@ -59,11 +59,7 @@ public class BaseApp
         Entities = new Entities(haContext);
         Services = new Services(haContext);
 
-        Vincent = new PersonModel(Entities.InputBoolean.Sleeping.IsOn(),
-            Entities.BinarySensor.VincentPhoneAndroidAuto.IsOn(), 
-            Entities.InputBoolean.Away.IsOff(),
-            Entities.Sensor.ThuisSmS938bDirectionOfTravel.State,
-        Entities.Person.VincentMaarschalkerweerd.State);
+        Vincent = new PersonModel(Entities);
 
         Logger.LogDebug("Started {Name}", GetType().Name);
     }
